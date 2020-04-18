@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="475dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_popup"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/DictionaryBackButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/BackButtonContentDescription"
+            app:srcCompat="@drawable/ic_back"/>
+
+        <ImageButton
+            android:id="@+id/DictionaryCloseButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/CloseButtonContentDescription"
+            app:srcCompat="@drawable/ic_close"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/DictionaryWordTextView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:scrollY="40dp"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/DictionaryDisplayTextView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:scrollY="40dp"
+        android:textIsSelectable="true" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageButton
+            android:id="@+id/SaveButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/SaveButtonContentDescription"
+            app:srcCompat="@drawable/ic_save"
+            android:scaleType="fitXY"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+

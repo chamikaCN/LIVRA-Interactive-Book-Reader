@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="475dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_popup"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/CommentBackButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/BackButtonContentDescription"
+            app:srcCompat="@drawable/ic_back"/>
+
+        <ImageButton
+            android:id="@+id/CommentCloseButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/CloseButtonContentDescription"
+            app:srcCompat="@drawable/ic_close"/>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/CommentDisplayTextView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:scrollY="40dp"
+        android:textIsSelectable="true" />
+
+    <EditText
+        android:id="@+id/CommentEditText"
+        android:layout_width="match_parent"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:minLines="6"
+        android:gravity="top|start"
+        android:maxLines="10"
+        android:layout_height="150dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:scrollY="40dp"
+        android:textIsSelectable="true"
+        android:importantForAutofill="no"
+        android:hint="Add Your Comment...."/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:scrollX="0dp">
+
+        <ImageButton
+            android:id="@+id/CommentOKButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/SpeakButtonContentDescription"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_save" />
+
+    </LinearLayout>
+
+</LinearLayout>
