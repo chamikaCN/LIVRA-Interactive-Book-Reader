@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupCapturePopup() {
         cap_dictionaryButton = capturePopup.findViewById(R.id.DictionaryButton);
         cap_speechButton = capturePopup.findViewById(R.id.SpeechButton);
-        cap_copyButton = capturePopup.findViewById(R.id.CopyButton);
+        //cap_copyButton = capturePopup.findViewById(R.id.CopyButton);
         cap_commentButton = capturePopup.findViewById(R.id.CommentButton);
         cap_closeButton = capturePopup.findViewById(R.id.CloseButton);
         cap_displayView = capturePopup.findViewById(R.id.DisplayTextView);
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             capturePopup.dismiss();
             showCommentPopup(v2);
         });
-        cap_copyButton.setOnClickListener(v1 -> copyToClipboard());
+        //cap_copyButton.setOnClickListener(v1 -> copyToClipboard());
         cap_displayView.setText(capturedString);
 
         capturePopup.show();
@@ -407,8 +407,8 @@ public class MainActivity extends AppCompatActivity {
             searchedWord = dictionaryResponse.getString("word");
             StringBuilder shower = new StringBuilder();
             searchResultDefinitions = dictionaryResponse.getJSONArray("definitions");
-            Log.d("Test", searchResultDefinitions.toString());
-            for (int i = 0; i < 5; i++) {
+            int limit = Integer.min(5, searchResultDefinitions.length());
+            for (int i = 0; i < limit; i++) {
                 shower.append(searchResultDefinitions.getJSONObject(i).getString("partOfSpeech")).append(" : ").append(searchResultDefinitions.getJSONObject(i).getString("definition")).append("\n");
             }
             dict_wordView.setText(searchedWord);
@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveDictionaryDefinitions(JSONArray array) throws JSONException {
         String word = selectedString;
-        for(int i =0 ; i < array.length(); i++){
+        for (int i = 0; i < array.length(); i++) {
             JSONObject jo = array.getJSONObject(i);
             String def = jo.getString("definition");
             String pos = jo.getString("partOfSpeech");
@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void saveWord (String word, String definition, String pos) {
+    private void saveWord(String word, String definition, String pos) {
         WordObject wordObject = new WordObject(word, definition, pos);
         wordHandler.addWord(wordObject);
     }
@@ -445,13 +445,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Test", commentHandler.getComments().toString());
         Log.d("Test", wordHandler.getWords().toString());
         ArrayList<String[]> q = wordHandler.getDefinitionPosByWord("support");
-        for (String[] w : q){
+        for (String[] w : q) {
             Log.d("Test", w[0] + " : " + w[1] + "\n");
         }
     }
 
     private void loadStorageActivity() {
-        Intent intent = new Intent(this,StorageActivity.class);
+        Intent intent = new Intent(this, StorageActivity.class);
         startActivity(intent);
     }
 }
