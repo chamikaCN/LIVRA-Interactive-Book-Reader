@@ -13,7 +13,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="end"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/red_rounded_button"
+        android:scaleType="fitXY"
         android:drawablePadding = "5dp"
         android:contentDescription="@string/CloseButtonContentDescription"
         app:srcCompat="@drawable/ic_close"/>
@@ -25,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_margin="20dp"
+        android:textColor="@color/colorLightText"
         android:scrollY="40dp"
         android:textIsSelectable="true" />
 
@@ -36,10 +38,10 @@
 
         <ImageButton
             android:id="@+id/SpeechButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_margin="15dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_one"
             android:contentDescription="@string/SpeakButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_speech" />
@@ -47,33 +49,24 @@
 
         <ImageButton
             android:id="@+id/DictionaryButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_margin="15dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_two"
             android:contentDescription="@string/DictionaryButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_dictionary" />
 
         <ImageButton
             android:id="@+id/CommentButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_margin="15dp"
             android:background="@drawable/rounded_button"
             android:contentDescription="@string/CommentButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_comment" />
 
-        <ImageButton
-            android:id="@+id/CopyButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="15dp"
-            android:background="@drawable/rounded_button"
-            android:contentDescription="@string/CopyButtonContentDescription"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_dictionary" />
 
 
     </LinearLayout>

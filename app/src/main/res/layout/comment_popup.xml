@@ -21,7 +21,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/blue_rounded_button"
+            android:scaleType="fitXY"
             android:contentDescription="@string/BackButtonContentDescription"
             app:srcCompat="@drawable/ic_back"/>
 
@@ -31,7 +32,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/red_rounded_button"
+            android:scaleType="fitXY"
             android:contentDescription="@string/CloseButtonContentDescription"
             app:srcCompat="@drawable/ic_close"/>
     </LinearLayout>
@@ -43,7 +45,8 @@
         android:layout_height="80dp"
         android:layout_margin="20dp"
         android:scrollY="40dp"
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true"
+        android:textColor="@color/colorLightText"/>
 
     <EditText
         android:id="@+id/CommentTitleEditText"
@@ -54,6 +57,7 @@
         android:layout_marginBottom="10dp"
         android:textIsSelectable="true"
         android:importantForAutofill="no"
+        android:textColor="@color/colorLightText"
         android:hint="Add Your Title...."/>
 
     <EditText
@@ -69,6 +73,7 @@
         android:layout_marginLeft="20dp"
         android:scrollY="40dp"
         android:textIsSelectable="true"
+        android:textColor="@color/colorLightText"
         android:importantForAutofill="no"
         android:hint="Add Your Comment...."/>
 
@@ -80,10 +85,10 @@
 
         <ImageButton
             android:id="@+id/CommentOKButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_margin="15dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_three"
             android:contentDescription="@string/SpeakButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_save" />

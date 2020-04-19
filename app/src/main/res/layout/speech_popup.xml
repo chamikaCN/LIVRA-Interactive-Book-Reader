@@ -21,7 +21,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/blue_rounded_button"
+            android:scaleType="fitXY"
             android:contentDescription="@string/BackButtonContentDescription"
             app:srcCompat="@drawable/ic_back" />
 
@@ -31,7 +32,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/red_rounded_button"
+            android:scaleType="fitXY"
             android:contentDescription="@string/CloseButtonContentDescription"
             app:srcCompat="@drawable/ic_close" />
     </LinearLayout>
@@ -41,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_margin="20dp"
+        android:textColor="@color/colorLightText"
         android:scrollY="40dp"
         android:textIsSelectable="true" />
 
@@ -49,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorLightTitle"
         android:layout_marginTop="10dp"
         android:text="@string/pitch" />
 
@@ -68,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:textColor="@color/colorLightTitle"
         android:text="@string/speed" />
 
     <SeekBar
@@ -91,7 +96,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="20dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_three"
             android:contentDescription="@string/SpeakButtonContentDescription"
             app:srcCompat="@drawable/ic_play"
             android:scaleType="fitXY"/>
@@ -100,7 +105,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="20dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_two"
             android:contentDescription="@string/PauseButtonContentDescription"
             app:srcCompat="@drawable/ic_pause"
             android:scaleType="fitXY"/>
@@ -110,7 +115,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="20dp"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/rounded_button_one"
             android:contentDescription="@string/StopButtonContentDescription"
             app:srcCompat="@drawable/ic_stop"
             android:scaleType="fitXY"/>
