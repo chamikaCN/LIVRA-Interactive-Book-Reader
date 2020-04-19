@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -12,6 +13,7 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -40,18 +43,24 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_arButton, main_storageButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
     TextRecognizer textRecognizer;
-    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView;
+    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView;
     SeekBar speedBar, pitchBar;
+    EditText cmt_editText, cmt_titleText;
     TextToSpeech speech;
-    String detectedString, capturedString, selectedString;
+    String detectedString, capturedString, selectedString, searchedWord;
     JSONObject dictionaryResponse;
-    Dialog capturePopup, speechPopup, dictionaryPopup;
+    JSONArray searchResultDefinitions;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
+
+    DataBaseHelper dbHelper;
+    CommentHandler commentHandler;
+    WordHandler wordHandler;
 
     final int RequestCameraPermissionID = 1001;
 
@@ -77,23 +86,33 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dbHelper = new DataBaseHelper(this);
+        commentHandler = new CommentHandler(dbHelper, this);
+        wordHandler = new WordHandler(dbHelper, this);
+
         capturePopup = new Dialog(this);
         capturePopup.setContentView(R.layout.capture_popup);
         speechPopup = new Dialog(this);
         speechPopup.setContentView(R.layout.speech_popup);
         dictionaryPopup = new Dialog(this);
         dictionaryPopup.setContentView(R.layout.dictionary_popup);
+        commentPopup = new Dialog(this);
+        commentPopup.setContentView(R.layout.comment_popup);
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
         main_arButton = findViewById(R.id.ARButton);
+        main_storageButton = findViewById(R.id.StorageButton);
         main_detectedView = findViewById(R.id.DetectedTextView);
 
         setupCapturePopup();
         setupSpeechPopup();
         setupDictionaryPopup();
+        setupCommentPopup();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+
+        showTesting();
 
         detectText();
         constructText();
@@ -105,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             showCapturePopup(v1);
         });
 
+        main_storageButton.setOnClickListener(v1 -> loadStorageActivity());
     }
 
     private void setupCapturePopup() {
@@ -135,6 +155,15 @@ public class MainActivity extends AppCompatActivity {
         dict_wordView = dictionaryPopup.findViewById(R.id.DictionaryWordTextView);
     }
 
+    private void setupCommentPopup() {
+        cmt_backButton = commentPopup.findViewById(R.id.CommentBackButton);
+        cmt_closeButton = commentPopup.findViewById(R.id.CommentCloseButton);
+        cmt_saveButton = commentPopup.findViewById(R.id.CommentOKButton);
+        cmt_displayView = commentPopup.findViewById(R.id.CommentDisplayTextView);
+        cmt_titleText = commentPopup.findViewById(R.id.CommentTitleEditText);
+        cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
+    }
+
     public void showCapturePopup(View v) {
 
         cap_closeButton.setOnClickListener(v1 -> capturePopup.dismiss());
@@ -148,11 +177,15 @@ public class MainActivity extends AppCompatActivity {
             capturePopup.dismiss();
             showDictionaryPopup(v2);
         });
+        cap_commentButton.setOnClickListener(v2 -> {
+            selectedString = getSelectedString(cap_displayView);
+            capturePopup.dismiss();
+            showCommentPopup(v2);
+        });
         cap_copyButton.setOnClickListener(v1 -> copyToClipboard());
         cap_displayView.setText(capturedString);
 
         capturePopup.show();
-
     }
 
     public void showDictionaryPopup(View v) {
@@ -161,12 +194,24 @@ public class MainActivity extends AppCompatActivity {
         dict_backButton.setOnClickListener(v3 -> {
             dict_displayView.setText("");
             dict_wordView.setText("");
+            searchedWord = "";
+            searchResultDefinitions = null;
             dictionaryPopup.dismiss();
             showCapturePopup(v3);
         });
-        dict_closeButton.setOnClickListener(v1 -> dictionaryPopup.dismiss());
+        dict_closeButton.setOnClickListener(v1 ->
+        {
+            searchedWord = "";
+            dictionaryPopup.dismiss();
+        });
+        dict_saveButton.setOnClickListener(v1 -> {
+            try {
+                saveDictionaryDefinitions(searchResultDefinitions);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
         dictionaryPopup.show();
-
     }
 
     public void showSpeechPopup(View v) {
@@ -183,10 +228,21 @@ public class MainActivity extends AppCompatActivity {
         });
         spk_speakButton.setOnClickListener(v2 -> speak(selectedString));
         spk_stopButton.setOnClickListener(v2 -> speech.stop());
-        spk_pauseButton.setOnClickListener(v2 -> {});
+        spk_pauseButton.setOnClickListener(v2 -> speechPause());
         spk_displayView.setText(selectedString);
         speechPopup.show();
+    }
 
+    public void showCommentPopup(View v) {
+        cmt_backButton.setOnClickListener(v1 ->
+        {
+            commentPopup.dismiss();
+            showCapturePopup(v1);
+        });
+        cmt_closeButton.setOnClickListener(v1 -> commentPopup.dismiss());
+        cmt_saveButton.setOnClickListener(v1 -> saveComment());
+        cmt_displayView.setText(selectedString);
+        commentPopup.show();
     }
 
     private void detectText() {
@@ -290,6 +346,9 @@ public class MainActivity extends AppCompatActivity {
         speech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    private void speechPause() {
+    }
+
     private void copyToClipboard() {
 
         selectedString = getSelectedString(cap_displayView);
@@ -345,17 +404,54 @@ public class MainActivity extends AppCompatActivity {
         if (dictionaryResponse == null) {
             dict_displayView.setText("cannot connect with server");
         } else if (dictionaryResponse.has("word")) {
-            String word = dictionaryResponse.getString("word");
-            String shower = "";
-            JSONArray definitions = dictionaryResponse.getJSONArray("definitions");
-            Log.d("Test", definitions.toString());
+            searchedWord = dictionaryResponse.getString("word");
+            StringBuilder shower = new StringBuilder();
+            searchResultDefinitions = dictionaryResponse.getJSONArray("definitions");
+            Log.d("Test", searchResultDefinitions.toString());
             for (int i = 0; i < 5; i++) {
-                shower = shower + definitions.getJSONObject(i).getString("partOfSpeech") + " : " + definitions.getJSONObject(i).getString("definition") + "\n";
+                shower.append(searchResultDefinitions.getJSONObject(i).getString("partOfSpeech")).append(" : ").append(searchResultDefinitions.getJSONObject(i).getString("definition")).append("\n");
             }
-            dict_wordView.setText(word);
-            dict_displayView.setText(shower);
+            dict_wordView.setText(searchedWord);
+            dict_displayView.setText(shower.toString());
         } else {
             dict_displayView.setText("No Definitions found");
         }
+    }
+
+    private void saveComment() {
+        String phrase = selectedString;
+        String title = cmt_titleText.getText().toString();
+        String comment = cmt_editText.getText().toString();
+        CommentObject commentObject = new CommentObject(title, phrase, comment);
+        commentHandler.addComment(commentObject);
+    }
+
+    private void saveDictionaryDefinitions(JSONArray array) throws JSONException {
+        String word = selectedString;
+        for(int i =0 ; i < array.length(); i++){
+            JSONObject jo = array.getJSONObject(i);
+            String def = jo.getString("definition");
+            String pos = jo.getString("partOfSpeech");
+            saveWord(word, def, pos);
+        }
+    }
+
+    private void saveWord (String word, String definition, String pos) {
+        WordObject wordObject = new WordObject(word, definition, pos);
+        wordHandler.addWord(wordObject);
+    }
+
+    private void showTesting() {
+        Log.d("Test", commentHandler.getComments().toString());
+        Log.d("Test", wordHandler.getWords().toString());
+        ArrayList<String[]> q = wordHandler.getDefinitionPosByWord("support");
+        for (String[] w : q){
+            Log.d("Test", w[0] + " : " + w[1] + "\n");
+        }
+    }
+
+    private void loadStorageActivity() {
+        Intent intent = new Intent(this,StorageActivity.class);
+        startActivity(intent);
     }
 }
