@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">InteractiveBookReader</string>
+    <string name="ARButtonContentDescription">AR logo</string>
+    <string name="CaptureButtonContentDescription">Capture logo</string>
+    <string name="CloseButtonContentDescription">Close</string>
+    <string name="SpeakButtonContentDescription">Close</string>
+    <string name="DictionaryButtonContentDescription">Dictionary</string>
+    <string name="StopButtonContentDescription">Stop</string>
+    <string name="BackButtonContentDescription">Back</string>
+    <string name="CopyButtonContentDescription">Copy</string>
+    <string name="CommentButtonContentDescription">Comment</string>
+    <string name="SaveButtonContentDescription">Save</string>
+    <string name="pitch">Pitch</string>
+    <string name="speed">Speed</string>
+    <string name="speech">Spe</string>
+    <string name="dictionary">Di</string>
+    <string name="close">Clo</string>
+    <string name="speak">Spk</string>
+    <string name="stop">Stp</string>
+    <string name="back">Bk</string>
+    <string name="copy">Cop</string>
+    <string name="comment">Com</string>
+    <string name="save">Sav</string>
+    <string name="PauseButtonContentDescription">Pause</string>
+    <string name="StorageButtonContentDescription">Storage</string>
+
+</resources>

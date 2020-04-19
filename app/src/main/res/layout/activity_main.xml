@@ -47,6 +47,21 @@
         app:layout_constraintVertical_bias="0.95"
         app:srcCompat="@drawable/ic_capture"/>
 
+    <ImageButton
+        android:id="@+id/StorageButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/rounded_button"
+        android:contentDescription="@string/StorageButtonContentDescription"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/Surface"
+        app:layout_constraintEnd_toEndOf="@+id/Surface"
+        app:layout_constraintStart_toStartOf="@+id/Surface"
+        app:layout_constraintTop_toTopOf="@id/Surface"
+        app:layout_constraintVertical_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.92"
+        app:srcCompat="@drawable/ic_storage"/>
+
     <TextView
         android:id="@+id/DetectedTextView"
         android:layout_width="wrap_content"

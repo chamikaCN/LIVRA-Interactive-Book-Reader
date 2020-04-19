@@ -25,7 +25,7 @@
             android:contentDescription="@string/BackButtonContentDescription"
             app:srcCompat="@drawable/ic_back" />
 
-        <Button
+        <ImageButton
             android:id="@+id/SpeakCloseButton"
             android:layout_width="40dp"
             android:layout_height="40dp"

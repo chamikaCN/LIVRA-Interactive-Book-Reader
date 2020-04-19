@@ -56,6 +56,16 @@
             app:srcCompat="@drawable/ic_dictionary" />
 
         <ImageButton
+            android:id="@+id/CommentButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@string/CommentButtonContentDescription"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_comment" />
+
+        <ImageButton
             android:id="@+id/CopyButton"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -65,14 +75,6 @@
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_dictionary" />
 
-        <ImageButton
-            android:id="@+id/CommentButton"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="15dp"
-            android:background="@drawable/rounded_button"
-            android:contentDescription="@string/CommentButtonContentDescription"
-            app:srcCompat="@drawable/ic_comment"/>
 
     </LinearLayout>
 
