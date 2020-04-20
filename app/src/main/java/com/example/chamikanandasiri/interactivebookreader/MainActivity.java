@@ -121,12 +121,13 @@ public class MainActivity extends AppCompatActivity {
 
         speechInitialization();
 
-        main_arButton.setActivated(false);
+//        main_arButton.setActivated(false);
 
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
             showCapturePopup(v1);
         });
+        main_arButton.setOnClickListener(v->displayAr());
 
         main_storageButton.setOnClickListener(v1 -> loadStorageActivity());
     }
@@ -475,6 +476,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private  void displayAr() {
+        Intent intent = new Intent(this, ArViewActivity.class);
+        startActivity(intent);
+
+    }
     public void recognizeARActivity(){
         main_arButton.setActivated(true);
         main_arButton.setOnClickListener(v1 -> {});
