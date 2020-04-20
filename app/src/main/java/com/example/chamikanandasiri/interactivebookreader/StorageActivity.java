@@ -1,15 +1,16 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class StorageActivity extends AppCompatActivity {
 
     DataBaseHelper dataBaseHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
