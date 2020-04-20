@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'com.google.ar.sceneform.plugin'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -33,4 +33,32 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+//Nilaan
+    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'
+    implementation 'com.google.ar.sceneform:animation:1.15.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
+
+
+sceneform.asset('sampleData/model.obj',
+        'default',
+        'sampleData/model.sfa',
+        'src/main/assets/model')
+
+sceneform.asset('sampleData/table.obj',
+        'default',
+        'sampleData/table.sfa',
+        'src/main/assets/table')
+
+
+sceneform.asset('sampleData/room.obj',
+        'default',
+        'sampleData/room.sfa',
+        'src/main/assets/room')
+
+sceneform.asset('sampleData/embedded_resources.fbx',
+        'default',
+        'sampleData/embedded_resources.sfa',
+        'src/main/assets/bird')
