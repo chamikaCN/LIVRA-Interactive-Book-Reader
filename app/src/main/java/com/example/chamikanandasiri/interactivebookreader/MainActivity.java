@@ -13,6 +13,8 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -119,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
         speechInitialization();
 
+        main_arButton.setActivated(false);
+
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
             showCapturePopup(v1);
@@ -206,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         });
         dict_saveButton.setOnClickListener(v1 -> {
             try {
+                buttonAnimation1(dict_saveButton);
                 saveDictionaryDefinitions(searchResultDefinitions);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -240,7 +245,10 @@ public class MainActivity extends AppCompatActivity {
             showCapturePopup(v1);
         });
         cmt_closeButton.setOnClickListener(v1 -> commentPopup.dismiss());
-        cmt_saveButton.setOnClickListener(v1 -> saveComment());
+        cmt_saveButton.setOnClickListener(v1 -> {
+            buttonAnimation1(cmt_saveButton);
+            saveComment();
+        });
         cmt_displayView.setText(selectedString);
         commentPopup.show();
     }
@@ -450,8 +458,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void buttonAnimation1(ImageButton button) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        BounceInterpolator bi = new BounceInterpolator(0.2, 20);
+        animation.setInterpolator(bi);
+        button.startAnimation(animation);
+    }
+
+    private void buttonAnimation2(ImageButton button) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.constant_bounce);
+        button.startAnimation(animation);
+    }
+
     private void loadStorageActivity() {
         Intent intent = new Intent(this, StorageActivity.class);
         startActivity(intent);
+    }
+
+    public void recognizeARActivity(){
+        main_arButton.setActivated(true);
+        main_arButton.setOnClickListener(v1 -> {});
+        buttonAnimation2(main_arButton);
     }
 }

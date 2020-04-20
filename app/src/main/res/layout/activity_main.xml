@@ -23,7 +23,7 @@
         android:id="@+id/ARButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/gradient"
         android:contentDescription="@string/ARButtonContentDescription"
         app:layout_constraintBottom_toBottomOf="@+id/Surface"
         app:layout_constraintEnd_toEndOf="@+id/Surface"
