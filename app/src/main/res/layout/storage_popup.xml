@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_popup"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/StorageCloseButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/red_rounded_button"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/CloseButtonContentDescription"
+            app:srcCompat="@drawable/ic_close"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/CommentLoadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:background="@drawable/rounded_button_three"
+        android:text="@string/show_saved_comments"
+        android:textColor="@color/colorDarkText"
+         />
+
+    <Button
+        android:id="@+id/WordLoadButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:background="@drawable/rounded_button_two"
+        android:textColor="@color/colorDarkText"
+        android:text="@string/show_saved_words"
+         />
+
+</LinearLayout>
+
+

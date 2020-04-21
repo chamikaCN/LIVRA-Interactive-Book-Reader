@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -40,6 +41,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put("Title", title);
         cv.put("Phrase", phrase);
         cv.put("Comment", comment);
+        Log.d("Test","came here");
         long result = db.insert(TABLE_COMMENT, null, cv);
         return result != -1;
     }
@@ -58,35 +60,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getAllComments() {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select Comment from " + TABLE_COMMENT, null);
-        return db.query(TABLE_COMMENT,new String[]{"Comment"},null,null,null,null,"TimeStamp");
+        return db.query(TABLE_COMMENT, new String[]{"Comment"}, null, null, null, null, "TimeStamp");
     }
 
-    public Cursor getPhraseCommentByTitle(String title){
+
+    public Cursor getPhraseCommentByTitle(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select * from " + TABLE_COMMENT + " where Title = \'"+ title +"\'",null);
-        return db.query(TABLE_COMMENT,new String[]{"Phrase","Comment"},"Title = ?", new String[]{title},null,null,null);
+        return db.query(TABLE_COMMENT, new String[]{"Phrase", "Comment"}, "Title = ?", new String[]{title}, null, null, null);
     }
 
-    public Cursor getAllDistinctTitles(){
+    public Cursor getAllDistinctTitles() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(true, TABLE_COMMENT, new String[]{"Title"},null,null,null,null,"TimeStamp",null);
+        return db.query(true, TABLE_COMMENT, new String[]{"Title"}, null, null, null, null, "TimeStamp", null);
+    }
+
+    public Cursor getSimilarTitles(String title) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(true, TABLE_COMMENT, new String[]{"Title"}, "Title" + " LIKE ?", new String[] {"%"+ title+ "%" }, null, null, "TimeStamp", null);
     }
 
     public Cursor getAllDistinctWords() {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select Comment from " + TABLE_COMMENT, null);
-        return db.query(true, TABLE_WORD,new String[]{"Word"},null,null,null,null,"TimeStamp",null);
+        return db.query(true, TABLE_WORD, new String[]{"Word"}, null, null, null, null, "TimeStamp", null);
     }
 
-    public Cursor getDefinitionPoSByWord(String word){
+    public Cursor getSimilarWords (String word) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        //return db.rawQuery("select Comment from " + TABLE_COMMENT, null);
+        return db.query(true, TABLE_WORD, new String[]{"Word"},  "Word" + " LIKE ?",new String[] {"%"+ word+ "%" }, null, null, null, "TimeStamp", null);
+    }
+
+    public Cursor getDefinitionPoSByWord(String word) {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select * from " + TABLE_COMMENT + " where Title = \'"+ title +"\'",null);
-        return db.query(TABLE_WORD,new String[]{"PartOfSpeech","Definition"},"Word = ?", new String[]{word},null,null,null);
+        return db.query(TABLE_WORD, new String[]{"PartOfSpeech", "Definition"}, "Word = ?", new String[]{word}, null, null, null);
     }
 
-    public Cursor getWordsByPoS(String pos){
+    public Cursor getWordsByPoS(String pos) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(true,TABLE_WORD,new String[]{"Word"},"PartOfSpeech = ?", new String[]{pos}, null, null, null, null);
+        return db.query(true, TABLE_WORD, new String[]{"Word"}, "PartOfSpeech = ?", new String[]{pos}, null, null, null, null);
+    }
+
+    public Cursor getWordsPoSDefinitions() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_WORD, new String[]{"Word", "PartOfSpeech", "Definition"}, null, null, null, null, null, null);
     }
 }
 

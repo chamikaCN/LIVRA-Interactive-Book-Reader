@@ -2,6 +2,7 @@ package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,17 @@ public class WordHandler {
         return words;
     }
 
+    public ArrayList<String> getSimilarWords(String word) {
+        Cursor res = dbHelper.getSimilarWords(word);
+        ArrayList<String> words = new ArrayList<>();
+
+        while (res.moveToNext()) {
+            String Ac = res.getString(0);
+            words.add(Ac);
+        }
+        return words;
+    }
+
     public ArrayList<String[]> getDefinitionPosByWord(String word) {
         Cursor res = dbHelper.getDefinitionPoSByWord(word);
         ArrayList<String[]> results = new ArrayList<>();
@@ -33,7 +45,6 @@ public class WordHandler {
             String Ac = res.getString(0);
             String Bc = res.getString(1);
             results.add(new String[]{Ac,Bc});
-
         }return results;
     }
 

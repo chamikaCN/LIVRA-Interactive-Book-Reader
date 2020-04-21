@@ -48,6 +48,17 @@ public class CommentHandler {
         return results;
     }
 
+    public ArrayList<String> getSimilarTitles(String title){
+        Cursor res = dbHelper.getSimilarTitles(title);
+        ArrayList<String> results = new ArrayList<>();
+
+        while (res.moveToNext()){
+            String Ac = res.getString(0);
+            results.add(Ac);
+        }
+        return results;
+    }
+
     public boolean addComment (CommentObject commentObject) {
         return dbHelper.insertRowComment(commentObject.getTimeStamp(),commentObject.getTitle(),commentObject.getPhrase(),commentObject.getComment());
     }
