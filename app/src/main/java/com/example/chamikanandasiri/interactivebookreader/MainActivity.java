@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -31,7 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -47,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton main_captureButton, main_arButton, main_storageButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton;
+
+    Button str_wordButton, str_commentButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
     TextRecognizer textRecognizer;
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     String detectedString, capturedString, selectedString, searchedWord;
     JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         dictionaryPopup.setContentView(R.layout.dictionary_popup);
         commentPopup = new Dialog(this);
         commentPopup.setContentView(R.layout.comment_popup);
+        storagePopup = new Dialog(this);
+        storagePopup.setContentView(R.layout.storage_popup);
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
@@ -111,10 +115,9 @@ public class MainActivity extends AppCompatActivity {
         setupSpeechPopup();
         setupDictionaryPopup();
         setupCommentPopup();
+        setupStoragePopup();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-
-        showTesting();
 
         detectText();
         constructText();
@@ -129,8 +132,9 @@ public class MainActivity extends AppCompatActivity {
         });
         main_arButton.setOnClickListener(v->displayAr());
 
-        main_storageButton.setOnClickListener(v1 -> loadStorageActivity());
+        main_storageButton.setOnClickListener(this::showStoragePopup);
     }
+
 
     private void setupCapturePopup() {
         cap_dictionaryButton = capturePopup.findViewById(R.id.DictionaryButton);
@@ -167,6 +171,12 @@ public class MainActivity extends AppCompatActivity {
         cmt_displayView = commentPopup.findViewById(R.id.CommentDisplayTextView);
         cmt_titleText = commentPopup.findViewById(R.id.CommentTitleEditText);
         cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
+    }
+
+    private  void setupStoragePopup(){
+        str_closeButton = storagePopup.findViewById(R.id.StorageCloseButton);
+        str_commentButton = storagePopup.findViewById(R.id.CommentLoadButton);
+        str_wordButton = storagePopup.findViewById(R.id.WordLoadButton);
     }
 
     public void showCapturePopup(View v) {
@@ -252,6 +262,13 @@ public class MainActivity extends AppCompatActivity {
         });
         cmt_displayView.setText(selectedString);
         commentPopup.show();
+    }
+
+    public void showStoragePopup(View v1) {
+        str_wordButton.setOnClickListener(v2 -> loadStorageActivity("word"));
+        str_commentButton.setOnClickListener(v2 -> loadStorageActivity("comment"));
+        str_closeButton.setOnClickListener(v2 -> storagePopup.dismiss());
+        storagePopup.show();
     }
 
     private void detectText() {
@@ -450,15 +467,6 @@ public class MainActivity extends AppCompatActivity {
         wordHandler.addWord(wordObject);
     }
 
-    private void showTesting() {
-        Log.d("Test", commentHandler.getComments().toString());
-        Log.d("Test", wordHandler.getWords().toString());
-        ArrayList<String[]> q = wordHandler.getDefinitionPosByWord("support");
-        for (String[] w : q) {
-            Log.d("Test", w[0] + " : " + w[1] + "\n");
-        }
-    }
-
     private void buttonAnimation1(ImageButton button) {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator bi = new BounceInterpolator(0.2, 20);
@@ -471,16 +479,17 @@ public class MainActivity extends AppCompatActivity {
         button.startAnimation(animation);
     }
 
-    private void loadStorageActivity() {
+    private void loadStorageActivity(String type) {
         Intent intent = new Intent(this, StorageActivity.class);
+        intent.putExtra("type",type);
         startActivity(intent);
     }
 
-    private  void displayAr() {
+    private void displayAr() {
         Intent intent = new Intent(this, ArViewActivity.class);
         startActivity(intent);
-
     }
+    
     public void recognizeARActivity(){
         main_arButton.setActivated(true);
         main_arButton.setOnClickListener(v1 -> {});

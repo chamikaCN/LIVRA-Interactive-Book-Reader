@@ -26,5 +26,9 @@
     <string name="title_activity_retrieve">RetrieveActivity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_retrive">RetriveActivity</string>
+    <string name="show_saved_comments">Show saved comments</string>
+    <string name="show_saved_words">Show saved words</string>
+    <string name="SearchButtonContentDescription">Search</string>
 
 </resources>

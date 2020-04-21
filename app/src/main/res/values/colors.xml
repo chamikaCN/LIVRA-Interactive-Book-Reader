@@ -7,6 +7,7 @@
     <color name="colorBlue">#3F51B5</color>
     <color name="colorLightGrey">#222222</color>
     <color name="colorLightText">#eeeeee</color>
+    <color name="colorDarkText">#242424</color>
     <color name="colorLightTitle">#80CBC4</color>
     <color name="colorLightOne">#9575CD</color>
     <color name="colorLightTwo">#FFD54F</color>
