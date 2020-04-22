@@ -24,6 +24,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.MultiDetector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -45,26 +48,31 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, main_storageButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_arButton, main_storageButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton;
 
-    Button str_wordButton, str_commentButton;
+    Button str_wordButton, str_commentButton, brc_detailsButton, brc_contentButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
+
     TextRecognizer textRecognizer;
-    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView;
+    BarcodeDetector barcodeDetector;
+    MultiDetector multiDetector;
+
+    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView;
     SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
     TextToSpeech speech;
-    String detectedString, capturedString, selectedString, searchedWord;
+    String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
     JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
+
 
     final int RequestCameraPermissionID = 1001;
 
@@ -104,11 +112,14 @@ public class MainActivity extends AppCompatActivity {
         commentPopup.setContentView(R.layout.comment_popup);
         storagePopup = new Dialog(this);
         storagePopup.setContentView(R.layout.storage_popup);
+        barcodePopup = new Dialog(this);
+        barcodePopup.setContentView(R.layout.barcode_popup);
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
         main_arButton = findViewById(R.id.ARButton);
         main_storageButton = findViewById(R.id.StorageButton);
+        main_barcodeButton = findViewById(R.id.BarcodeButton);
         main_detectedView = findViewById(R.id.DetectedTextView);
 
         setupCapturePopup();
@@ -116,23 +127,28 @@ public class MainActivity extends AppCompatActivity {
         setupDictionaryPopup();
         setupCommentPopup();
         setupStoragePopup();
+        setupBarcodePopup();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
+        barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
+        multiDetector = new MultiDetector.Builder().add(textRecognizer).add(barcodeDetector).build();
 
         detectText();
         constructText();
+        barCodeRecognize();
 
         speechInitialization();
 
-//        main_arButton.setActivated(false);
+
 
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
             showCapturePopup(v1);
         });
-        main_arButton.setOnClickListener(v->displayAr());
-
+        main_arButton.setOnClickListener(v -> displayAr());
+        main_barcodeButton.setOnClickListener(this::showBarcodePopup);
         main_storageButton.setOnClickListener(this::showStoragePopup);
+        main_barcodeButton.setEnabled(false);
     }
 
 
@@ -173,11 +189,18 @@ public class MainActivity extends AppCompatActivity {
         cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
     }
 
-    private  void setupStoragePopup(){
+    private void setupStoragePopup() {
         str_closeButton = storagePopup.findViewById(R.id.StorageCloseButton);
         str_commentButton = storagePopup.findViewById(R.id.CommentLoadButton);
         str_wordButton = storagePopup.findViewById(R.id.WordLoadButton);
     }
+
+    private void setupBarcodePopup() {
+        brc_contentButton = barcodePopup.findViewById(R.id.BarcodeContentButton);
+        brc_closeButton = barcodePopup.findViewById(R.id.BarcodeCloseButton);
+        brc_detailsButton = barcodePopup.findViewById(R.id.BarcodeDetailsButton);
+        brc_displayView = barcodePopup.findViewById(R.id.BarcodeTextView);
+}
 
     public void showCapturePopup(View v) {
 
@@ -252,6 +275,9 @@ public class MainActivity extends AppCompatActivity {
     public void showCommentPopup(View v) {
         cmt_backButton.setOnClickListener(v1 ->
         {
+            cmt_displayView.setText("");
+            cmt_titleText.setText("");
+            cmt_editText.setText("");
             commentPopup.dismiss();
             showCapturePopup(v1);
         });
@@ -271,13 +297,20 @@ public class MainActivity extends AppCompatActivity {
         storagePopup.show();
     }
 
+    public void showBarcodePopup(View v2) {
+        Log.d("Test","wertyuio");
+        brc_closeButton.setOnClickListener(v -> barcodePopup.dismiss());
+        brc_displayView.setText(detectedISBN);
+        barcodePopup.show();
+    }
+
     private void detectText() {
 
         if (!textRecognizer.isOperational()) {
             Log.w("TextDetectionActivity", "Detector dependencies are not yet available");
         } else {
             //creating a video stream through camera
-            cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
+            cameraSource = new CameraSource.Builder(getApplicationContext(), multiDetector)
                     .setFacing(CameraSource.CAMERA_FACING_BACK)
                     .setRequestedPreviewSize(350, 350)
                     .setRequestedFps(2.0f)
@@ -336,6 +369,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void barCodeRecognize() {
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+
+            }
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                final SparseArray<Barcode> items = detections.getDetectedItems();
+                if (items.size() != 0) {
+                    String barcode = items.valueAt(0).displayValue;
+                    Log.d("Test","qwort");
+                    if (barcode.length() == 10 || barcode.length() == 13){
+                        Log.d("Test","qwo");
+                        detectedISBN = barcode;
+                        main_barcodeButton.setEnabled(true);
+                        buttonAnimation2(main_barcodeButton);
+                    }
+                }
+            }
+        });
+
+    }
+
 
     private String getSelectedString(TextView view) {
         String s = view.getText().subSequence(view.getSelectionStart(), view.getSelectionEnd()).toString();
@@ -481,7 +540,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadStorageActivity(String type) {
         Intent intent = new Intent(this, StorageActivity.class);
-        intent.putExtra("type",type);
+        intent.putExtra("type", type);
         startActivity(intent);
     }
 
@@ -489,10 +548,26 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ArViewActivity.class);
         startActivity(intent);
     }
-    
-    public void recognizeARActivity(){
+
+    public void recognizeARActivity() {
         main_arButton.setActivated(true);
-        main_arButton.setOnClickListener(v1 -> {});
+        main_arButton.setOnClickListener(v1 -> {
+        });
         buttonAnimation2(main_arButton);
     }
+
+
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//
+//        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
+//
+//        if(intentResult != null){
+//            if(intentResult.getContents() != null){
+//                Log.d("Test",intentResult.getContents());
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 }
