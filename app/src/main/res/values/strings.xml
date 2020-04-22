@@ -31,5 +31,6 @@
     <string name="show_saved_words">Show saved words</string>
     <string name="SearchButtonContentDescription">Search</string>
     <string name="BarcodeContentDescription">barcode</string>
+    <string name="remove">Remove</string>
 
 </resources>

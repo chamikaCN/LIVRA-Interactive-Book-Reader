@@ -12,5 +12,8 @@
     <color name="colorLightOne">#9575CD</color>
     <color name="colorLightTwo">#FFD54F</color>
     <color name="colorLightThree">#81C784</color>
+    <color name="colorDisabled">#636363</color>
+    <color name="colorLightFour">#4FC3F7</color>
+    <color name="colorLightFive">#E57373</color>
 
 </resources>
