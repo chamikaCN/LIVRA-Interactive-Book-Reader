@@ -12,16 +12,40 @@
         android:id="@+id/fragment"
         android:name="com.google.ar.sceneform.ux.ArFragment"/>
 
-    <Button
-        android:id="@+id/remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Remove"
-        app:layout_constraintEnd_toStartOf="@+id/fragment"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/back"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_button_four"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment"
+        app:layout_constraintEnd_toEndOf="@+id/fragment"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/fragment"
+        app:layout_constraintTop_toTopOf="@+id/fragment"
+        android:contentDescription="@string/back"
+        app:srcCompat="@drawable/ic_back"
+        android:scaleType="fitXY"/>
+
+
+    <ImageButton
+        android:id="@+id/remove"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        android:layout_marginTop="112dp"
+        android:background="@drawable/rounded_button_five"
+        android:contentDescription="@string/remove"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment"
+        app:layout_constraintEnd_toEndOf="@+id/fragment"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.14"
+        app:layout_constraintStart_toStartOf="@+id/fragment"
+        app:layout_constraintTop_toTopOf="@+id/fragment"
+        app:srcCompat="@drawable/ic_remove" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

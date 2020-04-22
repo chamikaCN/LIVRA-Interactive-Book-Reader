@@ -1,8 +1,9 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.ar.core.Anchor;
 import com.google.ar.sceneform.AnchorNode;
@@ -26,28 +27,33 @@ public class ArViewActivity extends AppCompatActivity {
     private ArrayList<String> namesPath = new ArrayList<>();
     private ArrayList<String> modelNames = new ArrayList<>();
     AnchorNode anchorNode;
-    private Button btnRemove;
+    private ImageButton btnRemove, btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ar_view);
 
-        arFragment = (ArFragment)getSupportFragmentManager().findFragmentById(R.id.fragment);
-        btnRemove = (Button)findViewById(R.id.remove);
+        arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        btnRemove = findViewById(R.id.remove);
+        btnBack = findViewById(R.id.back);
         getImages();
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
 
             Anchor anchor = hitResult.createAnchor();
 
             ModelRenderable.builder()
-                    .setSource(this,Uri.parse(Common.model))
+                    .setSource(this, Uri.parse(Common.model))
                     .build()
-                    .thenAccept(modelRenderable -> addModelToScene(anchor,modelRenderable));
+                    .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
 
         });
 
         btnRemove.setOnClickListener(view -> removeAnchorNode(anchorNode));
+        btnBack.setOnClickListener(view -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void getImages() {
@@ -55,22 +61,28 @@ public class ArViewActivity extends AppCompatActivity {
         imagesPath.add(R.drawable.table);
         imagesPath.add(R.drawable.bookshelf);
         imagesPath.add(R.drawable.bird);
+        imagesPath.add(R.drawable.table);
+        imagesPath.add(R.drawable.table);
 
         namesPath.add("Table");
         namesPath.add("BookShelf");
         namesPath.add("Bird");
+        namesPath.add("Cat");
+        namesPath.add("Dog");
 
         modelNames.add("table.sfb");
         modelNames.add("model.sfb");
         modelNames.add("bird.sfb");
-        initaiteRecyclerview();
+        modelNames.add("bird.sfb");
+        modelNames.add("table.sfb");
+        initiateRecyclerView();
     }
 
-    private void initaiteRecyclerview() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+    private void initiateRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerviewAdapter adapter = new RecyclerviewAdapter(this,namesPath,imagesPath,modelNames);
+        RecyclerviewAdapter adapter = new RecyclerviewAdapter(this, namesPath, imagesPath, modelNames);
         recyclerView.setAdapter(adapter);
     }
 
@@ -92,16 +104,17 @@ public class ArViewActivity extends AppCompatActivity {
             nodeToremove = null;
         }
     }
-    private void animate(ModelRenderable modelRenderable){
-        if (modelAnimator!=null && modelAnimator.isRunning())
-            modelAnimator.end();
-        int animationCount =modelRenderable.getAnimationDataCount();
 
-        if (i==animationCount){
-                i=0;
+    private void animate(ModelRenderable modelRenderable) {
+        if (modelAnimator != null && modelAnimator.isRunning())
+            modelAnimator.end();
+        int animationCount = modelRenderable.getAnimationDataCount();
+
+        if (i == animationCount) {
+            i = 0;
         }
-        AnimationData animationData =modelRenderable.getAnimationData(i);
-        modelAnimator=new ModelAnimator(animationData,modelRenderable);
+        AnimationData animationData = modelRenderable.getAnimationData(i);
+        modelAnimator = new ModelAnimator(animationData, modelRenderable);
         modelAnimator.start();
         i++;
 
