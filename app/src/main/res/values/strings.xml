@@ -30,5 +30,6 @@
     <string name="show_saved_comments">Show saved comments</string>
     <string name="show_saved_words">Show saved words</string>
     <string name="SearchButtonContentDescription">Search</string>
+    <string name="BarcodeContentDescription">barcode</string>
 
 </resources>
