@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     final int RequestCameraPermissionID = 1001;
 
-    //check whether camera access permission is given
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == RequestCameraPermissionID) {
@@ -139,8 +139,6 @@ public class MainActivity extends AppCompatActivity {
 
         speechInitialization();
 
-
-
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
             showCapturePopup(v1);
@@ -200,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         brc_closeButton = barcodePopup.findViewById(R.id.BarcodeCloseButton);
         brc_detailsButton = barcodePopup.findViewById(R.id.BarcodeDetailsButton);
         brc_displayView = barcodePopup.findViewById(R.id.BarcodeTextView);
-}
+    }
 
     public void showCapturePopup(View v) {
 
@@ -298,8 +296,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showBarcodePopup(View v2) {
-        Log.d("Test","wertyuio");
-        brc_closeButton.setOnClickListener(v -> barcodePopup.dismiss());
+        brc_closeButton.setOnClickListener(v -> {
+            barcodePopup.dismiss();
+            main_barcodeButton.clearAnimation();
+            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
+            main_barcodeButton.setEnabled(false);
+        });
         brc_displayView.setText(detectedISBN);
         barcodePopup.show();
     }
@@ -382,12 +384,14 @@ public class MainActivity extends AppCompatActivity {
                 final SparseArray<Barcode> items = detections.getDetectedItems();
                 if (items.size() != 0) {
                     String barcode = items.valueAt(0).displayValue;
-                    Log.d("Test","qwort");
-                    if (barcode.length() == 10 || barcode.length() == 13){
-                        Log.d("Test","qwo");
-                        detectedISBN = barcode;
-                        main_barcodeButton.setEnabled(true);
-                        buttonAnimation2(main_barcodeButton);
+                    if (barcode.length() == 10 || barcode.length() == 13) {
+                        if (!barcode.equals(detectedISBN)) {
+                            detectedISBN = barcode;
+                            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_one));
+                            buttonAnimation2(main_barcodeButton);
+                            main_barcodeButton.setEnabled(true);
+//                            buttonAnimation2(main_barcodeButton);
+                        }
                     }
                 }
             }
@@ -473,10 +477,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String message = response.body().string();
-                Log.e("Test", message);
                 try {
                     dictionaryResponse = new JSONObject(message);
-                    Log.d("Test", "werty");
                     formatDictionaryResponse();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -555,19 +557,4 @@ public class MainActivity extends AppCompatActivity {
         });
         buttonAnimation2(main_arButton);
     }
-
-
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//
-//        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode,resultCode,data);
-//
-//        if(intentResult != null){
-//            if(intentResult.getContents() != null){
-//                Log.d("Test",intentResult.getContents());
-//            }
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 }
