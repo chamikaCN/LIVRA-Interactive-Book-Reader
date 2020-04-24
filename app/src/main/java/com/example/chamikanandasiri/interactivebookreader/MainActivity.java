@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton main_captureButton, main_arButton, main_storageButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton;
 
-    Button str_wordButton, str_commentButton, brc_detailsButton, brc_contentButton;
+    Button str_wordButton, str_commentButton, brc_detailsButton, brc_contentButton, dtl_contentButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
 
@@ -60,14 +62,15 @@ public class MainActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     MultiDetector multiDetector;
 
-    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView;
+    ImageView dtl_imageView;
+    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
     SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
     TextToSpeech speech;
-    String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
-    JSONObject dictionaryResponse;
+    String detectedString, capturedString, selectedString, searchedWord, detectedISBN, bookCoverURL = null;
+    JSONObject dictionaryResponse, detailsResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup, detailsPopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
@@ -114,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
         storagePopup.setContentView(R.layout.storage_popup);
         barcodePopup = new Dialog(this);
         barcodePopup.setContentView(R.layout.barcode_popup);
+        detailsPopup = new Dialog(this);
+        detailsPopup.setContentView(R.layout.details_popup);
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         setupCommentPopup();
         setupStoragePopup();
         setupBarcodePopup();
+        setupDetailsPopup();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
@@ -144,9 +150,15 @@ public class MainActivity extends AppCompatActivity {
             showCapturePopup(v1);
         });
         main_arButton.setOnClickListener(v -> displayAr());
-        main_barcodeButton.setOnClickListener(this::showBarcodePopup);
+        main_barcodeButton.setOnClickListener(v2 -> {
+            showBarcodePopup(v2);
+            main_barcodeButton.clearAnimation();
+            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
+            main_barcodeButton.setEnabled(false);
+        });
         main_storageButton.setOnClickListener(this::showStoragePopup);
         main_barcodeButton.setEnabled(false);
+        //buttonAnimation3(main_captureButton);
     }
 
 
@@ -198,6 +210,14 @@ public class MainActivity extends AppCompatActivity {
         brc_closeButton = barcodePopup.findViewById(R.id.BarcodeCloseButton);
         brc_detailsButton = barcodePopup.findViewById(R.id.BarcodeDetailsButton);
         brc_displayView = barcodePopup.findViewById(R.id.BarcodeTextView);
+    }
+
+    private void setupDetailsPopup() {
+        dtl_closeButton = detailsPopup.findViewById(R.id.DetailsCloseButton);
+        dtl_contentButton = detailsPopup.findViewById(R.id.DetailsContentButton);
+        dtl_imageView = detailsPopup.findViewById(R.id.DetailsImageView);
+        dtl_othersView = detailsPopup.findViewById(R.id.DetailsOtherTextView);
+        dtl_titleView = detailsPopup.findViewById(R.id.DetailsTitleTextView);
     }
 
     public void showCapturePopup(View v) {
@@ -263,8 +283,14 @@ public class MainActivity extends AppCompatActivity {
             speech.stop();
             speechPopup.dismiss();
         });
-        spk_speakButton.setOnClickListener(v2 -> speak(selectedString));
-        spk_stopButton.setOnClickListener(v2 -> speech.stop());
+        spk_speakButton.setOnClickListener(v2 -> {
+            buttonAnimation1(spk_speakButton);
+            speak(selectedString);
+        });
+        spk_stopButton.setOnClickListener(v2 -> {
+            buttonAnimation1(spk_stopButton);
+            speech.stop();
+        });
         spk_pauseButton.setOnClickListener(v2 -> speechPause());
         spk_displayView.setText(selectedString);
         speechPopup.show();
@@ -298,12 +324,30 @@ public class MainActivity extends AppCompatActivity {
     public void showBarcodePopup(View v2) {
         brc_closeButton.setOnClickListener(v -> {
             barcodePopup.dismiss();
-            main_barcodeButton.clearAnimation();
-            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
-            main_barcodeButton.setEnabled(false);
+            detectedISBN = "";
+        });
+        brc_detailsButton.setOnClickListener(v -> {
+            showDetailsPopup(v);
+            barcodePopup.dismiss();
         });
         brc_displayView.setText(detectedISBN);
         barcodePopup.show();
+    }
+
+    public void showDetailsPopup(View v) {
+        getBackendResponse(detectedISBN);
+        dtl_closeButton.setOnClickListener(v2 -> {
+            detectedISBN = "";
+            dtl_titleView.setText("");
+            dtl_othersView.setText("");
+            dtl_contentButton.setOnClickListener(v1 -> {
+            });
+            detailsPopup.dismiss();
+        });
+        detailsPopup.show();
+    }
+
+    public void showContentPopup(View v2) {
     }
 
     private void detectText() {
@@ -390,7 +434,6 @@ public class MainActivity extends AppCompatActivity {
                             main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_one));
                             buttonAnimation2(main_barcodeButton);
                             main_barcodeButton.setEnabled(true);
-//                            buttonAnimation2(main_barcodeButton);
                         }
                     }
                 }
@@ -540,6 +583,11 @@ public class MainActivity extends AppCompatActivity {
         button.startAnimation(animation);
     }
 
+    private void buttonAnimation3(ImageButton button) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.idle);
+        button.startAnimation(animation);
+    }
+
     private void loadStorageActivity(String type) {
         Intent intent = new Intent(this, StorageActivity.class);
         intent.putExtra("type", type);
@@ -556,5 +604,82 @@ public class MainActivity extends AppCompatActivity {
         main_arButton.setOnClickListener(v1 -> {
         });
         buttonAnimation2(main_arButton);
+    }
+
+    private void getBackendResponse(String isbn) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://ar-content-platform-backend.herokuapp.com/api/book/by-isbn/" + isbn)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String message = e.getMessage();
+                Log.w("failure Response", message);
+                dtl_titleView.setText("Cannot connect to Server");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String message = response.body().string();
+                Log.d("Test", message);
+                try {
+                    bookCoverURL = formatDetailsResponse(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        loadImage(bookCoverURL,dtl_imageView);
+    }
+
+    private String formatDetailsResponse(String message) throws JSONException {
+        detailsResponse = new JSONObject(message);
+        String coverURL;
+        if (detailsResponse.has("title")) {
+            String title = detailsResponse.getString("title");
+            String author = detailsResponse.getJSONArray("authors").get(0).toString();
+            String publisher = detailsResponse.getJSONObject("publisher").getString("name");
+            coverURL = detailsResponse.getJSONArray("covers").get(0).toString();
+            String isbn = detailsResponse.getJSONArray("isbns").get(0).toString();
+            int contentAmount = detailsResponse.getJSONArray("content").length();
+            StringBuilder other = new StringBuilder();
+            other.append("Author : ").append(author).append("\nPublisher : ").append(publisher).append("\nISBN : ").append(isbn);
+            if (contentAmount == 0) {
+                other.append("\n\nNo AR content is available for this book");
+                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
+            } else {
+                other.append("\n").append(contentAmount).append(" models are available");
+                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_three));
+                dtl_contentButton.setOnClickListener(this::showContentPopup);
+            }
+            dtl_titleView.setText(title);
+            dtl_othersView.setText(other);
+
+        } else {
+            coverURL = null;
+            dtl_othersView.setText(" No Details Available for the Book on Our Database");
+        }
+        return coverURL;
+    }
+
+    private void loadImage(String Url, ImageView im) {
+        Picasso.with(this).load(Url).into(im, new com.squareup.picasso.Callback(){
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }

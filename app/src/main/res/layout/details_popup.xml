@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_popup"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/DetailsCloseButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/red_rounded_button"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/CloseButtonContentDescription"
+            app:srcCompat="@drawable/ic_close"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/DetailsImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="160dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:contentDescription="@string/book_cover" />
+
+    <TextView
+        android:id="@+id/DetailsTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/colorLightTitle"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/DetailsOtherTextView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorLightText"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/DetailsContentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:padding="10dp"
+            android:background="@drawable/disabled_rounded_button"
+            android:textColor="@color/colorDarkText"
+            android:text="View AR Content"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+
