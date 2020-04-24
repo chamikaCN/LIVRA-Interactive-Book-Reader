@@ -32,5 +32,6 @@
     <string name="SearchButtonContentDescription">Search</string>
     <string name="BarcodeContentDescription">barcode</string>
     <string name="remove">Remove</string>
+    <string name="book_cover">Book Cover</string>
 
 </resources>
