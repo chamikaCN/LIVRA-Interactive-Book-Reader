@@ -89,7 +89,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getSimilarWords (String word) {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select Comment from " + TABLE_COMMENT, null);
-        return db.query(true, TABLE_WORD, new String[]{"Word"},  "Word" + " LIKE ?",new String[] {"%"+ word+ "%" }, null, null, null, "TimeStamp", null);
+        return db.query(true, TABLE_WORD, new String[]{"Word"},  "Word" + " LIKE ?",new String[] {"%"+ word+ "%" }, null, null, "TimeStamp",null);
     }
 
     public Cursor getDefinitionPoSByWord(String word) {
