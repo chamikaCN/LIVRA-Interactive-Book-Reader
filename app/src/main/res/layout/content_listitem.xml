@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/ContentListImageView"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:layout_weight="0.3"
+        android:contentDescription="@string/content_image" />
+
+    <TextView
+        android:id="@+id/ContentListNameView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="0.3"
+        android:text="map"
+        android:textColor="@color/colorLightTitle"
+        android:textSize="15sp"
+        android:textStyle="italic" />
+
+
+    <TextView
+        android:id="@+id/ContentListSizeView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="0.3"
+        android:padding="5dp"
+        android:text="2.34MB" />
+
+    <CheckBox
+        android:id="@+id/ContentCheckBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:textAlignment="center"
+        android:layout_margin="5dp" />
+
+
+</LinearLayout>
