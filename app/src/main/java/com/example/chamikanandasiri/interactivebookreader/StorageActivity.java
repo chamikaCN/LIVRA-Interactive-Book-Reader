@@ -133,12 +133,12 @@ public class StorageActivity extends AppCompatActivity {
     }
 
     private void wordListGenerate() {
-        WordArrayAdapter adapter = new WordArrayAdapter(this, R.layout.word_card, wordObjects);
+        WordArrayAdapter adapter = new WordArrayAdapter(this, R.layout.word_listitem, wordObjects);
         str_listView.setAdapter(adapter);
     }
 
     private void commentListGenerate() {
-        CommentArrayAdapter adapter = new CommentArrayAdapter(this, R.layout.comment_card, commentObjects);
+        CommentArrayAdapter adapter = new CommentArrayAdapter(this, R.layout.comment_listitem, commentObjects);
         str_listView.setAdapter(adapter);
     }
 

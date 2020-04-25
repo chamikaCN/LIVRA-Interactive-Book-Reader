@@ -31,7 +31,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.arcard_listitem,parent,false);
         return new ViewHolder(view);
     }
 
