@@ -7,6 +7,8 @@ import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.SparseArray;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
@@ -52,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton main_captureButton, main_arButton, main_storageButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
 
-    Button str_wordButton, str_commentButton, brc_detailsButton, brc_contentButton, dtl_contentButton;
+    Button str_wordButton, str_commentButton, brc_detailsButton, dtl_contentButton, cnt_downloadButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
 
@@ -62,23 +66,24 @@ public class MainActivity extends AppCompatActivity {
     BarcodeDetector barcodeDetector;
     MultiDetector multiDetector;
 
+    ListView cnt_contentListView;
     ImageView dtl_imageView;
     TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
     SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
     TextToSpeech speech;
-    String detectedString, capturedString, selectedString, searchedWord, detectedISBN, bookCoverURL = null;
+    String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
     JSONObject dictionaryResponse, detailsResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup, detailsPopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup, detailsPopup, contentPopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
 
+    BookObject book;
 
     final int RequestCameraPermissionID = 1001;
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -105,35 +110,8 @@ public class MainActivity extends AppCompatActivity {
         commentHandler = new CommentHandler(dbHelper, this);
         wordHandler = new WordHandler(dbHelper, this);
 
-        capturePopup = new Dialog(this);
-        capturePopup.setContentView(R.layout.capture_popup);
-        speechPopup = new Dialog(this);
-        speechPopup.setContentView(R.layout.speech_popup);
-        dictionaryPopup = new Dialog(this);
-        dictionaryPopup.setContentView(R.layout.dictionary_popup);
-        commentPopup = new Dialog(this);
-        commentPopup.setContentView(R.layout.comment_popup);
-        storagePopup = new Dialog(this);
-        storagePopup.setContentView(R.layout.storage_popup);
-        barcodePopup = new Dialog(this);
-        barcodePopup.setContentView(R.layout.barcode_popup);
-        detailsPopup = new Dialog(this);
-        detailsPopup.setContentView(R.layout.details_popup);
-
-        cameraView = findViewById(R.id.Surface);
-        main_captureButton = findViewById(R.id.CaptureButton);
-        main_arButton = findViewById(R.id.ARButton);
-        main_storageButton = findViewById(R.id.StorageButton);
-        main_barcodeButton = findViewById(R.id.BarcodeButton);
-        main_detectedView = findViewById(R.id.DetectedTextView);
-
-        setupCapturePopup();
-        setupSpeechPopup();
-        setupDictionaryPopup();
-        setupCommentPopup();
-        setupStoragePopup();
-        setupBarcodePopup();
-        setupDetailsPopup();
+        setupMainLayout();
+        setupAllPopups();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
@@ -142,8 +120,20 @@ public class MainActivity extends AppCompatActivity {
         detectText();
         constructText();
         barCodeRecognize();
-
         speechInitialization();
+
+    }
+
+    //UI components Initialization
+
+    private void setupMainLayout(){
+
+        cameraView = findViewById(R.id.Surface);
+        main_captureButton = findViewById(R.id.CaptureButton);
+        main_arButton = findViewById(R.id.ARButton);
+        main_storageButton = findViewById(R.id.StorageButton);
+        main_barcodeButton = findViewById(R.id.BarcodeButton);
+        main_detectedView = findViewById(R.id.DetectedTextView);
 
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
@@ -158,9 +148,35 @@ public class MainActivity extends AppCompatActivity {
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
         main_barcodeButton.setEnabled(false);
-        //buttonAnimation3(main_captureButton);
     }
 
+    private void setupAllPopups() {
+        capturePopup = new Dialog(this);
+        capturePopup.setContentView(R.layout.capture_popup);
+        speechPopup = new Dialog(this);
+        speechPopup.setContentView(R.layout.speech_popup);
+        dictionaryPopup = new Dialog(this);
+        dictionaryPopup.setContentView(R.layout.dictionary_popup);
+        commentPopup = new Dialog(this);
+        commentPopup.setContentView(R.layout.comment_popup);
+        storagePopup = new Dialog(this);
+        storagePopup.setContentView(R.layout.storage_popup);
+        barcodePopup = new Dialog(this);
+        barcodePopup.setContentView(R.layout.barcode_popup);
+        detailsPopup = new Dialog(this);
+        detailsPopup.setContentView(R.layout.details_popup);
+        contentPopup = new Dialog(this);
+        contentPopup.setContentView(R.layout.content_popup);
+
+        setupCapturePopup();
+        setupSpeechPopup();
+        setupDictionaryPopup();
+        setupCommentPopup();
+        setupStoragePopup();
+        setupBarcodePopup();
+        setupDetailsPopup();
+        setupContentPopup();
+    }
 
     private void setupCapturePopup() {
         cap_dictionaryButton = capturePopup.findViewById(R.id.DictionaryButton);
@@ -206,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupBarcodePopup() {
-        brc_contentButton = barcodePopup.findViewById(R.id.BarcodeContentButton);
         brc_closeButton = barcodePopup.findViewById(R.id.BarcodeCloseButton);
         brc_detailsButton = barcodePopup.findViewById(R.id.BarcodeDetailsButton);
         brc_displayView = barcodePopup.findViewById(R.id.BarcodeTextView);
@@ -218,6 +233,13 @@ public class MainActivity extends AppCompatActivity {
         dtl_imageView = detailsPopup.findViewById(R.id.DetailsImageView);
         dtl_othersView = detailsPopup.findViewById(R.id.DetailsOtherTextView);
         dtl_titleView = detailsPopup.findViewById(R.id.DetailsTitleTextView);
+    }
+
+    private void setupContentPopup() {
+        cnt_closeButton = contentPopup.findViewById(R.id.ContentCloseButton);
+        cnt_backButton = contentPopup.findViewById(R.id.ContentBackButton);
+        cnt_downloadButton = contentPopup.findViewById(R.id.ContentDownloadButton);
+        cnt_contentListView = contentPopup.findViewById(R.id.ContentListView);
     }
 
     public void showCapturePopup(View v) {
@@ -340,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
             detectedISBN = "";
             dtl_titleView.setText("");
             dtl_othersView.setText("");
+            dtl_imageView.setImageDrawable(null);
             dtl_contentButton.setOnClickListener(v1 -> {
             });
             detailsPopup.dismiss();
@@ -348,7 +371,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showContentPopup(View v2) {
+        loadContentDetails();
+        cnt_backButton.setOnClickListener(v1 -> {
+            contentPopup.dismiss();
+        });
+        cnt_closeButton.setOnClickListener(v1 -> {
+            detailsPopup.dismiss();
+            contentPopup.dismiss();
+        });
+        contentPopup.show();
     }
+
+    // Main Functions
 
     private void detectText() {
 
@@ -416,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void barCodeRecognize() {
+    private void barCodeRecognize() {
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -442,15 +476,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    private String getSelectedString(TextView view) {
-        String s = view.getText().subSequence(view.getSelectionStart(), view.getSelectionEnd()).toString();
-        if (s.equals("")) {
-            return view.getText().toString();
-        }
-        return s;
-    }
-
     private void speechInitialization() {
 
         speech = new TextToSpeech(this, status -> {
@@ -466,30 +491,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         );
-    }
-
-    private void speak(String s) {
-        float speedValue = (float) speedBar.getProgress() / 50;
-        if (speedValue < 0.1) speedValue = 0.1f;
-        float pitchValue = (float) pitchBar.getProgress() / 50;
-        if (pitchValue < 0.1) pitchValue = 0.1f;
-        speech.setPitch(pitchValue);
-        speech.setSpeechRate(speedValue);
-        speech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    private void speechPause() {
-    }
-
-    private void copyToClipboard() {
-
-        selectedString = getSelectedString(cap_displayView);
-        ClipboardManager myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData myClip = ClipData.newPlainText("text", selectedString);
-        myClipboard.setPrimaryClip(myClip);
-
-        Toast.makeText(getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
-
     }
 
     private void getDictionaryResponse(String word) {
@@ -548,6 +549,106 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void getBackendResponse(String isbn) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://ar-content-platform-backend.herokuapp.com/api/book/by-isbn/" + isbn)
+                .get()
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                String message = e.getMessage();
+                Log.w("failure Response", message);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    dtl_othersView.setText("Cannot Connect to Server");
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String message = response.body().string();
+                Log.d("Test", message);
+                try {
+                    formatDetailsResponse(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void formatDetailsResponse(String message) throws JSONException {
+        detailsResponse = new JSONObject(message);
+        String coverURL;
+        ArrayList<DownloadContentObject> downloadContentDetails;
+
+        if (detailsResponse.has("title")) {
+            downloadContentDetails = new ArrayList<>();
+            String bookID = detailsResponse.getString("id");
+            String title = detailsResponse.getString("title");
+            String[] isbns = JSONArrayToStringArray(detailsResponse.getJSONArray("isbns"));
+            String[] authors = JSONArrayToStringArray(detailsResponse.getJSONArray("authors"));
+            String pubid = detailsResponse.getJSONObject("publisher").getString("id");
+            String pubname = detailsResponse.getJSONObject("publisher").getString("name");
+            String[] covers = JSONArrayToStringArray(detailsResponse.getJSONArray("covers"));
+            boolean active = detailsResponse.getBoolean("active");
+//            coverURL = detailsResponse.getJSONArray("covers").get(0).toString();
+//            //coverURL = "https://pbs.twimg.com/media/EWW9SSaWoAAWTDI?format=jpg&name=small";
+//            String isbn = detailsResponse.getJSONArray("isbns").get(0).toString();
+            JSONArray content = detailsResponse.getJSONArray("content");
+            int contentAmount = content.length();
+            for (int i = 0; i < contentAmount; i++) {
+                String[] im = JSONArrayToStringArray(content.getJSONObject(i).getJSONArray("images"));
+                String ti = content.getJSONObject(i).getString("title");
+                String si = "2.71MB";
+                String id = content.getJSONObject(i).getString("id");
+                String fi = content.getJSONObject(i).getString("file");
+                String des = content.getJSONObject(i).getString("description");
+                downloadContentDetails.add(new DownloadContentObject(id, im, ti, des, si, fi));
+            }
+            book = new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, pubid, pubname);
+
+
+            StringBuilder other = new StringBuilder();
+            other.append("Author : ").append(authors[0]).append("\nPublisher : ").append(pubname).append("\nISBN : ").append(isbns[0]);
+            if (contentAmount == 0) {
+                other.append("\n\nNo AR content is available for this book");
+                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
+            } else {
+                other.append("\n").append(contentAmount).append(" models are available");
+                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_three));
+                dtl_contentButton.setOnClickListener(this::showContentPopup);
+            }
+            dtl_titleView.setText(title);
+            dtl_othersView.setText(other);
+
+            new Handler(Looper.getMainLooper()).post(() -> loadImage(covers[0], dtl_imageView));
+
+        } else {
+            dtl_othersView.setText(" No Details Available for the Book on Our Database");
+        }
+    }
+
+    //Supporting Functions
+
+    private void speak(String s) {
+        float speedValue = (float) speedBar.getProgress() / 50;
+        if (speedValue < 0.1) speedValue = 0.1f;
+        float pitchValue = (float) pitchBar.getProgress() / 50;
+        if (pitchValue < 0.1) pitchValue = 0.1f;
+        speech.setPitch(pitchValue);
+        speech.setSpeechRate(speedValue);
+        speech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    private void speechPause() {
+    }
+
     private void saveComment() {
         String phrase = selectedString;
         String title = cmt_titleText.getText().toString();
@@ -571,6 +672,61 @@ public class MainActivity extends AppCompatActivity {
         wordHandler.addWord(wordObject);
     }
 
+    private void loadContentDetails() {
+        DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.content_listitem, book.getDownloadContent());
+        cnt_contentListView.setAdapter(adapter);
+    }
+
+    //Reusable Functions
+
+    private void loadImage(String Url, ImageView im) {
+        Picasso.with(this).load(Url)
+                .placeholder(R.drawable.ezgif_crop)
+                .into(im, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                    }
+
+                    @Override
+                    public void onError() {
+                    }
+                });
+    }
+
+    public String[] JSONArrayToStringArray(JSONArray array) {
+        int len = array.length();
+        String[] newArray = new String[len];
+        for (int j = 0; j < len; j++) {
+            String s;
+            try {
+                s = array.getString(j);
+                newArray[j] = s;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return newArray;
+    }
+
+    private String getSelectedString(TextView view) {
+        String s = view.getText().subSequence(view.getSelectionStart(), view.getSelectionEnd()).toString();
+        if (s.equals("")) {
+            return view.getText().toString();
+        }
+        return s;
+    }
+
+    private void copyToClipboard() {
+
+        selectedString = getSelectedString(cap_displayView);
+        ClipboardManager myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData myClip = ClipData.newPlainText("text", selectedString);
+        myClipboard.setPrimaryClip(myClip);
+
+        Toast.makeText(getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
+
+    }
+
     private void buttonAnimation1(ImageButton button) {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator bi = new BounceInterpolator(0.2, 20);
@@ -588,6 +744,8 @@ public class MainActivity extends AppCompatActivity {
         button.startAnimation(animation);
     }
 
+    //Redirection Functions
+
     private void loadStorageActivity(String type) {
         Intent intent = new Intent(this, StorageActivity.class);
         intent.putExtra("type", type);
@@ -604,82 +762,5 @@ public class MainActivity extends AppCompatActivity {
         main_arButton.setOnClickListener(v1 -> {
         });
         buttonAnimation2(main_arButton);
-    }
-
-    private void getBackendResponse(String isbn) {
-
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("https://ar-content-platform-backend.herokuapp.com/api/book/by-isbn/" + isbn)
-                .get()
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                String message = e.getMessage();
-                Log.w("failure Response", message);
-                dtl_titleView.setText("Cannot connect to Server");
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String message = response.body().string();
-                Log.d("Test", message);
-                try {
-                    bookCoverURL = formatDetailsResponse(message);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        loadImage(bookCoverURL,dtl_imageView);
-    }
-
-    private String formatDetailsResponse(String message) throws JSONException {
-        detailsResponse = new JSONObject(message);
-        String coverURL;
-        if (detailsResponse.has("title")) {
-            String title = detailsResponse.getString("title");
-            String author = detailsResponse.getJSONArray("authors").get(0).toString();
-            String publisher = detailsResponse.getJSONObject("publisher").getString("name");
-            coverURL = detailsResponse.getJSONArray("covers").get(0).toString();
-            String isbn = detailsResponse.getJSONArray("isbns").get(0).toString();
-            int contentAmount = detailsResponse.getJSONArray("content").length();
-            StringBuilder other = new StringBuilder();
-            other.append("Author : ").append(author).append("\nPublisher : ").append(publisher).append("\nISBN : ").append(isbn);
-            if (contentAmount == 0) {
-                other.append("\n\nNo AR content is available for this book");
-                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
-            } else {
-                other.append("\n").append(contentAmount).append(" models are available");
-                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_three));
-                dtl_contentButton.setOnClickListener(this::showContentPopup);
-            }
-            dtl_titleView.setText(title);
-            dtl_othersView.setText(other);
-
-        } else {
-            coverURL = null;
-            dtl_othersView.setText(" No Details Available for the Book on Our Database");
-        }
-        return coverURL;
-    }
-
-    private void loadImage(String Url, ImageView im) {
-        Picasso.with(this).load(Url).into(im, new com.squareup.picasso.Callback(){
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
     }
 }
