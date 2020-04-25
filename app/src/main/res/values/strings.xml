@@ -33,5 +33,6 @@
     <string name="BarcodeContentDescription">barcode</string>
     <string name="remove">Remove</string>
     <string name="book_cover">Book Cover</string>
+    <string name="content_image">Content image</string>
 
 </resources>
