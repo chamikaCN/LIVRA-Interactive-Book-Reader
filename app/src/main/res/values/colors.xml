@@ -5,7 +5,7 @@
     <color name="colorAccent">#747474</color>
     <color name="colorRed">#F44336</color>
     <color name="colorBlue">#3F51B5</color>
-    <color name="colorLightGrey">#222222</color>
+    <color name="colorDarkBackground">#222222</color>
     <color name="colorLightText">#eeeeee</color>
     <color name="colorDarkText">#242424</color>
     <color name="colorLightTitle">#80CBC4</color>
@@ -15,5 +15,7 @@
     <color name="colorDisabled">#636363</color>
     <color name="colorLightFour">#4FC3F7</color>
     <color name="colorLightFive">#E57373</color>
+    <color name="colorDarkCard">#384F50</color>
+
 
 </resources>
