@@ -1,8 +1,11 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BookObject {
+
+//Serializable for testing
+public class BookObject implements Serializable {
 
     private String id;
     private String title;

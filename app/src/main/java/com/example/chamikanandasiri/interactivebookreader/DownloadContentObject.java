@@ -1,6 +1,8 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
-public class DownloadContentObject {
+import java.io.Serializable;
+
+public class DownloadContentObject implements Serializable {
 
     private String id;
     private String[] imageURLs;
