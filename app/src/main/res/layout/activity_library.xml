@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".LibraryActivity"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_weight="2">
+
+        <EditText
+            android:id="@+id/LibraryEditText"
+            android:layout_width="0dp"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.95"
+            android:hint="  Search for books "/>
+        <ImageButton
+            android:layout_margin="10dp"
+            android:id="@+id/LibrarySearchButton"
+            android:layout_width= "60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/rounded_button_three"
+            android:contentDescription="@string/SearchButtonContentDescription"
+            app:srcCompat="@drawable/ic_search"
+            android:scaleType="fitXY"/>
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/LibraryGridView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:columnWidth="160dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center" />
+
+</LinearLayout>
