@@ -54,7 +54,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, main_storageButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
             dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
 
@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         main_captureButton = findViewById(R.id.CaptureButton);
         main_arButton = findViewById(R.id.ARButton);
         main_storageButton = findViewById(R.id.StorageButton);
+        main_libraryButton = findViewById(R.id.LibraryButton);
         main_barcodeButton = findViewById(R.id.BarcodeButton);
         main_detectedView = findViewById(R.id.DetectedTextView);
 
@@ -143,30 +144,31 @@ public class MainActivity extends AppCompatActivity {
         main_barcodeButton.setOnClickListener(v2 -> {
             showBarcodePopup(v2);
             main_barcodeButton.clearAnimation();
-            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
+            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
             main_barcodeButton.setEnabled(false);
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
+        main_libraryButton.setOnClickListener(v2 -> loadLibraryActivity());
         main_barcodeButton.setEnabled(false);
     }
 
     private void setupAllPopups() {
         capturePopup = new Dialog(this);
-        capturePopup.setContentView(R.layout.capture_popup);
+        capturePopup.setContentView(R.layout.popup_capture);
         speechPopup = new Dialog(this);
-        speechPopup.setContentView(R.layout.speech_popup);
+        speechPopup.setContentView(R.layout.popup_speech);
         dictionaryPopup = new Dialog(this);
-        dictionaryPopup.setContentView(R.layout.dictionary_popup);
+        dictionaryPopup.setContentView(R.layout.popup_dictionary);
         commentPopup = new Dialog(this);
-        commentPopup.setContentView(R.layout.comment_popup);
+        commentPopup.setContentView(R.layout.popup_comment);
         storagePopup = new Dialog(this);
-        storagePopup.setContentView(R.layout.storage_popup);
+        storagePopup.setContentView(R.layout.popup_storage);
         barcodePopup = new Dialog(this);
-        barcodePopup.setContentView(R.layout.barcode_popup);
+        barcodePopup.setContentView(R.layout.popup_barcode);
         detailsPopup = new Dialog(this);
-        detailsPopup.setContentView(R.layout.details_popup);
+        detailsPopup.setContentView(R.layout.popup_details);
         contentPopup = new Dialog(this);
-        contentPopup.setContentView(R.layout.content_popup);
+        contentPopup.setContentView(R.layout.popup_content);
 
         setupCapturePopup();
         setupSpeechPopup();
@@ -597,9 +599,6 @@ public class MainActivity extends AppCompatActivity {
             String pubname = detailsResponse.getJSONObject("publisher").getString("name");
             String[] covers = JSONArrayToStringArray(detailsResponse.getJSONArray("covers"));
             boolean active = detailsResponse.getBoolean("active");
-//            coverURL = detailsResponse.getJSONArray("covers").get(0).toString();
-//            //coverURL = "https://pbs.twimg.com/media/EWW9SSaWoAAWTDI?format=jpg&name=small";
-//            String isbn = detailsResponse.getJSONArray("isbns").get(0).toString();
             JSONArray content = detailsResponse.getJSONArray("content");
             int contentAmount = content.length();
             for (int i = 0; i < contentAmount; i++) {
@@ -618,9 +617,9 @@ public class MainActivity extends AppCompatActivity {
             other.append("Author : ").append(authors[0]).append("\nPublisher : ").append(pubname).append("\nISBN : ").append(isbns[0]);
             if (contentAmount == 0) {
                 other.append("\n\nNo AR content is available for this book");
-                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.disabled_rounded_button));
+                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
             } else {
-                other.append("\n").append(contentAmount).append(" models are available");
+                other.append("\n\n").append(contentAmount).append(" models are available");
                 dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_three));
                 dtl_contentButton.setOnClickListener(this::showContentPopup);
             }
@@ -631,6 +630,8 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             dtl_othersView.setText(" No Details Available for the Book on Our Database");
+            //TODO:get a jason response with nack. disable the view button
+
         }
     }
 
@@ -673,8 +674,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadContentDetails() {
-        DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.content_listitem, book.getDownloadContent());
+        DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent());
         cnt_contentListView.setAdapter(adapter);
+        cnt_downloadButton.setOnClickListener(v -> {
+            ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
+            for( DownloadContentObject d : selected){
+                Log.d("Test",d.getContName());
+            }
+        });
+
     }
 
     //Reusable Functions
@@ -754,6 +762,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayAr() {
         Intent intent = new Intent(this, ArViewActivity.class);
+        startActivity(intent);
+    }
+
+    private void loadLibraryActivity() {
+        Intent intent = new Intent(this, LibraryActivity.class);
+        intent.putExtra("Book",book);
         startActivity(intent);
     }
 

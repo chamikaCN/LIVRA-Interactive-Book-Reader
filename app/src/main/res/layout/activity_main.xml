@@ -38,7 +38,7 @@
         android:id="@+id/BarcodeButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/disabled_rounded_button"
+        android:background="@drawable/rounded_button_disabled"
         android:contentDescription="@string/BarcodeContentDescription"
         app:layout_constraintBottom_toBottomOf="@+id/Surface"
         app:layout_constraintEnd_toEndOf="@+id/Surface"
@@ -62,6 +62,21 @@
         app:layout_constraintTop_toTopOf="@id/Surface"
         app:layout_constraintVertical_bias="0.95"
         app:srcCompat="@drawable/ic_capture"/>
+
+    <ImageButton
+        android:id="@+id/LibraryButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/rounded_button"
+        android:contentDescription="@string/LibraryButtonContentDescription"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/Surface"
+        app:layout_constraintEnd_toEndOf="@+id/Surface"
+        app:layout_constraintStart_toStartOf="@+id/Surface"
+        app:layout_constraintTop_toTopOf="@id/Surface"
+        app:layout_constraintVertical_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:srcCompat="@drawable/ic_library"/>
 
     <ImageButton
         android:id="@+id/StorageButton"
