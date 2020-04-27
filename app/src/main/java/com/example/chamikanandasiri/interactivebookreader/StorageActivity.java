@@ -1,6 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -9,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +25,8 @@ public class StorageActivity extends AppCompatActivity {
 
     ArrayList<WordObject> wordObjects;
     ArrayList<CommentObject> commentObjects;
+
+    private String TAG ="Test";
 
 
     @Override
@@ -88,10 +92,10 @@ public class StorageActivity extends AppCompatActivity {
                 StringBuilder definitions = new StringBuilder();
                 StringBuilder POSs = new StringBuilder();
                 for (String[] a : defpos) {
-                    definitions.append(a[1]).append("\n");
+                    definitions.append("\u2606 ").append("( ").append(a[0].toUpperCase()).append(" ) -  ").append(a[1]).append("\n");
                     POSs.append(a[0]).append("\n");
                 }
-                wordObjects.add(new WordObject(word, definitions.toString(), POSs.toString()));
+                wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(),1));
             }
 
             wordListGenerate();
@@ -106,12 +110,11 @@ public class StorageActivity extends AppCompatActivity {
             StringBuilder definitions = new StringBuilder();
             StringBuilder POSs = new StringBuilder();
             for (String[] a : defpos) {
-                definitions.append(a[1]).append("\n");
+                definitions.append("\u2606 ").append("( ").append(a[0].toUpperCase()).append(" ) -  ").append(a[1]).append("\n");
                 POSs.append(a[0]).append("\n");
             }
-            wordObjects.add(new WordObject(word, definitions.toString(), POSs.toString()));
+            wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(),1));
         }
-
         wordListGenerate();
     }
 
@@ -120,15 +123,10 @@ public class StorageActivity extends AppCompatActivity {
         ArrayList<String> titles = commentHandler.getAllDistinctTitles();
         for (String title : titles) {
             ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentbyTitle(title);
-            StringBuilder phrases = new StringBuilder();
-            StringBuilder comments = new StringBuilder();
             for (String[] a : phrcmt) {
-                phrases.append(a[0]).append("\n");
-                comments.append(a[1]).append("\n");
+                commentObjects.add(new CommentObject(title, a[0],a[1]));
             }
-            commentObjects.add(new CommentObject(title, phrases.toString(), comments.toString()));
         }
-
         commentListGenerate();
     }
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -39,7 +40,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -81,7 +84,11 @@ public class MainActivity extends AppCompatActivity {
     CommentHandler commentHandler;
     WordHandler wordHandler;
 
+    int timeStampUniqueCount = 0;
+
     BookObject book;
+
+    private String TAG ="Test";
 
     final int RequestCameraPermissionID = 1001;
 
@@ -660,7 +667,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveDictionaryDefinitions(JSONArray array) throws JSONException {
         String word = selectedString;
-        for (int i = 0; i < array.length(); i++) {
+        int limit = Integer.min(5, array.length());
+        for (int i = 0; i < limit; i++) {
             JSONObject jo = array.getJSONObject(i);
             String def = jo.getString("definition");
             String pos = jo.getString("partOfSpeech");
@@ -669,7 +677,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveWord(String word, String definition, String pos) {
-        WordObject wordObject = new WordObject(word, definition, pos);
+        WordObject wordObject = new WordObject(word, definition, pos,timeStampUniqueCount);
+        if(timeStampUniqueCount == 9){timeStampUniqueCount = 0;} else{timeStampUniqueCount+=1;}
         wordHandler.addWord(wordObject);
     }
 

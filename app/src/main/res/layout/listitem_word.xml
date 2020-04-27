@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:padding="5dp"
+    android:clickable="false"
+    android:focusable="false"
     android:orientation="vertical">
 
     <TextView
@@ -13,7 +15,7 @@
         android:text="WORD"
         android:textColor="@color/colorLightTitle"
         android:textStyle="bold"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:padding="5dp"/>
 
     <LinearLayout
@@ -22,17 +24,9 @@
         android:padding="5dp">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/WordCardPOS"
-            android:text="pos"
-            android:padding="5dp"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="0.7"
-            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
             android:id="@+id/WordCardDefinition"
             android:scrollX="0dp"
             android:text="definition"
