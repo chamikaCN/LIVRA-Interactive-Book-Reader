@@ -20,6 +20,8 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
     private ArrayList<DownloadContentObject> objects;
     private ArrayList<DownloadContentObject> selectedObjects;
 
+    private String TAG ="Test";
+
     public DownloadContentArrayAdapter(Context context, int resource, ArrayList<DownloadContentObject> objects) {
         super(context, resource, objects);
         this.context = context;

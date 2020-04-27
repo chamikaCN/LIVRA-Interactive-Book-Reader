@@ -11,6 +11,8 @@ public class DownloadContentObject implements Serializable {
     private String size;
     private String fileURL;
 
+    private String TAG ="Test";
+
     public DownloadContentObject(String id, String[] imageURLs, String name, String description, String size, String fileURL) {
         this.id = id;
         this.imageURLs = imageURLs;

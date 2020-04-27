@@ -11,6 +11,8 @@ public class CommentObject {
     private String phrase;
     private String comment;
 
+    private String TAG ="Test";
+
     public CommentObject(String title, String phrase, String comment) {
         this.title = title;
         this.phrase = phrase;

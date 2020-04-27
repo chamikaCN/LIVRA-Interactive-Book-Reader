@@ -13,6 +13,8 @@ class CommentArrayAdapter extends ArrayAdapter<CommentObject> {
     private Context context;
     private  int resource;
 
+    private String TAG ="Test";
+
     public CommentArrayAdapter(Context context, int resource, ArrayList<CommentObject> objects) {
         super(context, resource, objects);
         this.context = context;

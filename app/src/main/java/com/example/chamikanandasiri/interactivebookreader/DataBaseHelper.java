@@ -17,6 +17,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_WORD = "word_table";
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
+    private String TAG ="Test";
+
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
     }
@@ -41,7 +43,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put("Title", title);
         cv.put("Phrase", phrase);
         cv.put("Comment", comment);
-        Log.d("Test","came here");
+        Log.d("Test",timestamp + title + phrase + comment);
         long result = db.insert(TABLE_COMMENT, null, cv);
         return result != -1;
     }
@@ -53,6 +55,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put("Word", word);
         cv.put("Definition", definition);
         cv.put("PartOfSpeech", partofspeech);
+        Log.d(TAG,timestamp + word + definition + partofspeech);
         long result = db.insert(TABLE_WORD, null, cv);
         return result != -1;
     }
@@ -68,6 +71,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select * from " + TABLE_COMMENT + " where Title = \'"+ title +"\'",null);
         return db.query(TABLE_COMMENT, new String[]{"Phrase", "Comment"}, "Title = ?", new String[]{title}, null, null, null);
+
     }
 
     public Cursor getAllDistinctTitles() {
@@ -83,7 +87,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getAllDistinctWords() {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select Comment from " + TABLE_COMMENT, null);
-        return db.query(true, TABLE_WORD, new String[]{"Word"}, null, null, null, null, "TimeStamp", null);
+        return db.query(true,TABLE_WORD, new String[]{"Word"}, null, null, null, null, "TimeStamp", null);
     }
 
     public Cursor getSimilarWords (String word) {

@@ -17,6 +17,8 @@ public class BookObject implements Serializable {
     private String publisherId;
     private String publisherName;
 
+    private String TAG ="Test";
+
     public BookObject(String id, String title, String[] authors, String[] isbns, String[] covers, boolean active, ArrayList<DownloadContentObject> content, String publisherId, String publisherName) {
         this.id = id;
         this.title = title;

@@ -16,6 +16,8 @@ public class LibraryActivity extends AppCompatActivity {
     private EditText lib_searchText;
     private GridView lib_gridView;
 
+    private String TAG ="Test";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

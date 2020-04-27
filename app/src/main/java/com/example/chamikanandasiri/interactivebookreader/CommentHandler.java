@@ -2,12 +2,16 @@ package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CommentHandler {
     private DataBaseHelper dbHelper;
     private Context context;
+
+    private String TAG ="Test";
 
     public CommentHandler(DataBaseHelper dbHelper, Context context){
         this.dbHelper = dbHelper;
@@ -32,6 +36,9 @@ public class CommentHandler {
         while (res.moveToNext()) {
             String Ac = res.getString(0);
             String Bc = res.getString(1);
+
+//            String[] cat = new String[]{Ac,Bc};
+//            Log.d(TAG, "getPhraseCommentByTitle: "+ Arrays.toString(cat));
             results.add(new String[]{Ac,Bc});
 
         }return results;

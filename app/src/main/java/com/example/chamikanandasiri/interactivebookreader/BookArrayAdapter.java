@@ -15,6 +15,7 @@ import java.util.ArrayList;
 class BookArrayAdapter extends ArrayAdapter<BookObject> {
     private Context context;
     private int resource;
+    private String TAG ="Test";
 
     public BookArrayAdapter(Context context, int resource, ArrayList<BookObject> objects) {
         super(context, resource, objects);

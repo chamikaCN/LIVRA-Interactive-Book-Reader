@@ -7,6 +7,8 @@ public class BounceInterpolator implements Interpolator {
     private double amplitude = 1;
     private double frequency = 10;
 
+    private String TAG ="Test";
+
     BounceInterpolator(double amplitude, double frequency) {
         this.amplitude = amplitude;
         this.frequency = frequency;

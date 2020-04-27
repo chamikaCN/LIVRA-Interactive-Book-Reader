@@ -10,7 +10,9 @@ public class WordHandler {
     private DataBaseHelper dbHelper;
     private Context context;
 
-    public WordHandler(DataBaseHelper dbHelper, Context context){
+    private String TAG = "Test";
+
+    public WordHandler(DataBaseHelper dbHelper, Context context) {
         this.dbHelper = dbHelper;
         this.context = context;
     }
@@ -44,11 +46,12 @@ public class WordHandler {
         while (res.moveToNext()) {
             String Ac = res.getString(0);
             String Bc = res.getString(1);
-            results.add(new String[]{Ac,Bc});
-        }return results;
+            results.add(new String[]{Ac, Bc});
+        }
+        return results;
     }
 
-    public ArrayList<String> getWordsByPos(String pos){
+    public ArrayList<String> getWordsByPos(String pos) {
         Cursor res = dbHelper.getWordsByPoS(pos);
         ArrayList<String> results = new ArrayList<>();
 
@@ -56,11 +59,12 @@ public class WordHandler {
             String Ac = res.getString(0);
             results.add(Ac);
 
-        }return results;
+        }
+        return results;
     }
 
-    public boolean addWord (WordObject wordObject) {
-        return dbHelper.insertRowWord(wordObject.getTimeStamp(), wordObject.getWord(),wordObject.getDefinition(),wordObject.getPartOfSpeech());
+    public boolean addWord(WordObject wordObject) {
+        return dbHelper.insertRowWord(wordObject.getTimeStamp(), wordObject.getWord(), wordObject.getDefinition(), wordObject.getPartOfSpeech());
     }
 
 
