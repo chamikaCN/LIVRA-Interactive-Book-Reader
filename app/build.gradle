@@ -66,7 +66,3 @@ sceneform.asset('sampleData/embedded_resources.fbx',
         'src/main/assets/bird')
 
 
-sceneform.asset('sampleData/1444_Crust_LODa.fbx',
-        'default',
-        'sampleData/1444_Crust_LODa.sfa',
-        'src/main/assets/1444_Crust_LODa')
