@@ -66,3 +66,24 @@ sceneform.asset('sampleData/embedded_resources.fbx',
         'src/main/assets/bird')
 
 
+
+
+sceneform.asset('sampleData/A.fbx',
+        'default',
+        'sampleData/A.sfa',
+        'src/main/assets/A')
+
+sceneform.asset('sampleData/B.fbx',
+        'default',
+        'sampleData/B.sfa',
+        'src/main/assets/B')
+
+sceneform.asset('sampleData/C.fbx',
+        'default',
+        'sampleData/C.sfa',
+        'src/main/assets/C')
+
+sceneform.asset('sampleData/D.fbx',
+        'default',
+        'sampleData/D.sfa',
+        'src/main/assets/D')
