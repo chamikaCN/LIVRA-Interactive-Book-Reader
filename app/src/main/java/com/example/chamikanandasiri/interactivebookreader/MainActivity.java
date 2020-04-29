@@ -4,9 +4,10 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,9 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -68,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     TextRecognizer textRecognizer;
     BarcodeDetector barcodeDetector;
     MultiDetector multiDetector;
+    ToneGenerator toneGenerator;
 
     ListView cnt_contentListView;
     ImageView dtl_imageView;
@@ -83,27 +83,34 @@ public class MainActivity extends AppCompatActivity {
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
+    BookHandler bookHandler;
 
     int timeStampUniqueCount = 0;
 
     BookObject book;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     final int RequestCameraPermissionID = 1001;
+    final int RequestWriteStoragePermissionID = 1002;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == RequestCameraPermissionID) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    return;
+        switch (requestCode) {
+            case RequestCameraPermissionID: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    try {
+                        cameraSource.start(cameraView.getHolder());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                try {
-                    cameraSource.start(cameraView.getHolder());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            }
+            case RequestWriteStoragePermissionID: {
+
             }
         }
     }
@@ -116,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DataBaseHelper(this);
         commentHandler = new CommentHandler(dbHelper, this);
         wordHandler = new WordHandler(dbHelper, this);
+        bookHandler = new BookHandler(dbHelper, this);
 
         setupMainLayout();
         setupAllPopups();
@@ -123,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
         multiDetector = new MultiDetector.Builder().add(textRecognizer).add(barcodeDetector).build();
+        toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
         detectText();
         constructText();
@@ -133,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     //UI components Initialization
 
-    private void setupMainLayout(){
+    private void setupMainLayout() {
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
@@ -358,6 +367,8 @@ public class MainActivity extends AppCompatActivity {
             detectedISBN = "";
         });
         brc_detailsButton.setOnClickListener(v -> {
+            dtl_imageView.setImageDrawable(null);
+            dtl_titleView.setText("");
             showDetailsPopup(v);
             barcodePopup.dismiss();
         });
@@ -383,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
         loadContentDetails();
         cnt_backButton.setOnClickListener(v1 -> {
             contentPopup.dismiss();
+            showDetailsPopup(v1);
         });
         cnt_closeButton.setOnClickListener(v1 -> {
             detailsPopup.dismiss();
@@ -454,6 +466,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         detectedString = stringBuilder.toString();
                     });
+                }else{
+                    detectedString = "";
                 }
             }
         });
@@ -473,10 +487,12 @@ public class MainActivity extends AppCompatActivity {
                     String barcode = items.valueAt(0).displayValue;
                     if (barcode.length() == 10 || barcode.length() == 13) {
                         if (!barcode.equals(detectedISBN)) {
+                            toneGenerator.startTone(ToneGenerator.TONE_CDMA_PIP, 350);
                             detectedISBN = barcode;
                             main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_one));
                             buttonAnimation2(main_barcodeButton);
                             main_barcodeButton.setEnabled(true);
+                            //TODO deactivate animation, button and set detected string to "" after 5 seconds
                         }
                     }
                 }
@@ -628,7 +644,10 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 other.append("\n\n").append(contentAmount).append(" models are available");
                 dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_three));
-                dtl_contentButton.setOnClickListener(this::showContentPopup);
+                dtl_contentButton.setOnClickListener(v2 -> {
+                    showContentPopup(v2);
+                    detailsPopup.dismiss();
+                });
             }
             dtl_titleView.setText(title);
             dtl_othersView.setText(other);
@@ -637,8 +656,6 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             dtl_othersView.setText(" No Details Available for the Book on Our Database");
-            //TODO:get a jason response with nack. disable the view button
-
         }
     }
 
@@ -665,6 +682,10 @@ public class MainActivity extends AppCompatActivity {
         commentHandler.addComment(commentObject);
     }
 
+    private void saveBook(BookObject book) {
+        bookHandler.addBook(book);
+    }
+
     private void saveDictionaryDefinitions(JSONArray array) throws JSONException {
         String word = selectedString;
         int limit = Integer.min(5, array.length());
@@ -677,8 +698,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveWord(String word, String definition, String pos) {
-        WordObject wordObject = new WordObject(word, definition, pos,timeStampUniqueCount);
-        if(timeStampUniqueCount == 9){timeStampUniqueCount = 0;} else{timeStampUniqueCount+=1;}
+        WordObject wordObject = new WordObject(word, definition, pos, timeStampUniqueCount);
+        Log.d(TAG, "saveWord: " + word + definition + pos + timeStampUniqueCount);
+        if (timeStampUniqueCount == 9) {
+            timeStampUniqueCount = 0;
+        } else {
+            timeStampUniqueCount += 1;
+        }
         wordHandler.addWord(wordObject);
     }
 
@@ -686,9 +712,10 @@ public class MainActivity extends AppCompatActivity {
         DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent());
         cnt_contentListView.setAdapter(adapter);
         cnt_downloadButton.setOnClickListener(v -> {
+            saveBook(book);
             ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
-            for( DownloadContentObject d : selected){
-                Log.d("Test",d.getContName());
+            for (DownloadContentObject d : selected) {
+                Log.d("Test", d.getContName());
             }
         });
 
@@ -776,7 +803,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadLibraryActivity() {
         Intent intent = new Intent(this, LibraryActivity.class);
-        intent.putExtra("Book",book);
+        intent.putExtra("Book", book);
         startActivity(intent);
     }
 
