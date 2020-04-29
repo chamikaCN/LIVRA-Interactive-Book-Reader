@@ -8,16 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class BookArrayAdapter extends ArrayAdapter<BookObject> {
+class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
     private Context context;
     private int resource;
     private String TAG ="Test";
 
-    public BookArrayAdapter(Context context, int resource, ArrayList<BookObject> objects) {
+    public SimpleBookArrayAdapter(Context context, int resource, ArrayList<SimpleBookObject> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
@@ -25,10 +26,10 @@ class BookArrayAdapter extends ArrayAdapter<BookObject> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String imageURL = getItem(position).getCovers()[0];
+        String imageURL = getItem(position).getCover();
         String name = getItem(position).getTitle();
         StringBuilder other = new StringBuilder();
-        other.append(getItem(position).getAuthors()[0]).append(" ").append(getItem(position).getIsbns()[0]);
+        other.append(getItem(position).getAuthor()).append("\n").append(getItem(position).getIsbn());
 
         LayoutInflater inflater = LayoutInflater.from(context);
         convertView = inflater.inflate(resource, parent, false);
@@ -39,6 +40,8 @@ class BookArrayAdapter extends ArrayAdapter<BookObject> {
 
         Picasso.with(context).load(imageURL)
                 .placeholder(R.drawable.ezgif_crop)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .fit()
                 .into(imageView);
         tvName.setText(name);
         tvOther.setText(other);
