@@ -1,6 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Common.model = modelNames.get(position);
+                Common.model = Uri.parse(modelNames.get(position));
             }
         });
     }

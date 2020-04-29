@@ -12,7 +12,9 @@ import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
+import com.google.ar.sceneform.assets.RenderableSource;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,17 +40,17 @@ public class ArViewActivity extends AppCompatActivity {
         btnRemove = findViewById(R.id.remove);
         btnBack = findViewById(R.id.back);
         getImages();
+//        Uri model=Uri.parse("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf");
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
 
             Anchor anchor = hitResult.createAnchor();
 
             ModelRenderable.builder()
-                    .setSource(this, Uri.parse(Common.model))
+                    .setSource(this, RenderableSource.builder().setSource(this,Common.model,RenderableSource.SourceType.GLTF2).setScale(0.4f).build())
+                    .setRegistryId(Common.model)
                     .build()
                     .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
-
         });
-
         btnRemove.setOnClickListener(view -> removeAnchorNode(anchorNode));
         btnBack.setOnClickListener(view -> {
             Intent intent = new Intent(this, MainActivity.class);
@@ -63,18 +65,21 @@ public class ArViewActivity extends AppCompatActivity {
         imagesPath.add(R.drawable.bird);
         imagesPath.add(R.drawable.table);
         imagesPath.add(R.drawable.table);
+        imagesPath.add(R.drawable.table);
 
         namesPath.add("Table");
         namesPath.add("BookShelf");
         namesPath.add("Bird");
         namesPath.add("Cat");
         namesPath.add("Dog");
+        namesPath.add("nilaan");
 
-        modelNames.add("table.sfb");
+        modelNames.add("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf");
         modelNames.add("model.sfb");
         modelNames.add("bird.sfb");
         modelNames.add("bird.sfb");
         modelNames.add("table.sfb");
+        modelNames.add("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf");
         initiateRecyclerView();
     }
 
@@ -91,6 +96,8 @@ public class ArViewActivity extends AppCompatActivity {
         anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setParent(anchorNode);
+        node.getScaleController().setMaxScale(0.02f);
+        node.getScaleController().setMinScale(0.01f);
         node.setRenderable(modelRenderable);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
         node.select();

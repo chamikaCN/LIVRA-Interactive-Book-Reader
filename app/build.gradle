@@ -35,7 +35,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 //Nilaan
-    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'
+    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'   //1.15.0
+    implementation 'com.google.ar.sceneform:assets:1.15.0'
     implementation 'com.google.ar.sceneform:animation:1.15.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -54,12 +55,18 @@ sceneform.asset('sampleData/table.obj',
         'src/main/assets/table')
 
 
-sceneform.asset('sampleData/room.obj',
-        'default',
-        'sampleData/room.sfa',
-        'src/main/assets/room')
+//sceneform.asset('sampleData/room.obj',
+//        'default',
+//        'sampleData/room.sfa',
+//        'src/main/assets/room')
 
 sceneform.asset('sampleData/embedded_resources.fbx',
         'default',
         'sampleData/embedded_resources.sfa',
         'src/main/assets/bird')
+
+
+sceneform.asset('sampleData/1444_Crust_LODa.fbx',
+        'default',
+        'sampleData/1444_Crust_LODa.sfa',
+        'src/main/assets/1444_Crust_LODa')
