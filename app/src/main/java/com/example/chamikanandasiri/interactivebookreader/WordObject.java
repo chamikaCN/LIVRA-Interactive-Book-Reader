@@ -1,5 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import android.util.Log;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,8 +21,8 @@ public class WordObject {
         this.word = word;
         this.definition = definition;
         this.partOfSpeech = pos;
-        this.timestamp = addTimeStamp();
         this.timeStampUniqueCount = timeCount;
+        this.timestamp = addTimeStamp();
     }
 
     private Timestamp addTimeStamp() {
