@@ -1,7 +1,10 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 //Serializable for testing
@@ -16,6 +19,7 @@ public class BookObject implements Serializable {
     private ArrayList<DownloadContentObject> content;
     private String publisherId;
     private String publisherName;
+    private Timestamp timeStamp;
 
     private String TAG ="Test";
 
@@ -29,6 +33,14 @@ public class BookObject implements Serializable {
         this.content = content;
         this.publisherId = publisherId;
         this.publisherName = publisherName;
+        this.timeStamp = addTimeStamp();
+    }
+
+    private Timestamp addTimeStamp() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        String stamp = formatter.format(date) + ".0";
+        return Timestamp.valueOf(stamp);
     }
 
     public String getBookId() {
@@ -66,4 +78,6 @@ public class BookObject implements Serializable {
     public String getPublisherName() {
         return publisherName;
     }
+
+    public String getTimeStamp() {return  timeStamp.toString();}
 }
