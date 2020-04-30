@@ -75,12 +75,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public boolean insertRowContent(String id, String timestamp, String bookID, String name, String size, String imageURL, String fileURL) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("ContentID", id);
+        cv.put("TimeStamp", timestamp);
+        cv.put("BookID", bookID);
+        cv.put("Name", name);
+        cv.put("Size", size);
+        cv.put("ImageURL", imageURL);
+        cv.put("FileURL", fileURL);
+        long result = db.insert(TABLE_CONTENT, null, cv);
+        return result != -1;
+    }
+
     public Cursor getAllComments() {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select Comment from " + TABLE_COMMENT, null);
         return db.query(TABLE_COMMENT, new String[]{"Comment"}, null, null, null, null, "TimeStamp");
     }
-
 
     public Cursor getPhraseCommentByTitle(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -134,51 +147,3 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return db.query(TABLE_BOOK, new String[]{"Title","Author","ISBN","CoverURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
 }
-
-
-//    public Cursor getAllTransactions() {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor transactions = db.rawQuery("select * from " + TABLE_TRANSACTION, null);
-//        return transactions;
-//    }
-//
-//    public Cursor getLimitedTransactions(int limit) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor limitTransactions = db.rawQuery("select * from " + TABLE_TRANSACTION + " limit " + limit, null);
-//        return limitTransactions;
-//    }
-//
-//    public Cursor getAllAccountNumbers() {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor accountNumbers = db.rawQuery("select AccountNo from " + TABLE_ACCOUNT, null);
-//        System.out.println(accountNumbers);
-//        return accountNumbers;
-//    }
-//
-//    public Cursor getAllAccounts() {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor accounts = db.rawQuery("select * from " + TABLE_ACCOUNT, null);
-//        return accounts;
-//    }
-//
-//    public Cursor getAccount(String AccNo) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor account = db.rawQuery("select * from " + TABLE_ACCOUNT + " where AccountNo = \'" + AccNo + "\'", null);
-//        return account;
-//    }
-//
-//    public void removeAccount(String AccNo) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor account = db.rawQuery("delete from " + TABLE_ACCOUNT + " where AccountNo = \'" + AccNo + "\'", null);
-//    }
-
-//    public void updateAccount(String AccNo, String Bank, String Holder, Double Balance){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        ContentValues cv = new ContentValues();
-//        cv.put("AccountNo", AccNo);
-//        cv.put("Bank", Bank);
-//        cv.put("AccountHolder", Holder);
-//        cv.put("Balance",Balance);
-//        db.update(TABLE_ACCOUNT,null,"AccNo=" + AccNo ,null);
-//    }
-
