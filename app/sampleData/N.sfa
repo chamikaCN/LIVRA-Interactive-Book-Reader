@@ -1,0 +1,60 @@
+{
+  animations: [
+    {
+      path: 'sampleData/N.fbx',
+    },
+  ],
+  materials: [
+    {
+      name: 'Red',
+      parameters: [
+        {
+          baseColor: [
+            0.259799,
+            0.012529,
+            0.0091479999999999999,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampleData/N.fbx',
+    name: 'N',
+    recenter: 'root',
+  },
+  version: '0.54:2',
+}

@@ -1,0 +1,60 @@
+{
+  animations: [
+    {
+      path: 'sampleData/S.fbx',
+    },
+  ],
+  materials: [
+    {
+      name: 'Orange',
+      parameters: [
+        {
+          baseColor: [
+            0.410939,
+            0.091414999999999996,
+            0.0023700000000000001,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'sampleData/S.fbx',
+    name: 'S',
+    recenter: 'root',
+  },
+  version: '0.54:2',
+}
