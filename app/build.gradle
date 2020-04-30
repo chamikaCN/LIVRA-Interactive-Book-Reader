@@ -35,7 +35,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 //Nilaan
-    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'
+    implementation 'com.google.ar.sceneform.ux:sceneform-ux:1.15.0'   //1.15.0
+    implementation 'com.google.ar.sceneform:assets:1.15.0'
     implementation 'com.google.ar.sceneform:animation:1.15.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -54,12 +55,35 @@ sceneform.asset('sampleData/table.obj',
         'src/main/assets/table')
 
 
-sceneform.asset('sampleData/room.obj',
-        'default',
-        'sampleData/room.sfa',
-        'src/main/assets/room')
+//sceneform.asset('sampleData/room.obj',
+//        'default',
+//        'sampleData/room.sfa',
+//        'src/main/assets/room')
 
 sceneform.asset('sampleData/embedded_resources.fbx',
         'default',
         'sampleData/embedded_resources.sfa',
         'src/main/assets/bird')
+
+
+
+
+sceneform.asset('sampleData/A.fbx',
+        'default',
+        'sampleData/A.sfa',
+        'src/main/assets/A')
+
+sceneform.asset('sampleData/B.fbx',
+        'default',
+        'sampleData/B.sfa',
+        'src/main/assets/B')
+
+sceneform.asset('sampleData/C.fbx',
+        'default',
+        'sampleData/C.sfa',
+        'src/main/assets/C')
+
+sceneform.asset('sampleData/D.fbx',
+        'default',
+        'sampleData/D.sfa',
+        'src/main/assets/D')
