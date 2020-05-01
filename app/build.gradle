@@ -87,3 +87,141 @@ sceneform.asset('sampleData/D.fbx',
         'default',
         'sampleData/D.sfa',
         'src/main/assets/D')
+
+sceneform.asset('sampleData/comma.fbx',
+        'default',
+        'sampleData/comma.sfa',
+        'src/main/assets/comma')
+
+sceneform.asset('sampleData/dot.fbx',
+        'default',
+        'sampleData/dot.sfa',
+        'src/main/assets/dot')
+
+
+
+
+sceneform.asset('sampleData/E.fbx',
+        'default',
+        'sampleData/E.sfa',
+        'src/main/assets/E')
+
+sceneform.asset('sampleData/exclamation.fbx',
+        'default',
+        'sampleData/exclamation.sfa',
+        'src/main/assets/exclamation')
+
+sceneform.asset('sampleData/F.fbx',
+        'default',
+        'sampleData/F.sfa',
+        'src/main/assets/F')
+
+sceneform.asset('sampleData/G.fbx',
+        'default',
+        'sampleData/G.sfa',
+        'src/main/assets/G')
+
+sceneform.asset('sampleData/H.fbx',
+        'default',
+        'sampleData/H.sfa',
+        'src/main/assets/H')
+
+sceneform.asset('sampleData/hyphen.fbx',
+        'default',
+        'sampleData/hyphen.sfa',
+        'src/main/assets/hyphen')
+
+sceneform.asset('sampleData/I.fbx',
+        'default',
+        'sampleData/I.sfa',
+        'src/main/assets/I')
+
+sceneform.asset('sampleData/J.fbx',
+        'default',
+        'sampleData/J.sfa',
+        'src/main/assets/J')
+
+sceneform.asset('sampleData/K.fbx',
+        'default',
+        'sampleData/K.sfa',
+        'src/main/assets/K')
+
+sceneform.asset('sampleData/L.fbx',
+        'default',
+        'sampleData/L.sfa',
+        'src/main/assets/L')
+
+sceneform.asset('sampleData/M.fbx',
+        'default',
+        'sampleData/M.sfa',
+        'src/main/assets/M')
+
+sceneform.asset('sampleData/N.fbx',
+        'default',
+        'sampleData/N.sfa',
+        'src/main/assets/N')
+
+sceneform.asset('sampleData/O.fbx',
+        'default',
+        'sampleData/O.sfa',
+        'src/main/assets/O')
+
+sceneform.asset('sampleData/P.fbx',
+        'default',
+        'sampleData/P.sfa',
+        'src/main/assets/P')
+
+sceneform.asset('sampleData/question.fbx',
+        'default',
+        'sampleData/question.sfa',
+        'src/main/assets/question')
+
+sceneform.asset('sampleData/Q.fbx',
+        'default',
+        'sampleData/Q.sfa',
+        'src/main/assets/Q')
+
+sceneform.asset('sampleData/R.fbx',
+        'default',
+        'sampleData/R.sfa',
+        'src/main/assets/R')
+
+sceneform.asset('sampleData/S.fbx',
+        'default',
+        'sampleData/S.sfa',
+        'src/main/assets/S')
+
+sceneform.asset('sampleData/T.fbx',
+        'default',
+        'sampleData/T.sfa',
+        'src/main/assets/T')
+
+sceneform.asset('sampleData/U.fbx',
+        'default',
+        'sampleData/U.sfa',
+        'src/main/assets/U')
+
+sceneform.asset('sampleData/V.fbx',
+        'default',
+        'sampleData/V.sfa',
+        'src/main/assets/V')
+
+sceneform.asset('sampleData/W.fbx',
+        'default',
+        'sampleData/W.sfa',
+        'src/main/assets/W')
+
+sceneform.asset('sampleData/X.fbx',
+        'default',
+        'sampleData/X.sfa',
+        'src/main/assets/X')
+
+sceneform.asset('sampleData/Y.fbx',
+        'default',
+        'sampleData/Y.sfa',
+        'src/main/assets/Y')
+
+sceneform.asset('sampleData/Z.fbx',
+        'default',
+        'sampleData/Z.sfa',
+        'src/main/assets/Z')
