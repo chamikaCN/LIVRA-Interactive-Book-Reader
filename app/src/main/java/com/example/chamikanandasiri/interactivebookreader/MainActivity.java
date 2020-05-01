@@ -56,7 +56,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
             dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
 
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         main_storageButton = findViewById(R.id.StorageButton);
         main_libraryButton = findViewById(R.id.LibraryButton);
         main_barcodeButton = findViewById(R.id.BarcodeButton);
+        main_gameButton = findViewById(R.id.GameButton);
         main_detectedView = findViewById(R.id.DetectedTextView);
 
         main_captureButton.setOnClickListener(v1 -> {
@@ -165,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
         main_libraryButton.setOnClickListener(v2 -> loadLibraryActivity());
+        main_gameButton.setOnClickListener(v2 -> loadGameActivity());
         main_barcodeButton.setEnabled(false);
     }
 
@@ -803,7 +805,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadLibraryActivity() {
         Intent intent = new Intent(this, LibraryActivity.class);
-        intent.putExtra("Book", book);
+        startActivity(intent);
+    }
+
+    private void loadGameActivity() {
+        Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
 
