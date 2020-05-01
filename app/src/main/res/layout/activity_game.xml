@@ -9,43 +9,43 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment"
+        android:id="@+id/GameFragment"
         android:name="com.google.ar.sceneform.ux.ArFragment"/>
 
 
     <ImageButton
-        android:id="@+id/back"
+        android:id="@+id/GameBackButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
         android:background="@drawable/rounded_button_four"
-        app:layout_constraintBottom_toBottomOf="@+id/fragment"
-        app:layout_constraintEnd_toEndOf="@+id/fragment"
+        app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
+        app:layout_constraintEnd_toEndOf="@+id/GameFragment"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/fragment"
-        app:layout_constraintTop_toTopOf="@+id/fragment"
+        app:layout_constraintStart_toStartOf="@+id/GameFragment"
+        app:layout_constraintTop_toTopOf="@+id/GameFragment"
         android:contentDescription="@string/back"
         app:srcCompat="@drawable/ic_back"
         android:scaleType="fitXY"/>
 
 
     <ImageButton
-        android:id="@+id/remove"
+        android:id="@+id/GameRestartButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
         android:layout_marginTop="112dp"
         android:background="@drawable/rounded_button_five"
-        android:contentDescription="@string/remove"
+        android:contentDescription="@string/restart"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/fragment"
-        app:layout_constraintEnd_toEndOf="@+id/fragment"
+        app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
+        app:layout_constraintEnd_toEndOf="@+id/GameFragment"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="0.14"
-        app:layout_constraintStart_toStartOf="@+id/fragment"
-        app:layout_constraintTop_toTopOf="@+id/fragment"
-        app:srcCompat="@drawable/ic_remove" />
+        app:layout_constraintStart_toStartOf="@+id/GameFragment"
+        app:layout_constraintTop_toTopOf="@+id/GameFragment"
+        app:srcCompat="@drawable/ic_restart" />
 
 
 
