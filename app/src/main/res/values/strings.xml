@@ -35,5 +35,6 @@
     <string name="book_cover">Book Cover</string>
     <string name="content_image">Content image</string>
     <string name="LibraryButtonContentDescription">Library</string>
+    <string name="restart">Restart</string>
 
 </resources>
