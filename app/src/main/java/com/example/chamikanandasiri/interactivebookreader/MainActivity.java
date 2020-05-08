@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
     SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
-    TextToSpeech speech;
     String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
     JSONObject dictionaryResponse, detailsResponse;
     JSONArray searchResultDefinitions;
@@ -84,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     CommentHandler commentHandler;
     WordHandler wordHandler;
     BookHandler bookHandler;
+    Speaker speaker;
 
     int timeStampUniqueCount = 0;
 
@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         commentHandler = new CommentHandler(dbHelper, this);
         wordHandler = new WordHandler(dbHelper, this);
         bookHandler = new BookHandler(dbHelper, this);
+        speaker = new Speaker(this);
 
         setupMainLayout();
         setupAllPopups();
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         detectText();
         constructText();
         barCodeRecognize();
-        speechInitialization();
+        //speechInitialization();
 
     }
 
@@ -316,13 +317,13 @@ public class MainActivity extends AppCompatActivity {
     public void showSpeechPopup(View v) {
 
         spk_backButton.setOnClickListener(v1 -> {
-            speech.stop();
+            speechStop();
             speechPopup.dismiss();
             showCapturePopup(v1);
         });
         spk_closeButton.setOnClickListener(v1 ->
         {
-            speech.stop();
+            speechStop();
             speechPopup.dismiss();
         });
         spk_speakButton.setOnClickListener(v2 -> {
@@ -331,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         });
         spk_stopButton.setOnClickListener(v2 -> {
             buttonAnimation1(spk_stopButton);
-            speech.stop();
+            speechStop();
         });
         spk_pauseButton.setOnClickListener(v2 -> speechPause());
         spk_displayView.setText(selectedString);
@@ -503,22 +504,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void speechInitialization() {
-
-        speech = new TextToSpeech(this, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                int result = speech.setLanguage(Locale.UK);
-                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Log.e("TTS", "language not supported");
-                } else {
-                    spk_speakButton.setEnabled(true);
-                }
-            } else {
-                Log.e("TTS", "initializing failed");
-            }
-        }
-        );
-    }
+//    private void speechInitialization() {
+//
+//        speech = new TextToSpeech(this, status -> {
+//            if (status == TextToSpeech.SUCCESS) {
+//                int result = speech.setLanguage(Locale.UK);
+//                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                    Log.e("TTS", "language not supported");
+//                } else {
+//                    spk_speakButton.setEnabled(true);
+//                }
+//            } else {
+//                Log.e("TTS", "initializing failed");
+//            }
+//        }
+//        );
+//    }
 
     private void getDictionaryResponse(String word) {
 
@@ -665,15 +666,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void speak(String s) {
         float speedValue = (float) speedBar.getProgress() / 50;
-        if (speedValue < 0.1) speedValue = 0.1f;
         float pitchValue = (float) pitchBar.getProgress() / 50;
-        if (pitchValue < 0.1) pitchValue = 0.1f;
-        speech.setPitch(pitchValue);
-        speech.setSpeechRate(speedValue);
-        speech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+        speaker.speak(s,speedValue,pitchValue);
     }
 
     private void speechPause() {
+    }
+
+    private void speechStop(){
+        speaker.stop();
     }
 
     private void saveComment() {
