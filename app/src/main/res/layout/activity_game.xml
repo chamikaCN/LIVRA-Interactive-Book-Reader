@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <fragment
+        android:id="@+id/GameFragment"
+        android:name="com.example.chamikanandasiri.interactivebookreader.CustomARFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/GameFragment"
-        android:name="com.google.ar.sceneform.ux.ArFragment"/>
-
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="-19dp" />
 
     <ImageButton
         android:id="@+id/GameBackButton"
@@ -35,17 +37,108 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
-        android:layout_marginTop="112dp"
         android:background="@drawable/rounded_button_five"
         android:contentDescription="@string/restart"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
         app:layout_constraintEnd_toEndOf="@+id/GameFragment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.14"
+        app:layout_constraintVertical_bias="0.15"
         app:layout_constraintStart_toStartOf="@+id/GameFragment"
         app:layout_constraintTop_toTopOf="@+id/GameFragment"
         app:srcCompat="@drawable/ic_restart" />
+
+    <ImageButton
+        android:id="@+id/GameRemoveButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_button_five"
+        android:contentDescription="@string/restart"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
+        app:layout_constraintEnd_toEndOf="@+id/GameFragment"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.30"
+        app:layout_constraintStart_toStartOf="@+id/GameFragment"
+        app:layout_constraintTop_toTopOf="@+id/GameFragment"
+        app:srcCompat="@drawable/ic_remove" />
+
+    <TextView
+        android:id="@+id/GameDisplayView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintVertical_bias="0.03"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:text="@string/selected_letter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/GameLetterView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0.87"
+        app:layout_constraintVertical_bias="0.1"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:textAlignment="center"
+        android:text="Random"
+        android:textColor="@color/colorLightTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/GameChangeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_button_one"
+        android:text="@string/change_letter"
+        app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
+        app:layout_constraintEnd_toEndOf="@+id/GameFragment"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintStart_toStartOf="@+id/GameFragment"
+        app:layout_constraintTop_toTopOf="@+id/GameFragment" />
+
+    <Button
+        android:id="@+id/GameCheckButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_button_two"
+        android:text="Loading ... "
+        app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
+        app:layout_constraintEnd_toEndOf="@+id/GameFragment"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintStart_toStartOf="@+id/GameFragment"
+        app:layout_constraintTop_toTopOf="@+id/GameFragment" />
+
+    <Button
+        android:id="@+id/GameStartButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_button_three"
+        android:text="@string/start_game"
+        app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
+        app:layout_constraintEnd_toEndOf="@+id/GameFragment"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintStart_toStartOf="@+id/GameFragment"
+        app:layout_constraintTop_toTopOf="@+id/GameFragment" />
 
 
 
