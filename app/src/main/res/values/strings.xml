@@ -36,5 +36,8 @@
     <string name="content_image">Content image</string>
     <string name="LibraryButtonContentDescription">Library</string>
     <string name="restart">Restart</string>
+    <string name="start_game">START GAME</string>
+    <string name="selected_letter">Selected Letter :</string>
+    <string name="change_letter">CHANGE LETTER</string>
 
 </resources>
