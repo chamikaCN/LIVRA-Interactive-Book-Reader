@@ -82,16 +82,19 @@ public class ArViewActivity extends AppCompatActivity {
 
     private void loadimage() throws  NullPointerException {
 //        /data/data/com.example.chamikanandasiri.interactivebookreader/files/9783161484100
-        File ar=new File(this.getFilesDir().getAbsolutePath()+"9783161484100","ar");
+        File ar=new File(this.getFilesDir().getAbsolutePath()+"/9783161484100","ar");
         Log.d("isbn",isbn);
         Log.d("arpath",ar.getAbsolutePath());
-        File img=new File(this.getFilesDir().getAbsolutePath()+"9783161484100","img");
+        File img=new File(this.getFilesDir().getAbsolutePath()+"/9783161484100","img");
         for(File f:ar.listFiles()){
 //            arName.add(f.getName());
             arModel.add(f);
+            Log.d("Model1",f.getAbsolutePath());
         }
         for(File f:img.listFiles()){
             arImagesPath.add(f);
+            Log.d("Model1",f.getAbsolutePath());
+
         }
     }
 

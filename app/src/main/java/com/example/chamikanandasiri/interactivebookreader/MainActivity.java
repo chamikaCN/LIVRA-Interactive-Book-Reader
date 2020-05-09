@@ -368,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
     public void showBarcodePopup(View v2) {
         brc_closeButton.setOnClickListener(v -> {
             barcodePopup.dismiss();
-            detectedISBN = "";
+//            detectedISBN = "";
         });
         brc_detailsButton.setOnClickListener(v -> {
             dtl_imageView.setImageDrawable(null);

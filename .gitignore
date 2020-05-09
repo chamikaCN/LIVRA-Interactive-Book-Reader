@@ -12,3 +12,5 @@
 /captures
 .externalNativeBuild
 .cxx
+.settings/org.eclipse.buildship.core.prefs
+.idea/misc.xml
