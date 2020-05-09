@@ -41,6 +41,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -714,7 +715,10 @@ public class MainActivity extends AppCompatActivity {
         cnt_downloadButton.setOnClickListener(v -> {
             saveBook(book);
             ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
+            File bookFile=makeDir(book.getIsbns()[0]);
             for (DownloadContentObject d : selected) {
+                ContentDownloader cd=new ContentDownloader(this,d,bookFile);
+                cd.execute();
                 Log.d("Test", d.getContName());
             }
         });
@@ -798,6 +802,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayAr() {
         Intent intent = new Intent(this, ArViewActivity.class);
+//        intent.putExtra("book",book);
+        intent.putExtra("isbn",detectedISBN);
         startActivity(intent);
     }
 
@@ -812,5 +818,18 @@ public class MainActivity extends AppCompatActivity {
         main_arButton.setOnClickListener(v1 -> {
         });
         buttonAnimation2(main_arButton);
+    }
+
+    public File makeDir(String fileName){
+        File f= new File(this.getFilesDir(),fileName);
+        if (!f.exists()){
+            f.mkdir();
+            File img=new File(f,"img");
+            File ar=new File(f,"ar");
+            img.mkdir();
+            ar.mkdir();
+        }
+
+        return f;
     }
 }
