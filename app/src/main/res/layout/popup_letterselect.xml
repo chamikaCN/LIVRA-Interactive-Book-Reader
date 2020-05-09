@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/rounded_popup"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/LetterSelectCloseButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button_red"
+            android:contentDescription="@string/CloseButtonContentDescription"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_close" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/LetterSelectEditText"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAlignment="center"
+        android:hint="Type Letter"
+        android:maxLength="1"
+        android:inputType="text"
+        android:textColor="@color/colorLightTitle" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/LetterSelectRandomButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_button_two"
+            android:text="Random"
+            android:textColor="@color/colorDarkText" />
+
+        <Button
+            android:id="@+id/LetterSelectOKButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_button_three"
+            android:text="OK"
+            android:textColor="@color/colorDarkText" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
+
+

@@ -14,7 +14,6 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 import com.google.ar.sceneform.assets.RenderableSource;
-
 import java.io.File;
 import java.util.ArrayList;
 
@@ -27,7 +26,7 @@ public class ArViewActivity extends AppCompatActivity {
     private int i;
     private String isbn;
     private ArFragment arFragment;
-    private ArrayList<Integer> imagesPath = new ArrayList<Integer>();
+    private ArrayList<Integer> imagesPath = new ArrayList<>();
     private ArrayList<String> namesPath = new ArrayList<>();
     private ArrayList<String> modelNames = new ArrayList<>();
 

@@ -57,7 +57,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
             dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
 
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
     TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
     SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
-    TextToSpeech speech;
     String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
     JSONObject dictionaryResponse, detailsResponse;
     JSONArray searchResultDefinitions;
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     CommentHandler commentHandler;
     WordHandler wordHandler;
     BookHandler bookHandler;
+    Speaker speaker;
 
     int timeStampUniqueCount = 0;
 
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         commentHandler = new CommentHandler(dbHelper, this);
         wordHandler = new WordHandler(dbHelper, this);
         bookHandler = new BookHandler(dbHelper, this);
+        speaker = new Speaker(this);
 
         setupMainLayout();
         setupAllPopups();
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         detectText();
         constructText();
         barCodeRecognize();
-        speechInitialization();
+        //speechInitialization();
 
     }
 
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         main_storageButton = findViewById(R.id.StorageButton);
         main_libraryButton = findViewById(R.id.LibraryButton);
         main_barcodeButton = findViewById(R.id.BarcodeButton);
+        main_gameButton = findViewById(R.id.GameButton);
         main_detectedView = findViewById(R.id.DetectedTextView);
 
         main_captureButton.setOnClickListener(v1 -> {
@@ -166,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
         main_libraryButton.setOnClickListener(v2 -> loadLibraryActivity());
+        main_gameButton.setOnClickListener(v2 -> loadGameActivity());
         main_barcodeButton.setEnabled(false);
     }
 
@@ -315,13 +318,13 @@ public class MainActivity extends AppCompatActivity {
     public void showSpeechPopup(View v) {
 
         spk_backButton.setOnClickListener(v1 -> {
-            speech.stop();
+            speechStop();
             speechPopup.dismiss();
             showCapturePopup(v1);
         });
         spk_closeButton.setOnClickListener(v1 ->
         {
-            speech.stop();
+            speechStop();
             speechPopup.dismiss();
         });
         spk_speakButton.setOnClickListener(v2 -> {
@@ -330,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         });
         spk_stopButton.setOnClickListener(v2 -> {
             buttonAnimation1(spk_stopButton);
-            speech.stop();
+            speechStop();
         });
         spk_pauseButton.setOnClickListener(v2 -> speechPause());
         spk_displayView.setText(selectedString);
@@ -502,22 +505,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void speechInitialization() {
-
-        speech = new TextToSpeech(this, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                int result = speech.setLanguage(Locale.UK);
-                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Log.e("TTS", "language not supported");
-                } else {
-                    spk_speakButton.setEnabled(true);
-                }
-            } else {
-                Log.e("TTS", "initializing failed");
-            }
-        }
-        );
-    }
+//    private void speechInitialization() {
+//
+//        speech = new TextToSpeech(this, status -> {
+//            if (status == TextToSpeech.SUCCESS) {
+//                int result = speech.setLanguage(Locale.UK);
+//                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                    Log.e("TTS", "language not supported");
+//                } else {
+//                    spk_speakButton.setEnabled(true);
+//                }
+//            } else {
+//                Log.e("TTS", "initializing failed");
+//            }
+//        }
+//        );
+//    }
 
     private void getDictionaryResponse(String word) {
 
@@ -664,15 +667,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void speak(String s) {
         float speedValue = (float) speedBar.getProgress() / 50;
-        if (speedValue < 0.1) speedValue = 0.1f;
         float pitchValue = (float) pitchBar.getProgress() / 50;
-        if (pitchValue < 0.1) pitchValue = 0.1f;
-        speech.setPitch(pitchValue);
-        speech.setSpeechRate(speedValue);
-        speech.speak(s, TextToSpeech.QUEUE_FLUSH, null);
+        speaker.speak(s,speedValue,pitchValue);
     }
 
     private void speechPause() {
+    }
+
+    private void speechStop(){
+        speaker.stop();
     }
 
     private void saveComment() {
@@ -809,7 +812,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadLibraryActivity() {
         Intent intent = new Intent(this, LibraryActivity.class);
-        intent.putExtra("Book", book);
+        startActivity(intent);
+    }
+
+    private void loadGameActivity() {
+        Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
 
