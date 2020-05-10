@@ -1,5 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Trace;
 import android.text.PrecomputedText;
@@ -17,41 +18,67 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class ContentDownloader extends AsyncTask {
-    private File outputdir, outputTempFile;
+    private File outputdir, outputTempFile,ar,img;
     private DownloadContentObject d;
-    private URL fileurl;
+    private URL fileurl,imgurl;
+    private Context context;
 
 
-    public ContentDownloader(File outputdir, File outputTempFile, DownloadContentObject d, URL fileurl) {
-        this.outputdir = outputdir;
-        this.outputTempFile = outputTempFile;
+    public ContentDownloader(Context context, DownloadContentObject d, File isbn) {
+        this.outputdir=isbn;
         this.d = d;
-        this.fileurl=fileurl;
+        try {
+            this.fileurl=new URL((d.getFileURL()));
+            this.imgurl=new URL((d.getImageURLs()[0]));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     protected Boolean doInBackground(Object[] objects) {
         try {
-            URL fileurl = new URL("https://res.cloudinary.com/db2rl2mxy/raw/upload/v1588078553/a99101c088dc6d4cc97dd7d306b4a7f753164786.zip");
-//                    URL imageurl=new URL(d.getImageURLs()[0]);
+//            URL fileurl = new URL("https://res.cloudinary.com/db2rl2mxy/raw/upload/v1588078553/a99101c088dc6d4cc97dd7d306b4a7f753164786.zip");
+
+
             Log.d("fIleurl", fileurl.toString());
+            Log.d("imgurl",imgurl.toString());
 
-            //Download zip content file
             URLConnection c = fileurl.openConnection();
+            Log.d("Outputdir",outputdir.getAbsolutePath()+"ar");
+            Log.d("contentname",d.getContName());
 
+            outputTempFile=createFile(outputdir.getAbsolutePath()+"/ar",d.getContName()+".sfb");
             c.connect();
-            InputStream input = new BufferedInputStream(fileurl.openStream());
-            OutputStream output = new FileOutputStream(outputTempFile);
-
+            InputStream input = c.getInputStream();
+            FileOutputStream output = new FileOutputStream(outputTempFile);
             byte[] buffer = new byte[1024];
             int len = 0;
-            int count;
-            while ((count = input.read(buffer)) != -1) {
-                output.write(buffer, 0, count);
-                len += count;
+//            int count;
+            while ((len = input.read(buffer)) != -1) {
+                output.write(buffer, 0, len);
+//                len += count;
             }
-            output.flush();
+//            output.flush();
             output.close();
             input.close();
+
+            URLConnection ic = imgurl.openConnection();
+            Log.d("Outputdir",outputdir.getAbsolutePath()+"img");
+            Log.d("contentname",d.getContName());
+
+            outputTempFile=createFile(outputdir.getAbsolutePath()+"/img",d.getContName()+".jpg");
+            c.connect();
+            InputStream inputimg = ic.getInputStream();
+            FileOutputStream outputimg = new FileOutputStream(outputTempFile);
+            byte[] imgbuffer = new byte[1024];
+            int lent = 0;
+            while ((len = inputimg.read(imgbuffer)) != -1) {
+                outputimg.write(imgbuffer, 0, len);
+            }
+
+            outputimg.close();
+            inputimg.close();
+
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -63,4 +90,12 @@ public class ContentDownloader extends AsyncTask {
             return false;
         }
     }
+
+    public File createFile(String parent ,String filename) throws IOException {
+        File f =new File(parent,filename);
+        f.createNewFile();
+        return f;
+
+    }
+
 }

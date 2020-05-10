@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -20,12 +21,19 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
     private Context context;
     private ArrayList<String> modelNames = new ArrayList<>();
 
+    private  ArrayList<File> arImagesPath = new ArrayList<>();
+    private ArrayList<File> arModel = new ArrayList<>();
 
-    public RecyclerviewAdapter(Context context, ArrayList<String> textNames, ArrayList<Integer> imagesPath, ArrayList<String> modelNames) {
+    /*public RecyclerviewAdapter(Context context, ArrayList<String> textNames, ArrayList<Integer> imagesPath, ArrayList<String> modelNames) {
         this.textNames = textNames;
         this.imagesPath = imagesPath;
         this.modelNames = modelNames;
         this.context = context;
+    }*/
+
+    public RecyclerviewAdapter(Context context, ArrayList<File> arImagesPath, ArrayList<File> arModel) {
+        this.arImagesPath=arImagesPath;
+        this.arModel=arModel;
     }
 
     @NonNull
@@ -38,20 +46,36 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.imageView.setImageResource(imagesPath.get(position));
-        holder.textView.setText(textNames.get(position));
+//        holder.imageView.setImageResource(imagesPath.get(position));
+//        holder.textView.setText(textNames.get(position));
+//
+//        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//            }
+//        });
+//        holder.imageView.setImageResource(imagesPath.get(position));
+        holder.imageView.setImageURI(Uri.fromFile(arImagesPath.get(position)));
+
+        holder.textView.setText(arImagesPath.get(position).getName());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Common.model = Uri.parse(modelNames.get(position));
             }
         });
+
+
+
+
+
     }
+
 
     @Override
     public int getItemCount() {
-        return imagesPath.size();
+//        return imagesPath.size();
+        return  arModel.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
