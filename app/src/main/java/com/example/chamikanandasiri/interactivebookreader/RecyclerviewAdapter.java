@@ -62,13 +62,9 @@ public class RecyclerviewAdapter extends RecyclerView.Adapter<RecyclerviewAdapte
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Common.model = arModel.get(position);
             }
         });
-
-
-
-
-
     }
 
 

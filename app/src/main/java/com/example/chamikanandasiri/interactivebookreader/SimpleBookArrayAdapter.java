@@ -1,6 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,11 @@ class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
     private Context context;
     private int resource;
     private String TAG ="Test";
-
     public SimpleBookArrayAdapter(Context context, int resource, ArrayList<SimpleBookObject> objects) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
+
     }
 
     @Override
@@ -46,9 +47,24 @@ class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
         tvName.setText(name);
         tvOther.setText(other);
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayAr(getItem(position).getIsbn());
+
+            }
+        });
         return convertView;
+
+
     }
 
+    private void displayAr(String isbn) {
+        Intent intent = new Intent(context, ArViewActivity.class);
+//        intent.putExtra("book",book);
+        intent.putExtra("isbn",isbn);
+        context.startActivity(intent);
+    }
 
 
 }
