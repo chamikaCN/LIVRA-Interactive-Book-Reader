@@ -366,17 +366,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showBarcodePopup(View v2) {
+        boolean bookInLibrary = checkBarcodeAlreadyInLibrary(detectedISBN);
+        if(bookInLibrary){
+            brc_detailsButton.setText("Go to Library");
+            brc_displayView.setText("The book with "+detectedISBN+" code is already in the library");
+            brc_detailsButton.setOnClickListener(v -> {
+                dtl_imageView.setImageDrawable(null);
+                dtl_titleView.setText("");
+                dtl_othersView.setText("");
+                Intent intent = new Intent(this,LibraryActivity.class);
+                startActivity(intent);
+                barcodePopup.dismiss();
+            });
+        }else{
+            brc_detailsButton.setText("Show Details");
+            brc_detailsButton.setOnClickListener(v -> {
+                dtl_imageView.setImageDrawable(null);
+                dtl_titleView.setText("");
+                dtl_othersView.setText("");
+                showDetailsPopup(v);
+                barcodePopup.dismiss();
+            });
+            brc_displayView.setText(detectedISBN);
+        }
         brc_closeButton.setOnClickListener(v -> {
             barcodePopup.dismiss();
-//            detectedISBN = "";
+            detectedISBN = "";
         });
-        brc_detailsButton.setOnClickListener(v -> {
-            dtl_imageView.setImageDrawable(null);
-            dtl_titleView.setText("");
-            showDetailsPopup(v);
-            barcodePopup.dismiss();
-        });
-        brc_displayView.setText(detectedISBN);
+
         barcodePopup.show();
     }
 
@@ -676,6 +693,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void speechStop(){
         speaker.stop();
+    }
+
+    private boolean checkBarcodeAlreadyInLibrary(String ISBN){
+        //TODO: implement the method to check the database
+        return false;
     }
 
     private void saveComment() {
