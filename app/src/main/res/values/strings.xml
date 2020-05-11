@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InteractiveBookReader</string>
+    <string name="app_name">Livra</string>
     <string name="ARButtonContentDescription">AR logo</string>
     <string name="CaptureButtonContentDescription">Capture logo</string>
     <string name="CloseButtonContentDescription">Close</string>
