@@ -20,7 +20,7 @@
     </SurfaceView>
 
     <ImageButton
-        android:id="@+id/ARButton"
+        android:id="@+id/GameButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:background="@drawable/rounded_button"
@@ -35,21 +35,6 @@
         android:scaleType="fitXY"/>
 
     <ImageButton
-        android:id="@+id/GameButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/rounded_button"
-        android:contentDescription="@string/ARButtonContentDescription"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.25"
-        app:srcCompat="@drawable/ic_game"
-        android:scaleType="fitXY"/>
-
-    <ImageButton
         android:id="@+id/SettingsButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -60,7 +45,7 @@
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="@+id/Surface"
         app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintVertical_bias="0.25"
         app:srcCompat="@drawable/ic_settings"
         android:scaleType="fitXY"/>
 
@@ -75,7 +60,7 @@
         app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="@+id/Surface"
         app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.55"
+        app:layout_constraintVertical_bias="0.4"
         app:srcCompat="@drawable/ic_barcode"
         android:scaleType="fitXY"/>
 
