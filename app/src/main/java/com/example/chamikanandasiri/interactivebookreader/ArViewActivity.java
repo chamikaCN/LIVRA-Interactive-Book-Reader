@@ -14,7 +14,7 @@ import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
-import com.google.ar.sceneform.assets.RenderableSource;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -25,7 +25,13 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ArViewActivity extends AppCompatActivity {
     private ModelAnimator modelAnimator;
     private int i;
-    private String isbn;
+    private String bookID;
+
+    //TODO NILAAN : get the details of the contents related to this bookID by using getContentsByBookID() method in content handler
+    //TODO NILAAN : add the necessary cards for the content
+    //TODO NILAAN : render the content on click
+
+
     private ArFragment arFragment;
     private ArrayList<Integer> imagesPath = new ArrayList<>();
     private ArrayList<String> namesPath = new ArrayList<>();
@@ -53,16 +59,14 @@ public class ArViewActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_ar_view);
-//        this.book=(BookObject)getIntent().getSerializableExtra("book");
-        this.isbn=getIntent().getExtras().getString("isbn");
+        this.bookID = getIntent().getExtras().getString("bookID");
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         btnRemove = findViewById(R.id.remove);
         btnBack = findViewById(R.id.back);
         getImages();
         try {
             loadimage();
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 //        Uri model=Uri.parse("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf");
@@ -71,9 +75,9 @@ public class ArViewActivity extends AppCompatActivity {
             Anchor anchor = hitResult.createAnchor();
 
             ModelRenderable.builder()
-                    .setSource(this,Uri.fromFile(Common.model))
+                    .setSource(this, Uri.fromFile(Common.model))
                     .build()
-                    .thenAccept(modelRenderable -> addModelToScene(anchor,modelRenderable));
+                    .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
 
         });
 
@@ -91,20 +95,20 @@ public class ArViewActivity extends AppCompatActivity {
         });
     }
 
-    private void loadimage() throws  NullPointerException {
+    private void loadimage() throws NullPointerException {
 //        /data/data/com.example.chamikanandasiri.interactivebookreader/files/9783161484100
-        File ar=new File(this.getFilesDir().getAbsolutePath()+"/9783161484100","ar");
-        Log.d("isbn",isbn);
-        Log.d("arpath",ar.getAbsolutePath());
-        File img=new File(this.getFilesDir().getAbsolutePath()+"/9783161484100","img");
-        for(File f:ar.listFiles()){
+        File ar = new File(this.getFilesDir().getAbsolutePath() + "/9783161484100", "ar");
+        Log.d("bookID", bookID);
+        Log.d("arpath", ar.getAbsolutePath());
+        File img = new File(this.getFilesDir().getAbsolutePath() + "/9783161484100", "img");
+        for (File f : ar.listFiles()) {
 //            arName.add(f.getName());
             arModel.add(f);
-            Log.d("Model1",f.getAbsolutePath());
+            Log.d("Model1", f.getAbsolutePath());
         }
-        for(File f:img.listFiles()){
+        for (File f : img.listFiles()) {
             arImagesPath.add(f);
-            Log.d("Model1",f.getAbsolutePath());
+            Log.d("Model1", f.getAbsolutePath());
 
         }
     }
@@ -139,7 +143,7 @@ public class ArViewActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerviewAdapter adapter = new RecyclerviewAdapter(this,arImagesPath, arModel);
+        RecyclerviewAdapter adapter = new RecyclerviewAdapter(this, arImagesPath, arModel);
         recyclerView.setAdapter(adapter);
     }
 
