@@ -1,5 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -19,12 +20,21 @@ public class LibraryActivity extends AppCompatActivity {
     private BookHandler bookHandler;
 
     private String TAG = "Test";
-
+    String currentTheme;
     private ArrayList<SimpleBookObject> displayingBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        currentTheme = sharedPreferences.getString("Theme","Light");
+        if (currentTheme.equals("Light")) {
+            setTheme(R.style.LightTheme);
+        } else if (currentTheme.equals("Dark")) {
+            setTheme(R.style.DarkTheme);
+        }
+
         setContentView(R.layout.activity_library);
 
         dataBaseHelper = new DataBaseHelper(this);

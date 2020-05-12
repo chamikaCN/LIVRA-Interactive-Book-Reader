@@ -1,6 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,11 +37,21 @@ public class ArViewActivity extends AppCompatActivity {
 
     AnchorNode anchorNode;
     BookObject book;
+    String currentTheme;
     private ImageButton btnRemove, btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        currentTheme = sharedPreferences.getString("Theme", "Light");
+        if (currentTheme.equals("Light")) {
+            setTheme(R.style.LightTheme);
+        } else if (currentTheme.equals("Dark")) {
+            setTheme(R.style.DarkTheme);
+        }
+
         setContentView(R.layout.activity_ar_view);
 //        this.book=(BookObject)getIntent().getSerializableExtra("book");
         this.isbn=getIntent().getExtras().getString("isbn");

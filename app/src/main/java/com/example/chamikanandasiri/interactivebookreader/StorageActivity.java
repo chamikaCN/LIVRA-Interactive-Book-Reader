@@ -1,5 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,11 +28,21 @@ public class StorageActivity extends AppCompatActivity {
     ArrayList<CommentObject> commentObjects;
 
     private String TAG ="Test";
+    String currentTheme;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        currentTheme = sharedPreferences.getString("Theme", "Light");
+        if (currentTheme.equals("Light")) {
+            setTheme(R.style.LightTheme);
+        } else if (currentTheme.equals("Dark")) {
+            setTheme(R.style.DarkTheme);
+        }
+
         setContentView(R.layout.activity_storage);
 
         dataBaseHelper = new DataBaseHelper(this);

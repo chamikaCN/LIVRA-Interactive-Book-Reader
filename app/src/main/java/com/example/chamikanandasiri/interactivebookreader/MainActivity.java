@@ -5,13 +5,13 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,10 +57,11 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, main_settingsButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton, stn_closeButton;
 
+    Switch stn_themeSwitch;
     Button str_wordButton, str_commentButton, brc_detailsButton, dtl_contentButton, cnt_downloadButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
@@ -78,13 +79,15 @@ public class MainActivity extends AppCompatActivity {
     String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
     JSONObject dictionaryResponse, detailsResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup, detailsPopup, contentPopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup, detailsPopup, contentPopup, settingsPopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
     BookHandler bookHandler;
     Speaker speaker;
+
+    String currentTheme;
 
     int timeStampUniqueCount = 0;
 
@@ -119,6 +122,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        currentTheme = sharedPreferences.getString("Theme", "Light");
+        if (currentTheme.equals("Light")) {
+            setTheme(R.style.LightTheme);
+        } else if (currentTheme.equals("Dark")) {
+            setTheme(R.style.DarkTheme);
+        }
+
         setContentView(R.layout.activity_main);
 
         dbHelper = new DataBaseHelper(this);
@@ -153,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         main_libraryButton = findViewById(R.id.LibraryButton);
         main_barcodeButton = findViewById(R.id.BarcodeButton);
         main_gameButton = findViewById(R.id.GameButton);
-        main_detectedView = findViewById(R.id.DetectedTextView);
+        main_settingsButton = findViewById(R.id.SettingsButton);
 
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
@@ -167,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
             main_barcodeButton.setEnabled(false);
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
+        main_settingsButton.setOnClickListener(v2 -> showSettingsPopup(v2));
         main_libraryButton.setOnClickListener(v2 -> loadLibraryActivity());
         main_gameButton.setOnClickListener(v2 -> loadGameActivity());
         main_barcodeButton.setEnabled(false);
@@ -189,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
         detailsPopup.setContentView(R.layout.popup_details);
         contentPopup = new Dialog(this);
         contentPopup.setContentView(R.layout.popup_content);
+        settingsPopup = new Dialog(this);
+        settingsPopup.setContentView(R.layout.popup_settings);
 
         setupCapturePopup();
         setupSpeechPopup();
@@ -198,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         setupBarcodePopup();
         setupDetailsPopup();
         setupContentPopup();
+        setupSettingsPopup();
     }
 
     private void setupCapturePopup() {
@@ -262,6 +278,11 @@ public class MainActivity extends AppCompatActivity {
         cnt_backButton = contentPopup.findViewById(R.id.ContentBackButton);
         cnt_downloadButton = contentPopup.findViewById(R.id.ContentDownloadButton);
         cnt_contentListView = contentPopup.findViewById(R.id.ContentListView);
+    }
+
+    private void setupSettingsPopup() {
+        stn_closeButton = settingsPopup.findViewById(R.id.SettingsCloseButton);
+        stn_themeSwitch = settingsPopup.findViewById(R.id.SettingsThemeSwitch);
     }
 
     public void showCapturePopup(View v) {
@@ -367,18 +388,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void showBarcodePopup(View v2) {
         boolean bookInLibrary = checkBarcodeAlreadyInLibrary(detectedISBN);
-        if(bookInLibrary){
+        if (bookInLibrary) {
             brc_detailsButton.setText("Go to Library");
-            brc_displayView.setText("The book with "+detectedISBN+" code is already in the library");
+            brc_displayView.setText("The book with " + detectedISBN + " code is already in the library");
             brc_detailsButton.setOnClickListener(v -> {
                 dtl_imageView.setImageDrawable(null);
                 dtl_titleView.setText("");
                 dtl_othersView.setText("");
-                Intent intent = new Intent(this,LibraryActivity.class);
+                Intent intent = new Intent(this, LibraryActivity.class);
                 startActivity(intent);
                 barcodePopup.dismiss();
             });
-        }else{
+        } else {
             brc_detailsButton.setText("Show Details");
             brc_detailsButton.setOnClickListener(v -> {
                 dtl_imageView.setImageDrawable(null);
@@ -422,6 +443,20 @@ public class MainActivity extends AppCompatActivity {
             contentPopup.dismiss();
         });
         contentPopup.show();
+    }
+
+    public void showSettingsPopup(View v) {
+        if (currentTheme.equals("Dark")) {
+            stn_themeSwitch.setChecked(true);
+        } else {
+            stn_themeSwitch.setChecked(false);
+        }
+        stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
+        stn_themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {changeTheme(isChecked);
+        settingsPopup.dismiss();
+        //showSettingsPopup();
+        });
+        settingsPopup.show();
     }
 
     // Main Functions
@@ -478,7 +513,7 @@ public class MainActivity extends AppCompatActivity {
             public void receiveDetections(Detector.Detections<TextBlock> detections) {
                 final SparseArray<TextBlock> items = detections.getDetectedItems();
                 if (items.size() != 0) {
-                    main_detectedView.post(() -> {
+                    main_captureButton.post(() -> {
                         StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < items.size(); i++) {
                             TextBlock item = items.valueAt(i);
@@ -487,7 +522,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         detectedString = stringBuilder.toString();
                     });
-                }else{
+                } else {
                     detectedString = "";
                 }
             }
@@ -510,7 +545,7 @@ public class MainActivity extends AppCompatActivity {
                         if (!barcode.equals(detectedISBN)) {
                             toneGenerator.startTone(ToneGenerator.TONE_CDMA_PIP, 350);
                             detectedISBN = barcode;
-                            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_one));
+                            main_barcodeButton.setBackgroundResource(R.drawable.rounded_button_one);
                             buttonAnimation2(main_barcodeButton);
                             main_barcodeButton.setEnabled(true);
                             //TODO deactivate animation, button and set detected string to "" after 5 seconds
@@ -521,23 +556,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-//    private void speechInitialization() {
-//
-//        speech = new TextToSpeech(this, status -> {
-//            if (status == TextToSpeech.SUCCESS) {
-//                int result = speech.setLanguage(Locale.UK);
-//                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-//                    Log.e("TTS", "language not supported");
-//                } else {
-//                    spk_speakButton.setEnabled(true);
-//                }
-//            } else {
-//                Log.e("TTS", "initializing failed");
-//            }
-//        }
-//        );
-//    }
 
     private void getDictionaryResponse(String word) {
 
@@ -630,10 +648,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void formatDetailsResponse(String message) throws JSONException {
         detailsResponse = new JSONObject(message);
-        String coverURL;
         ArrayList<DownloadContentObject> downloadContentDetails;
 
         if (detailsResponse.has("title")) {
+            Log.d(TAG, "formatDetailsResponse: " + message);
             downloadContentDetails = new ArrayList<>();
             String bookID = detailsResponse.getString("id");
             String title = detailsResponse.getString("title");
@@ -661,10 +679,10 @@ public class MainActivity extends AppCompatActivity {
             other.append("Author : ").append(authors[0]).append("\nPublisher : ").append(pubname).append("\nISBN : ").append(isbns[0]);
             if (contentAmount == 0) {
                 other.append("\n\nNo AR content is available for this book");
-                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+                dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_disabled);
             } else {
                 other.append("\n\n").append(contentAmount).append(" models are available");
-                dtl_contentButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_three));
+                dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_three);
                 dtl_contentButton.setOnClickListener(v2 -> {
                     showContentPopup(v2);
                     detailsPopup.dismiss();
@@ -685,17 +703,17 @@ public class MainActivity extends AppCompatActivity {
     private void speak(String s) {
         float speedValue = (float) speedBar.getProgress() / 50;
         float pitchValue = (float) pitchBar.getProgress() / 50;
-        speaker.speak(s,speedValue,pitchValue);
+        speaker.speak(s, speedValue, pitchValue);
     }
 
     private void speechPause() {
     }
 
-    private void speechStop(){
+    private void speechStop() {
         speaker.stop();
     }
 
-    private boolean checkBarcodeAlreadyInLibrary(String ISBN){
+    private boolean checkBarcodeAlreadyInLibrary(String ISBN) {
         //TODO: implement the method to check the database
         return false;
     }
@@ -723,6 +741,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void changeTheme(boolean isDarkMode) {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (isDarkMode) {
+            editor.putString("Theme", "Dark");
+        } else {
+            editor.putString("Theme", "Light");
+        }
+        editor.apply();
+        recreate();
+        //showSettingsPopup();
+    }
+
     private void saveWord(String word, String definition, String pos) {
         WordObject wordObject = new WordObject(word, definition, pos, timeStampUniqueCount);
         Log.d(TAG, "saveWord: " + word + definition + pos + timeStampUniqueCount);
@@ -740,9 +771,9 @@ public class MainActivity extends AppCompatActivity {
         cnt_downloadButton.setOnClickListener(v -> {
             saveBook(book);
             ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
-            File bookFile=makeDir(book.getIsbns()[0]);
+            File bookFile = makeDir(book.getIsbns()[0]);
             for (DownloadContentObject d : selected) {
-                ContentDownloader cd=new ContentDownloader(this,d,bookFile);
+                ContentDownloader cd = new ContentDownloader(this, d, bookFile);
                 cd.execute();
                 Log.d("Test", d.getContName());
             }
@@ -828,7 +859,7 @@ public class MainActivity extends AppCompatActivity {
     private void displayAr() {
         Intent intent = new Intent(this, ArViewActivity.class);
 //        intent.putExtra("book",book);
-        intent.putExtra("isbn",detectedISBN);
+        intent.putExtra("isbn", detectedISBN);
         startActivity(intent);
     }
 
@@ -849,12 +880,12 @@ public class MainActivity extends AppCompatActivity {
         buttonAnimation2(main_arButton);
     }
 
-    public File makeDir(String fileName){
-        File f= new File(this.getFilesDir(),fileName);
-        if (!f.exists()){
+    public File makeDir(String fileName) {
+        File f = new File(this.getFilesDir(), fileName);
+        if (!f.exists()) {
             f.mkdir();
-            File img=new File(f,"img");
-            File ar=new File(f,"ar");
+            File img = new File(f, "img");
+            File ar = new File(f, "ar");
             img.mkdir();
             ar.mkdir();
         }

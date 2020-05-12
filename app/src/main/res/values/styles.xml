@@ -1,6 +1,40 @@
 <resources>
 
     <!-- Base application theme. -->
+    <style name="LightTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/lightPrimary</item>
+        <item name="colorPrimaryDark">@color/lightPrimaryVarient</item>
+        <item name="colorAccent">@color/darkPrimary</item>
+        <item name="editTextColor">@color/lightDefaultText</item>
+        <item name="titleTextColor">@color/lightTitleText</item>
+        <item name="hintTextColor">@color/lightHintText</item>
+        <item name="colorError">@color/lightFancyFive</item>
+        <item name="colorBackgroundFloating">@color/lightFancyFour</item>
+        <item name="colorControlActivated">@color/lightFancyThree</item>
+        <item name="colorControlHighlight">@color/lightFancyTwo</item>
+        <item name="colorControlNormal">@color/lightFancyOne</item>
+        <item name="panelBackground">@drawable/background_largelight</item>
+        <item name="editTextBackground">@drawable/backgraound_smalllight</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimaryVarient</item>
+        <item name="colorAccent">@color/lightPrimary</item>
+        <item name="editTextColor">@color/darkDefaultText</item>
+        <item name="titleTextColor">@color/darkTitleText</item>
+        <item name="hintTextColor">@color/darkHintText</item>
+        <item name="colorError">@color/darkFancyFive</item>
+        <item name="colorBackgroundFloating">@color/darkFancyFour</item>
+        <item name="colorControlActivated">@color/darkFancyThree</item>
+        <item name="colorControlHighlight">@color/darkFancyTwo</item>
+        <item name="colorControlNormal">@color/darkFancyOne</item>
+        <item name="panelBackground">@drawable/background_largedark</item>
+        <item name="editTextBackground">@drawable/background_smalldark</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -22,8 +56,6 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 </resources>

@@ -3,6 +3,7 @@ package com.example.chamikanandasiri.interactivebookreader;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.Visibility;
@@ -56,10 +57,20 @@ public class GameActivity extends AppCompatActivity {
     private Dialog letterPopup, endPopup;
     private int modelsRendered, gameSize = 6, score = 0;
     private String TAG = "Test";
+    String currentTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        currentTheme = sharedPreferences.getString("Theme", "Light");
+        if (currentTheme.equals("Light")) {
+            setTheme(R.style.LightTheme);
+        } else if (currentTheme.equals("Dark")) {
+            setTheme(R.style.DarkTheme);
+        }
+
         setContentView(R.layout.activity_game);
 
         arFragment = (CustomARFragment) getSupportFragmentManager().findFragmentById(R.id.GameFragment);
