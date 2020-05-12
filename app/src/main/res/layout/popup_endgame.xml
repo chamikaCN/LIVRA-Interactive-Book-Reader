@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:layout_gravity="center"
-    android:background="@drawable/rounded_popup"
+    android:background="?attr/editTextBackground"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp">
@@ -16,7 +16,7 @@
         android:layout_margin="20dp"
         android:textSize="20sp"
         android:textAlignment="center"
-        android:textColor="@color/colorLightTitle" />
+        android:textColor="?attr/titleTextColor" />
 
 
     <LinearLayout
@@ -34,7 +34,7 @@
             android:padding="10dp"
             android:background="@drawable/rounded_button_one"
             android:text="RETRY"
-            android:textColor="@color/colorDarkText" />
+            android:textColor="?attr/colorPrimary" />
 
         <Button
             android:id="@+id/EndgameBackButton"
@@ -44,7 +44,7 @@
             android:padding="10dp"
             android:background="@drawable/rounded_button_four"
             android:text="BACK"
-            android:textColor="@color/colorDarkText" />
+            android:textColor="?attr/colorPrimary" />
 
 
     </LinearLayout>

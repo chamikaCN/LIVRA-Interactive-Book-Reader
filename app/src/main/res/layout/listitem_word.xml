@@ -2,21 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
     android:padding="5dp"
     android:clickable="false"
     android:focusable="false"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/colorPrimary">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/WordCardWord"
         android:text="WORD"
-        android:textColor="@color/colorLightTitle"
+        android:textColor="?attr/titleTextColor"
         android:textStyle="bold"
-        android:textSize="15sp"
-        android:padding="5dp"/>
+        android:textSize="20sp"
+        android:paddingTop="5dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,11 +29,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="20dp"
             android:id="@+id/WordCardDefinition"
             android:scrollX="0dp"
+            android:textColor="?attr/editTextColor"
             android:text="definition"
-            android:padding="5dp"/>
+            android:paddingTop="5dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"/>
 
     </LinearLayout>
 

@@ -4,7 +4,7 @@
     android:layout_height="270dp"
     android:layout_margin="20dp"
     android:padding="10dp"
-    android:background="@color/colorDarkCard"
+    android:background="?attr/colorPrimaryDark"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -23,7 +23,7 @@
         android:id="@+id/BookTitleView"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
-        android:textColor="@color/colorLightTitle"
+        android:textColor="?attr/titleTextColor"
         android:textStyle="bold"/>
 
     <TextView
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/BookOtherView"
         android:textAlignment="center"
-        android:textColor="@color/colorLightText"
+        android:textColor="?attr/editTextColor"
         android:layout_marginBottom="10dp"/>
 
 </LinearLayout>

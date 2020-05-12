@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
-    android:layout_height="475dp"
+    android:layout_height="500dp"
     android:layout_gravity="center"
-    android:background="@drawable/rounded_popup"
+    android:background="?attr/panelBackground"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="end"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
         <ImageButton
@@ -21,7 +22,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button_blue"
+            android:background="@drawable/rounded_button_four"
             android:contentDescription="@string/BackButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_back" />
@@ -32,7 +33,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button_red"
+            android:background="@drawable/rounded_button_five"
             android:contentDescription="@string/CloseButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_close" />
@@ -45,27 +46,30 @@
         android:layout_height="80dp"
         android:layout_margin="20dp"
         android:scrollY="40dp"
-        android:textColor="@color/colorLightText"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:textColor="?attr/editTextColor"
         android:textIsSelectable="true" />
 
     <EditText
         android:id="@+id/CommentTitleEditText"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_marginBottom="10dp"
         android:hint="Add Your Title...."
         android:importantForAutofill="no"
-        android:textColor="@color/colorLightText"
+        android:textColorHint="?attr/hintTextColor"
+        android:textColor="?attr/editTextColor"
         android:textIsSelectable="true" />
 
     <EditText
         android:id="@+id/CommentEditText"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:gravity="top|start"
         android:hint="Add Your Comment...."
         android:importantForAutofill="no"
@@ -74,7 +78,8 @@
         android:maxLines="10"
         android:minLines="6"
         android:scrollY="40dp"
-        android:textColor="@color/colorLightText"
+        android:textColor="?attr/editTextColor"
+        android:textColorHint="?attr/hintTextColor"
         android:textIsSelectable="true" />
 
     <LinearLayout

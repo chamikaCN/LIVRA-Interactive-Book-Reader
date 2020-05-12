@@ -1,9 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:layout_gravity="center"
-    android:background="@drawable/rounded_popup"
+    android:background="?attr/editTextBackground"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="10dp">
@@ -21,7 +21,7 @@
             android:layout_height="40dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_button_red"
+            android:background="@drawable/rounded_button_five"
             android:contentDescription="@string/CloseButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_close" />
@@ -34,9 +34,10 @@
         android:layout_margin="10dp"
         android:textAlignment="center"
         android:hint="Type Letter"
+        android:textColorHint="?attr/hintTextColor"
         android:maxLength="1"
         android:inputType="text"
-        android:textColor="@color/colorLightTitle" />
+        android:textColor="?attr/editTextColor" />
 
 
     <LinearLayout
@@ -54,7 +55,7 @@
             android:padding="10dp"
             android:background="@drawable/rounded_button_two"
             android:text="Random"
-            android:textColor="@color/colorDarkText" />
+            android:textColor="?attr/colorPrimary" />
 
         <Button
             android:id="@+id/LetterSelectOKButton"
@@ -64,7 +65,7 @@
             android:padding="10dp"
             android:background="@drawable/rounded_button_three"
             android:text="OK"
-            android:textColor="@color/colorDarkText" />
+            android:textColor="?attr/colorPrimary" />
 
 
     </LinearLayout>

@@ -5,6 +5,7 @@
     android:layout_margin="10dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:background="?attr/colorPrimary"
     android:padding="10dp">
 
     <ImageView
@@ -22,7 +23,7 @@
         android:layout_margin="5dp"
         android:layout_weight="0.3"
         android:text="map"
-        android:textColor="@color/colorLightTitle"
+        android:textColor="?attr/titleTextColor"
         android:textSize="15sp"
         android:textStyle="italic" />
 
@@ -34,6 +35,7 @@
         android:layout_margin="5dp"
         android:layout_weight="0.3"
         android:padding="5dp"
+        android:textColor="?attr/editTextColor"
         android:text="2.34MB" />
 
     <CheckBox
