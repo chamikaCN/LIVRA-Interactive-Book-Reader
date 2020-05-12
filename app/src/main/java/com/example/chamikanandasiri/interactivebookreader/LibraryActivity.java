@@ -45,17 +45,6 @@ public class LibraryActivity extends AppCompatActivity {
         lib_searchText = findViewById(R.id.LibraryEditText);
 
         loadBookDetails();
-
-//        BookObject book = (BookObject)getIntent().getSerializableExtra("Book");
-//        ArrayList<BookObject> booksTest = new ArrayList<>();
-//        booksTest.add(book);
-//        booksTest.add(book);
-//        booksTest.add(book);
-//        booksTest.add(book);
-//        booksTest.add(book);
-
-
-
     }
 
     private void loadBookDetails() {

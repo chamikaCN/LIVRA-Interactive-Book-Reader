@@ -47,22 +47,14 @@ class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
         tvName.setText(name);
         tvOther.setText(other);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displayAr(getItem(position).getIsbn());
+        imageView.setOnClickListener(v -> displayAr(getItem(position).getBookId()));
 
-            }
-        });
         return convertView;
-
-
     }
 
-    private void displayAr(String isbn) {
+    private void displayAr(String bookID) {
         Intent intent = new Intent(context, ArViewActivity.class);
-//        intent.putExtra("book",book);
-        intent.putExtra("isbn",isbn);
+        intent.putExtra("bookID",bookID);
         context.startActivity(intent);
     }
 
