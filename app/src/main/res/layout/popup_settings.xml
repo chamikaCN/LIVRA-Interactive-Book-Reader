@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
     android:layout_height="475dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
-    android:background="?attr/colorPrimary"
+    android:background="?attr/panelBackground"
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -22,36 +22,98 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/rounded_button_five"
-            android:scaleType="fitXY"
             android:contentDescription="@string/CloseButtonContentDescription"
-            app:srcCompat="@drawable/ic_close"/>
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_close" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.6"
-            android:textColor="@color/colorLightTitle"
             android:text="Dark Mode"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textColor="?attr/titleTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/SettingsThemeSwitch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.4"
-            android:gravity="center"/>
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Text Size"
+            android:textAlignment="center"
+            android:textColor="?attr/titleTextColor"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/SettingsMinusButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_button_inverse"
+                android:contentDescription="@string/MinusButtonContentDescription"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_minus" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="25"
+                android:textAlignment="center"
+                android:textColor="?attr/titleTextColor"
+                android:textSize="30sp" />
+
+            <ImageButton
+                android:id="@+id/SettingsPlusButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_button_inverse"
+                android:contentDescription="@string/PlusButtonContentDescription"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_plus" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

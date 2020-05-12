@@ -39,5 +39,8 @@
     <string name="start_game">START GAME</string>
     <string name="selected_letter">Selected Letter :</string>
     <string name="change_letter">CHANGE LETTER</string>
+    <string name="SettingsButtonContentDescription">Settings</string>
+    <string name="MinusButtonContentDescription">Minus</string>
+    <string name="PlusButtonContentDescription">Plus</string>
 
 </resources>

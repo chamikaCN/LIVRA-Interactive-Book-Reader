@@ -17,5 +17,29 @@
     <color name="colorLightFive">#E57373</color>
     <color name="colorDarkCard">#384F50</color>
 
+    Theme Light
+    <color name="lightPrimary">#CFD8DC</color>
+    <color name="lightPrimaryVarient">#B0BEC5</color>
+    <color name="lightDefaultText">#000000</color>
+    <color name="lightTitleText">#37474F</color>
+    <color name="lightHintText">#607D8B</color>
+    <color name="lightFancyOne">#5E35B1</color>
+    <color name="lightFancyTwo">#FFA000</color>
+    <color name="lightFancyThree">#558B2F</color>
+    <color name="lightFancyFour">#1E88E5</color>
+    <color name="lightFancyFive">#E53935</color>
+
+    Theme Dark
+    <color name="darkPrimary">#263238</color>
+    <color name="darkPrimaryVarient">#37474F</color>
+    <color name="darkDefaultText">#FFFFFF</color>
+    <color name="darkTitleText">#BEB0C5</color>
+    <color name="darkHintText">#607D8B</color>
+    <color name="darkFancyOne">#BEB0C5</color>
+    <color name="darkFancyTwo">#FFE082</color>
+    <color name="darkFancyThree">#AED581</color>
+    <color name="darkFancyFour">#90CAF9</color>
+    <color name="darkFancyFive">#E57373</color>
+
 
 </resources>
