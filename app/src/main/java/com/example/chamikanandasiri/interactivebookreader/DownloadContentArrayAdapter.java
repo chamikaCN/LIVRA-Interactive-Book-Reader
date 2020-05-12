@@ -19,19 +19,22 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
     private int resource;
     private ArrayList<DownloadContentObject> objects;
     private ArrayList<DownloadContentObject> selectedObjects;
+    private ArrayList<String> contentIDsInDatabase;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
-    public DownloadContentArrayAdapter(Context context, int resource, ArrayList<DownloadContentObject> objects) {
+    public DownloadContentArrayAdapter(Context context, int resource, ArrayList<DownloadContentObject> objects, ArrayList<String> contentIDsInDatabase) {
         super(context, resource, objects);
         this.context = context;
         this.resource = resource;
         this.objects = objects;
+        this.contentIDsInDatabase = contentIDsInDatabase;
         selectedObjects = new ArrayList<>();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        String id = getItem(position).getContId();
         String imageURL = getItem(position).getImageURLs()[0];
         String name = getItem(position).getContName();
         String size = getItem(position).getContSize();
@@ -44,10 +47,15 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
         TextView tvSize = convertView.findViewById(R.id.ContentListSizeView);
         CheckBox check = convertView.findViewById(R.id.ContentCheckBox);
 
+        if (contentIDsInDatabase.contains(id)){
+            check.setChecked(true);
+            check.setEnabled(false);
+        }
+
         check.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if ((isChecked)) {
                 selectedObjects.add(objects.get(position));
-                Log.d("Test","added one " + selectedObjects.size());
+                Log.d("Test", "added one " + selectedObjects.size());
 
             } else {
                 selectedObjects.remove(objects.get(position));
@@ -65,7 +73,7 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
         return convertView;
     }
 
-    public ArrayList<DownloadContentObject> getSelectedObjects(){
+    public ArrayList<DownloadContentObject> getSelectedObjects() {
         return selectedObjects;
     }
 
