@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -49,7 +48,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean insertRowWord(String timestamp, String word, String definition, String partofspeech ) {
+    public boolean insertRowWord(String timestamp, String word, String definition, String partofspeech) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("TimeStamp", timestamp);
@@ -69,7 +68,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put("Author", author);
         cv.put("ISBN", isbn);
         cv.put("CoverURL", cover);
-        cv.put("PublisherID",pid);
+        cv.put("PublisherID", pid);
         cv.put("PublisherName", pname);
         long result = db.insert(TABLE_BOOK, null, cv);
         return result != -1;
@@ -144,6 +143,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getAllBookDetailsByID(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_BOOK, new String[]{"Title","Author","ISBN","CoverURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
+        return db.query(TABLE_BOOK, new String[]{"Title", "Author", "ISBN", "CoverURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
+
+    public Cursor getBookIDByISBN(String ISBN) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_BOOK, new String[]{"BookID"}, "ISBN = ?", new String[]{ISBN}, null, null, null);
+    }
+
+    public Cursor getContentDetailsByBooKID(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "CoverURL", "FileURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
+    }
+
+    public Cursor getContentIDsByBooKID(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_CONTENT, new String[]{"ContentID"}, "BookID = ?", new String[]{id}, null, null, null, null);
+    }
+
+
 }
