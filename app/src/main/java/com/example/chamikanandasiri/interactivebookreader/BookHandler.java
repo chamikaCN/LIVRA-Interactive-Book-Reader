@@ -42,6 +42,15 @@ public class BookHandler {
         return results;
     }
 
+    public String getBookIDByISBN(String ISBN){
+        Cursor res = dbHelper.getBookIDByISBN(ISBN);
+        String Ac = "empty";
+        while (res.moveToNext()) {
+            Ac = res.getString(0);
+        }
+        return Ac;
+    }
+
     public boolean addBook(BookObject bookObject) {
         return dbHelper.insertRowBook(bookObject.getBookId(), bookObject.getTimeStamp(), bookObject.getTitle(), bookObject.getAuthors()[0],
                 bookObject.getIsbns()[0], bookObject.getCovers()[0], bookObject.getPublisherId(), bookObject.getPublisherName());
