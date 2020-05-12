@@ -57,12 +57,12 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_arButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, main_settingsButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, main_settingsButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
             dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton, stn_closeButton;
 
     Switch stn_themeSwitch;
-    Button str_wordButton, str_commentButton, brc_detailsButton, dtl_contentButton, cnt_downloadButton;
+    Button str_wordButton, str_commentButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     ListView cnt_contentListView;
     ImageView dtl_imageView;
-    TextView main_detectedView, cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
+    TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
     SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
     String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     CommentHandler commentHandler;
     WordHandler wordHandler;
     BookHandler bookHandler;
+    ContentHandler contentHandler;
     Speaker speaker;
 
     String currentTheme;
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         commentHandler = new CommentHandler(dbHelper, this);
         wordHandler = new WordHandler(dbHelper, this);
         bookHandler = new BookHandler(dbHelper, this);
+        contentHandler = new ContentHandler(dbHelper,this);
         speaker = new Speaker(this);
 
         setupMainLayout();
@@ -150,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
         detectText();
         constructText();
         barCodeRecognize();
-        //speechInitialization();
 
     }
 
@@ -160,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
-        main_arButton = findViewById(R.id.ARButton);
         main_storageButton = findViewById(R.id.StorageButton);
         main_libraryButton = findViewById(R.id.LibraryButton);
         main_barcodeButton = findViewById(R.id.BarcodeButton);
@@ -171,11 +171,10 @@ public class MainActivity extends AppCompatActivity {
             capturedString = detectedString;
             showCapturePopup(v1);
         });
-        main_arButton.setOnClickListener(v -> displayAr());
         main_barcodeButton.setOnClickListener(v2 -> {
             showBarcodePopup(v2);
             main_barcodeButton.clearAnimation();
-            main_barcodeButton.setBackground(getResources().getDrawable(R.drawable.rounded_button_disabled));
+            main_barcodeButton.setBackgroundResource(R.drawable.rounded_button_disabled);
             main_barcodeButton.setEnabled(false);
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
@@ -262,7 +261,9 @@ public class MainActivity extends AppCompatActivity {
     private void setupBarcodePopup() {
         brc_closeButton = barcodePopup.findViewById(R.id.BarcodeCloseButton);
         brc_detailsButton = barcodePopup.findViewById(R.id.BarcodeDetailsButton);
+        brc_loadButton = barcodePopup.findViewById(R.id.BarcodeActivityButton);
         brc_displayView = barcodePopup.findViewById(R.id.BarcodeTextView);
+        brc_loadButton.setVisibility(View.GONE);
     }
 
     private void setupDetailsPopup() {
@@ -388,33 +389,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void showBarcodePopup(View v2) {
         boolean bookInLibrary = checkBarcodeAlreadyInLibrary(detectedISBN);
+        brc_detailsButton.setOnClickListener(v -> {
+            dtl_imageView.setImageDrawable(null);
+            dtl_titleView.setText("");
+            dtl_othersView.setText("");
+            showDetailsPopup(v);
+            barcodePopup.dismiss();
+        });
+        brc_loadButton.setOnClickListener(v -> {
+            loadARActivity(bookHandler.getBookIDByISBN(detectedISBN));
+            barcodePopup.dismiss();
+        });
         if (bookInLibrary) {
-            brc_detailsButton.setText("Go to Library");
-            brc_displayView.setText("The book with " + detectedISBN + " code is already in the library");
-            brc_detailsButton.setOnClickListener(v -> {
-                dtl_imageView.setImageDrawable(null);
-                dtl_titleView.setText("");
-                dtl_othersView.setText("");
-                Intent intent = new Intent(this, LibraryActivity.class);
-                startActivity(intent);
-                barcodePopup.dismiss();
-            });
+            brc_displayView.setText(detectedISBN + "\n(The book with " + detectedISBN + " code is already in the library)");
+            brc_loadButton.setVisibility(View.VISIBLE);
+
         } else {
-            brc_detailsButton.setText("Show Details");
-            brc_detailsButton.setOnClickListener(v -> {
-                dtl_imageView.setImageDrawable(null);
-                dtl_titleView.setText("");
-                dtl_othersView.setText("");
-                showDetailsPopup(v);
-                barcodePopup.dismiss();
-            });
+            brc_loadButton.setVisibility(View.GONE);
             brc_displayView.setText(detectedISBN);
         }
         brc_closeButton.setOnClickListener(v -> {
             barcodePopup.dismiss();
             detectedISBN = "";
         });
-
         barcodePopup.show();
     }
 
@@ -432,13 +429,14 @@ public class MainActivity extends AppCompatActivity {
         detailsPopup.show();
     }
 
-    public void showContentPopup(View v2) {
-        loadContentDetails();
+    public void showContentPopup(View v2, String bookID) {
+        loadContentDetails(bookID);
         cnt_backButton.setOnClickListener(v1 -> {
             contentPopup.dismiss();
             showDetailsPopup(v1);
         });
         cnt_closeButton.setOnClickListener(v1 -> {
+            detectedISBN = "";
             detailsPopup.dismiss();
             contentPopup.dismiss();
         });
@@ -670,7 +668,7 @@ public class MainActivity extends AppCompatActivity {
                 String id = content.getJSONObject(i).getString("id");
                 String fi = content.getJSONObject(i).getString("file");
                 String des = content.getJSONObject(i).getString("description");
-                downloadContentDetails.add(new DownloadContentObject(id, im, ti, des, si, fi));
+                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID,des, si, fi,i));
             }
             book = new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, pubid, pubname);
 
@@ -684,7 +682,7 @@ public class MainActivity extends AppCompatActivity {
                 other.append("\n\n").append(contentAmount).append(" models are available");
                 dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_three);
                 dtl_contentButton.setOnClickListener(v2 -> {
-                    showContentPopup(v2);
+                    showContentPopup(v2,bookID);
                     detailsPopup.dismiss();
                 });
             }
@@ -714,8 +712,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean checkBarcodeAlreadyInLibrary(String ISBN) {
-        //TODO: implement the method to check the database
-        return false;
+        String databaseResult = bookHandler.getBookIDByISBN(ISBN);
+        return !databaseResult.equals("empty");
+        //Returned book ID can be used later
     }
 
     private void saveComment() {
@@ -765,8 +764,9 @@ public class MainActivity extends AppCompatActivity {
         wordHandler.addWord(wordObject);
     }
 
-    private void loadContentDetails() {
-        DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent());
+    private void loadContentDetails(String bookID) {
+        ArrayList<String> databaseContents = contentHandler.getContentIDsByBookIDs(bookID);
+        DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent(), databaseContents);
         cnt_contentListView.setAdapter(adapter);
         cnt_downloadButton.setOnClickListener(v -> {
             saveBook(book);
@@ -775,6 +775,7 @@ public class MainActivity extends AppCompatActivity {
             for (DownloadContentObject d : selected) {
                 ContentDownloader cd = new ContentDownloader(this, d, bookFile);
                 cd.execute();
+                contentHandler.addContent(d);
                 Log.d("Test", d.getContName());
             }
         });
@@ -856,10 +857,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void displayAr() {
+    private void loadARActivity(String bookID) {
         Intent intent = new Intent(this, ArViewActivity.class);
-//        intent.putExtra("book",book);
-        intent.putExtra("isbn", detectedISBN);
+        intent.putExtra("booID", bookID);
         startActivity(intent);
     }
 
@@ -871,13 +871,6 @@ public class MainActivity extends AppCompatActivity {
     private void loadGameActivity() {
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
-    }
-
-    public void recognizeARActivity() {
-        main_arButton.setActivated(true);
-        main_arButton.setOnClickListener(v1 -> {
-        });
-        buttonAnimation2(main_arButton);
     }
 
     public File makeDir(String fileName) {
