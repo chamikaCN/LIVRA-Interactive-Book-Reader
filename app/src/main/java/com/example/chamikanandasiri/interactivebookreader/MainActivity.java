@@ -780,8 +780,9 @@ public class MainActivity extends AppCompatActivity {
         cnt_contentListView.setAdapter(adapter);
         cnt_downloadButton.setOnClickListener(v -> {
             saveBook(book);
+            buttonAnimation4(cnt_downloadButton);
             ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
-            File bookFile = makeDir(book.getIsbns()[0]);
+            File bookFile = makeDir(book.getBookId());
             for (DownloadContentObject d : selected) {
                 ContentDownloader cd = new ContentDownloader(this, d, bookFile);
                 cd.execute();
@@ -859,6 +860,13 @@ public class MainActivity extends AppCompatActivity {
         button.startAnimation(animation);
     }
 
+    private void buttonAnimation4(Button button) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        BounceInterpolator bi = new BounceInterpolator(0.2, 20);
+        animation.setInterpolator(bi);
+        button.startAnimation(animation);
+    }
+
     //Redirection Functions
 
     private void loadStorageActivity(String type) {
@@ -887,12 +895,9 @@ public class MainActivity extends AppCompatActivity {
         File f = new File(this.getFilesDir(), fileName);
         if (!f.exists()) {
             f.mkdir();
-            File img = new File(f, "img");
             File ar = new File(f, "ar");
-            img.mkdir();
             ar.mkdir();
         }
-
         return f;
     }
 }
