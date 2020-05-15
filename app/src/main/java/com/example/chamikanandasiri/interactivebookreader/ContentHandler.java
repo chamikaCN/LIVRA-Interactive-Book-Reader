@@ -26,9 +26,6 @@ public class ContentHandler {
             String Bc = res.getString(1);
             String Cc = res.getString(2);
             String Dc = res.getString(3);
-
-//            String[] cat = new String[]{Ac,Bc};
-//            Log.d(TAG, "getPhraseCommentByTitle: "+ Arrays.toString(cat));
             results.add(new String[]{Ac,Bc,Cc,Dc});
 
         }return results;

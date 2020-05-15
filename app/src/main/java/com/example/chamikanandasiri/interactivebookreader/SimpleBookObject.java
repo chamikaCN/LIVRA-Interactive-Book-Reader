@@ -1,14 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-
-//Serializable for testing
-public class SimpleBookObject implements Serializable {
+public class SimpleBookObject {
 
     private String id;
     private String title;

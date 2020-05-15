@@ -153,7 +153,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getContentDetailsByBooKID(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "CoverURL", "FileURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
+        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "ImageURL", "FileURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
 
     public Cursor getContentIDsByBooKID(String id) {
