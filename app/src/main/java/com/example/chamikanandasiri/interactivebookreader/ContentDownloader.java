@@ -18,18 +18,17 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class ContentDownloader extends AsyncTask {
-    private File outputdir, outputTempFile,ar,img;
+    private File outputdir, outputTempFile,ar;
     private DownloadContentObject d;
     private URL fileurl,imgurl;
     private Context context;
 
 
-    public ContentDownloader(Context context, DownloadContentObject d, File isbn) {
-        this.outputdir=isbn;
+    public ContentDownloader(Context context, DownloadContentObject d, File bookIDFile) {
+        this.outputdir=bookIDFile;
         this.d = d;
         try {
             this.fileurl=new URL((d.getFileURL()));
-            this.imgurl=new URL((d.getImageURLs()[0]));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -41,13 +40,12 @@ public class ContentDownloader extends AsyncTask {
 
 
             Log.d("fIleurl", fileurl.toString());
-            Log.d("imgurl",imgurl.toString());
 
             URLConnection c = fileurl.openConnection();
             Log.d("Outputdir",outputdir.getAbsolutePath()+"ar");
             Log.d("contentname",d.getContName());
 
-            outputTempFile=createFile(outputdir.getAbsolutePath()+"/ar",d.getContName()+".sfb");
+            outputTempFile=createFile(outputdir.getAbsolutePath()+"/ar",d.getContId()+".sfb");
             c.connect();
             InputStream input = c.getInputStream();
             FileOutputStream output = new FileOutputStream(outputTempFile);
@@ -62,22 +60,22 @@ public class ContentDownloader extends AsyncTask {
             output.close();
             input.close();
 
-            URLConnection ic = imgurl.openConnection();
-            Log.d("Outputdir",outputdir.getAbsolutePath()+"img");
-            Log.d("contentname",d.getContName());
-
-            outputTempFile=createFile(outputdir.getAbsolutePath()+"/img",d.getContName()+".jpg");
-            c.connect();
-            InputStream inputimg = ic.getInputStream();
-            FileOutputStream outputimg = new FileOutputStream(outputTempFile);
-            byte[] imgbuffer = new byte[1024];
-            int lent = 0;
-            while ((len = inputimg.read(imgbuffer)) != -1) {
-                outputimg.write(imgbuffer, 0, len);
-            }
-
-            outputimg.close();
-            inputimg.close();
+//            URLConnection ic = imgurl.openConnection();
+//            Log.d("Outputdir",outputdir.getAbsolutePath()+"img");
+//            Log.d("contentname",d.getContName());
+//
+//            outputTempFile=createFile(outputdir.getAbsolutePath()+"/img",d.getContName()+".jpg");
+//            c.connect();
+//            InputStream inputimg = ic.getInputStream();
+//            FileOutputStream outputimg = new FileOutputStream(outputTempFile);
+//            byte[] imgbuffer = new byte[1024];
+//            int lent = 0;
+//            while ((len = inputimg.read(imgbuffer)) != -1) {
+//                outputimg.write(imgbuffer, 0, len);
+//            }
+//
+//            outputimg.close();
+//            inputimg.close();
 
             return true;
         } catch (FileNotFoundException e) {
