@@ -1,5 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class SimpleContentObject implements Serializable {
@@ -9,6 +10,7 @@ public class SimpleContentObject implements Serializable {
     private String name;
     private String bookID;
     private String fileURL;
+    private File file;
 
     private String TAG ="Test";
 
@@ -38,5 +40,13 @@ public class SimpleContentObject implements Serializable {
 
     public String getFileURL() {
         return fileURL;
+    }
+
+    public void setFile(File f){
+        this.file = f;
+    }
+
+    public File getFile(){
+        return file;
     }
 }
