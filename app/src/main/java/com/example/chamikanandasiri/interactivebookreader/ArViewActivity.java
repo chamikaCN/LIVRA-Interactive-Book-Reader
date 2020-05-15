@@ -26,23 +26,13 @@ public class ArViewActivity extends AppCompatActivity {
     private ModelAnimator modelAnimator;
     private int i;
     private String bookID;
-
-    //TODO NILAAN : get the details of the contents related to this bookID by using getContentsByBookID() method in content handler
-    //TODO NILAAN : add the necessary cards for the content
-    //TODO NILAAN : render the content on click
-
-
+    private DataBaseHelper dataBaseHelper;
+    private ContentHandler contentHandler;
     private ArFragment arFragment;
-    private ArrayList<Integer> imagesPath = new ArrayList<>();
-    private ArrayList<String> namesPath = new ArrayList<>();
-    private ArrayList<String> modelNames = new ArrayList<>();
+    private ArrayList<SimpleContentObject> contentAvailable;
 
-    private ArrayList<File> arImagesPath = new ArrayList<>();
-    private ArrayList<String> arName = new ArrayList<>();
-    private ArrayList<File> arModel = new ArrayList<>();
-
+    private String TAG = "Test";
     AnchorNode anchorNode;
-    BookObject book;
     String currentTheme;
     private ImageButton btnRemove, btnBack;
 
@@ -57,37 +47,34 @@ public class ArViewActivity extends AppCompatActivity {
         } else if (currentTheme.equals("Dark")) {
             setTheme(R.style.DarkTheme);
         }
-
         setContentView(R.layout.activity_ar_view);
+
+        dataBaseHelper = new DataBaseHelper(this);
+        contentHandler = new ContentHandler(dataBaseHelper, this);
         this.bookID = getIntent().getExtras().getString("bookID");
+        contentAvailable = new ArrayList<>();
+
+        ArrayList<String[]> arrayList = contentHandler.getContentsByBookID(bookID);
+        for(String[] a : arrayList){
+            contentAvailable.add(new SimpleContentObject(a[0],a[2],a[1],bookID,a[3]));
+        }
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         btnRemove = findViewById(R.id.remove);
         btnBack = findViewById(R.id.back);
-        getImages();
+        initiateRecyclerView();
         try {
-            loadimage();
+            loadCards();
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-//        Uri model=Uri.parse("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf");
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
-
             Anchor anchor = hitResult.createAnchor();
-
             ModelRenderable.builder()
                     .setSource(this, Uri.fromFile(Common.model))
                     .build()
                     .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
 
         });
-
-
-//            ModelRenderable.builder()
-//                    .setSource(this, RenderableSource.builder().setSource(this,Common.model,RenderableSource.SourceType.GLTF2).setScale(0.4f).build())
-//                    .setRegistryId(Common.model)
-//                    .build()
-//                    .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
-//        });
         btnRemove.setOnClickListener(view -> removeAnchorNode(anchorNode));
         btnBack.setOnClickListener(view -> {
             Intent intent = new Intent(this, MainActivity.class);
@@ -95,55 +82,19 @@ public class ArViewActivity extends AppCompatActivity {
         });
     }
 
-    private void loadimage() throws NullPointerException {
-//        /data/data/com.example.chamikanandasiri.interactivebookreader/files/9783161484100
-        File ar = new File(this.getFilesDir().getAbsolutePath() + "/9783161484100", "ar");
-        Log.d("bookID", bookID);
-        Log.d("arpath", ar.getAbsolutePath());
-        File img = new File(this.getFilesDir().getAbsolutePath() + "/9783161484100", "img");
-        for (File f : ar.listFiles()) {
-//            arName.add(f.getName());
-            arModel.add(f);
-            Log.d("Model1", f.getAbsolutePath());
+    private void loadCards() throws NullPointerException {
+        for(SimpleContentObject sc: contentAvailable){
+            File arModel = new File(this.getFilesDir().getAbsolutePath() + "/"+ bookID +"/ar/", sc.getContId()+".sfb");
+            sc.setFile(arModel);
+            Log.d(TAG, "loadCards: got "+sc.getFile().getName());
         }
-        for (File f : img.listFiles()) {
-            arImagesPath.add(f);
-            Log.d("Model1", f.getAbsolutePath());
-
-        }
-    }
-
-    private void getImages() {
-
-        imagesPath.add(R.drawable.table);
-        imagesPath.add(R.drawable.bookshelf);
-        imagesPath.add(R.drawable.bird);
-        imagesPath.add(R.drawable.table);
-        imagesPath.add(R.drawable.table);
-        imagesPath.add(R.drawable.table);
-
-        namesPath.add("Table");
-        namesPath.add("BookShelf");
-        namesPath.add("Bird");
-        namesPath.add("Cat");
-        namesPath.add("Dog");
-        namesPath.add("nilaan");
-        //https://res.cloudinary.com/db2rl2mxy/raw/upload/v1588865438/0a6a06473eb26f4f8242e874ab1f591f7cb0e2c5..sfb
-        //https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf
-        modelNames.add("https://res.cloudinary.com/db2rl2mxy/raw/upload/v1588865438/0a6a06473eb26f4f8242e874ab1f591f7cb0e2c5..sfb");
-        modelNames.add("model.sfb");
-        modelNames.add("bird.sfb");
-        modelNames.add("bird.sfb");
-        modelNames.add("table.sfb");
-        modelNames.add("https://res.cloudinary.com/db2rl2mxy/raw/upload/v1588865438/0a6a06473eb26f4f8242e874ab1f591f7cb0e2c5..sfb");
-        initiateRecyclerView();
     }
 
     private void initiateRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerviewAdapter adapter = new RecyclerviewAdapter(this, arImagesPath, arModel);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, contentAvailable);
         recyclerView.setAdapter(adapter);
     }
 
