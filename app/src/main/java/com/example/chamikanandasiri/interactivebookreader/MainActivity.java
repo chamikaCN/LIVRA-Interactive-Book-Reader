@@ -57,7 +57,7 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, main_settingsButton, cap_dictionaryButton, cap_speechButton, cap_copyButton, cap_commentButton,
+    ImageButton main_captureButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, main_settingsButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
             dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton, stn_closeButton;
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             main_barcodeButton.setEnabled(false);
         });
         main_storageButton.setOnClickListener(this::showStoragePopup);
-        main_settingsButton.setOnClickListener(v2 -> showSettingsPopup(v2));
+        main_settingsButton.setOnClickListener(this::showSettingsPopup);
         main_libraryButton.setOnClickListener(v2 -> loadLibraryActivity());
         main_gameButton.setOnClickListener(v2 -> loadGameActivity());
         main_barcodeButton.setEnabled(false);
@@ -218,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
     private void setupCapturePopup() {
         cap_dictionaryButton = capturePopup.findViewById(R.id.DictionaryButton);
         cap_speechButton = capturePopup.findViewById(R.id.SpeechButton);
-        //cap_copyButton = capturePopup.findViewById(R.id.CopyButton);
         cap_commentButton = capturePopup.findViewById(R.id.CommentButton);
         cap_closeButton = capturePopup.findViewById(R.id.CloseButton);
         cap_displayView = capturePopup.findViewById(R.id.DisplayTextView);
@@ -304,7 +303,6 @@ public class MainActivity extends AppCompatActivity {
             capturePopup.dismiss();
             showCommentPopup(v2);
         });
-        //cap_copyButton.setOnClickListener(v1 -> copyToClipboard());
         cap_displayView.setText(capturedString);
 
         capturePopup.show();
@@ -401,7 +399,8 @@ public class MainActivity extends AppCompatActivity {
             barcodePopup.dismiss();
         });
         if (bookInLibrary) {
-            brc_displayView.setText(detectedISBN + "\n(The book with " + detectedISBN + " code is already in the library)");
+            String s = detectedISBN + "\n(The book with " + detectedISBN + " code is already in the library)";
+            brc_displayView.setText(s);
             brc_loadButton.setVisibility(View.VISIBLE);
 
         } else {
@@ -429,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
         detailsPopup.show();
     }
 
-    public void showContentPopup(View v2, String bookID) {
+    public void showContentPopup(String bookID) {
         loadContentDetails(bookID);
         cnt_backButton.setOnClickListener(v1 -> {
             contentPopup.dismiss();
@@ -452,7 +451,6 @@ public class MainActivity extends AppCompatActivity {
         stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
         stn_themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {changeTheme(isChecked);
         settingsPopup.dismiss();
-        //showSettingsPopup();
         });
         settingsPopup.show();
     }
@@ -595,7 +593,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void formatDictionaryResponse() throws JSONException {
         if (dictionaryResponse == null) {
-            dict_displayView.setText("cannot connect with server");
+            String s = "cannot connect with server";
+            dict_displayView.setText(s);
         } else if (dictionaryResponse.has("word")) {
             searchedWord = dictionaryResponse.getString("word");
             StringBuilder shower = new StringBuilder();
@@ -607,7 +606,8 @@ public class MainActivity extends AppCompatActivity {
             dict_wordView.setText(searchedWord);
             dict_displayView.setText(shower.toString());
         } else {
-            dict_displayView.setText("No Definitions found");
+            String s = "No Definitions found";
+            dict_displayView.setText(s);
         }
     }
 
@@ -626,7 +626,8 @@ public class MainActivity extends AppCompatActivity {
                 String message = e.getMessage();
                 Log.w("failure Response", message);
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    dtl_othersView.setText("Cannot Connect to Server");
+                    String s = "Cannot Connect to Server";
+                    dtl_othersView.setText(s);
                 });
             }
 
@@ -655,8 +656,8 @@ public class MainActivity extends AppCompatActivity {
             String title = detailsResponse.getString("title");
             String[] isbns = JSONArrayToStringArray(detailsResponse.getJSONArray("isbns"));
             String[] authors = JSONArrayToStringArray(detailsResponse.getJSONArray("authors"));
-            String pubid = detailsResponse.getJSONObject("publisher").getString("id");
-            String pubname = detailsResponse.getJSONObject("publisher").getString("name");
+            String publisherID = detailsResponse.getJSONObject("publisher").getString("id");
+            String publisherName = detailsResponse.getJSONObject("publisher").getString("name");
             String[] covers = JSONArrayToStringArray(detailsResponse.getJSONArray("covers"));
             boolean active = detailsResponse.getBoolean("active");
             JSONArray content = detailsResponse.getJSONArray("content");
@@ -664,17 +665,25 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < contentAmount; i++) {
                 String[] im = JSONArrayToStringArray(content.getJSONObject(i).getJSONArray("images"));
                 String ti = content.getJSONObject(i).getString("title");
-                String si = "2.71MB";
+                String si = content.getJSONObject(i).getString("size");
+                float size1 = Float.parseFloat(si);
+                float sizeInKB = size1/1024;
+                String size;
+                if(sizeInKB > 99.99){
+                    float sizeInMB = sizeInKB/1024;
+                    size = String.format("%.2f", sizeInMB) + " MB";
+                }else {
+                    size = String.format("%.2f", sizeInKB) + " KB";
+                }
                 String id = content.getJSONObject(i).getString("id");
                 String fi = content.getJSONObject(i).getString("file");
                 String des = content.getJSONObject(i).getString("description");
-                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID,des, si, fi,i));
+                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID,des, size, fi, i));
             }
-            book = new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, pubid, pubname);
-
+            book = new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, publisherID, publisherName);
 
             StringBuilder other = new StringBuilder();
-            other.append("Author : ").append(authors[0]).append("\nPublisher : ").append(pubname).append("\nISBN : ").append(isbns[0]);
+            other.append("Author : ").append(authors[0]).append("\nPublisher : ").append(publisherName).append("\nISBN : ").append(isbns[0]);
             if (contentAmount == 0) {
                 other.append("\n\nNo AR content is available for this book");
                 dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_disabled);
@@ -682,7 +691,7 @@ public class MainActivity extends AppCompatActivity {
                 other.append("\n\n").append(contentAmount).append(" models are available");
                 dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_three);
                 dtl_contentButton.setOnClickListener(v2 -> {
-                    showContentPopup(v2,bookID);
+                    showContentPopup(bookID);
                     detailsPopup.dismiss();
                 });
             }
@@ -692,7 +701,8 @@ public class MainActivity extends AppCompatActivity {
             new Handler(Looper.getMainLooper()).post(() -> loadImage(covers[0], dtl_imageView));
 
         } else {
-            dtl_othersView.setText(" No Details Available for the Book on Our Database");
+            String s = "No Details Available for the Book on Our Database";
+            dtl_othersView.setText(s);
         }
     }
 
