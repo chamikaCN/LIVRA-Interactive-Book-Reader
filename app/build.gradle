@@ -66,8 +66,6 @@ sceneform.asset('sampleData/embedded_resources.fbx',
         'src/main/assets/bird')
 
 
-
-
 sceneform.asset('sampleData/A.fbx',
         'default',
         'sampleData/A.sfa',
@@ -97,8 +95,6 @@ sceneform.asset('sampleData/dot.fbx',
         'default',
         'sampleData/dot.sfa',
         'src/main/assets/dot')
-
-
 
 
 sceneform.asset('sampleData/E.fbx',

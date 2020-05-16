@@ -15,7 +15,9 @@
         <item name="colorControlNormal">@color/lightFancyOne</item>
         <item name="panelBackground">@drawable/background_largelight</item>
         <item name="editTextBackground">@drawable/backgraound_smalllight</item>
+        <item name="actionModeBackground">@drawable/welcome_plain_light</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="selectableItemBackground">@drawable/livra_name_light</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
@@ -32,7 +34,9 @@
         <item name="colorControlNormal">@color/darkFancyOne</item>
         <item name="panelBackground">@drawable/background_largedark</item>
         <item name="editTextBackground">@drawable/background_smalldark</item>
+        <item name="actionModeBackground">@drawable/welcome_plain_dark</item>
         <item name="android:windowLightStatusBar">false</item>
+        <item name="selectableItemBackground">@drawable/livra_name_dark</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">

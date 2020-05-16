@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
     <uses-feature
         android:name="android.hardware.camera.ar"
         android:required="true" />
@@ -17,17 +16,18 @@
         android:roundIcon="@mipmap/ic_livra_new_round"
         android:supportsRtl="true"
         android:theme="@style/LightTheme">
-        <activity android:name=".GameActivity"></activity>
-        <activity android:name=".LibraryActivity" />
-        <activity android:name=".ArViewActivity" />
-        <activity android:name=".StorageActivity" />
-        <activity
-            android:name=".MainActivity">
+        <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".GameActivity" />
+        <activity android:name=".LibraryActivity" />
+        <activity android:name=".ArViewActivity" />
+        <activity android:name=".StorageActivity" />
+        <activity android:name=".MainActivity"/>
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
