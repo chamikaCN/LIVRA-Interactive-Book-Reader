@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton, stn_closeButton;
 
     Switch stn_themeSwitch;
-    Button str_wordButton, str_commentButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
+    Button str_wordButton, str_commentButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton, stn_applyButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
 
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         commentHandler = new CommentHandler(dbHelper, this);
         wordHandler = new WordHandler(dbHelper, this);
         bookHandler = new BookHandler(dbHelper, this);
-        contentHandler = new ContentHandler(dbHelper,this);
+        contentHandler = new ContentHandler(dbHelper, this);
         speaker = new Speaker(this);
 
         setupMainLayout();
@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupSettingsPopup() {
         stn_closeButton = settingsPopup.findViewById(R.id.SettingsCloseButton);
         stn_themeSwitch = settingsPopup.findViewById(R.id.SettingsThemeSwitch);
+        stn_applyButton = settingsPopup.findViewById(R.id.SettingsApplyButton);
     }
 
     public void showCapturePopup(View v) {
@@ -449,11 +450,14 @@ public class MainActivity extends AppCompatActivity {
             stn_themeSwitch.setChecked(false);
         }
         stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
-        stn_themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {changeTheme(isChecked);
-        settingsPopup.dismiss();
+//        stn_themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> changeTheme(isChecked));
+        stn_applyButton.setOnClickListener(v1 -> {
+            applySettings();
+            settingsPopup.dismiss();
         });
         settingsPopup.show();
     }
+
 
     // Main Functions
 
@@ -667,18 +671,18 @@ public class MainActivity extends AppCompatActivity {
                 String ti = content.getJSONObject(i).getString("title");
                 String si = content.getJSONObject(i).getString("size");
                 float size1 = Float.parseFloat(si);
-                float sizeInKB = size1/1024;
+                float sizeInKB = size1 / 1024;
                 String size;
-                if(sizeInKB > 99.99){
-                    float sizeInMB = sizeInKB/1024;
+                if (sizeInKB > 99.99) {
+                    float sizeInMB = sizeInKB / 1024;
                     size = String.format("%.2f", sizeInMB) + " MB";
-                }else {
+                } else {
                     size = String.format("%.2f", sizeInKB) + " KB";
                 }
                 String id = content.getJSONObject(i).getString("id");
                 String fi = content.getJSONObject(i).getString("file");
                 String des = content.getJSONObject(i).getString("description");
-                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID,des, size, fi, i));
+                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID, des, size, fi, i));
             }
             book = new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, publisherID, publisherName);
 
@@ -750,6 +754,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void applySettings() {
+        boolean themeSwitchValue = stn_themeSwitch.isChecked();
+        if ((themeSwitchValue && (currentTheme.equals("Light")))) {
+            changeTheme(true);
+        } else if (!themeSwitchValue && (currentTheme.equals("Dark"))) {
+            changeTheme(false);
+        }
+    }
+
     private void changeTheme(boolean isDarkMode) {
         SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -797,7 +810,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadImage(String Url, ImageView im) {
         Picasso.with(this).load(Url)
-                .placeholder(R.drawable.ezgif_crop)
+                .placeholder(R.drawable.bookcover_loading_anim)
                 .into(im, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {

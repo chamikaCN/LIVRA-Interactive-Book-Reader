@@ -116,5 +116,23 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/SettingsApplyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="2dp"
+            android:padding="10dp"
+            android:background="@drawable/rounded_button_two"
+            android:text="Apply"
+            android:textColor="?attr/colorPrimary" />
+    </LinearLayout>
+
 </LinearLayout>
 
