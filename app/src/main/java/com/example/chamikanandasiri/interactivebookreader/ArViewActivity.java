@@ -30,6 +30,7 @@ public class ArViewActivity extends AppCompatActivity {
     private ContentHandler contentHandler;
     private ArFragment arFragment;
     private ArrayList<SimpleContentObject> contentAvailable;
+    private static File selectedARModel;
 
     private String TAG = "Test";
     AnchorNode anchorNode;
@@ -55,8 +56,8 @@ public class ArViewActivity extends AppCompatActivity {
         contentAvailable = new ArrayList<>();
 
         ArrayList<String[]> arrayList = contentHandler.getContentsByBookID(bookID);
-        for(String[] a : arrayList){
-            contentAvailable.add(new SimpleContentObject(a[0],a[2],a[1],bookID,a[3]));
+        for (String[] a : arrayList) {
+            contentAvailable.add(new SimpleContentObject(a[0], a[2], a[1], bookID, a[3]));
         }
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         btnRemove = findViewById(R.id.remove);
@@ -69,11 +70,12 @@ public class ArViewActivity extends AppCompatActivity {
         }
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
             Anchor anchor = hitResult.createAnchor();
-            ModelRenderable.builder()
-                    .setSource(this, Uri.fromFile(Common.model))
-                    .build()
-                    .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
-
+            if (selectedARModel != null) {
+                ModelRenderable.builder()
+                        .setSource(this, Uri.fromFile(selectedARModel))
+                        .build()
+                        .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
+            }
         });
         btnRemove.setOnClickListener(view -> removeAnchorNode(anchorNode));
         btnBack.setOnClickListener(view -> {
@@ -82,11 +84,15 @@ public class ArViewActivity extends AppCompatActivity {
         });
     }
 
+    public static void setSelectedARModel(File f) {
+        selectedARModel = f;
+    }
+
     private void loadCards() throws NullPointerException {
-        for(SimpleContentObject sc: contentAvailable){
-            File arModel = new File(this.getFilesDir().getAbsolutePath() + "/"+ bookID +"/ar/", sc.getContId()+".sfb");
+        for (SimpleContentObject sc : contentAvailable) {
+            File arModel = new File(this.getFilesDir().getAbsolutePath() + "/" + bookID + "/ar/", sc.getContId() + ".sfb");
             sc.setFile(arModel);
-            Log.d(TAG, "loadCards: got "+sc.getFile().getName());
+            Log.d(TAG, "loadCards: got " + sc.getFile().getName());
         }
     }
 
