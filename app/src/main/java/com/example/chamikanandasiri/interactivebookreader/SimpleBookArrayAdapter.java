@@ -40,7 +40,7 @@ class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
         TextView tvOther = convertView.findViewById(R.id.BookOtherView);
 
         Picasso.with(context).load(imageURL)
-                .placeholder(R.drawable.ezgif_crop)
+                .placeholder(R.drawable.bookcover_loading_anim)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
                 .into(imageView);

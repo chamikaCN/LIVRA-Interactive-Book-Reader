@@ -64,7 +64,7 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
         });
 
         Picasso.with(context).load(imageURL)
-                .placeholder(R.drawable.ezgif_crop)
+                .placeholder(R.drawable.bookcover_loading_anim)
                 .into(imageView);
         tvName.setText(name);
         tvSize.setText(size);

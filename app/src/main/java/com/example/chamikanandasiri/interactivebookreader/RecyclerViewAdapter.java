@@ -37,14 +37,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Picasso.with(context).load(downloadedContent.get(position).getImageURL())
-                .placeholder(R.drawable.ezgif_crop)
+                .placeholder(R.drawable.bookcover_loading_anim)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
                 .into(holder.imageView);
 
         holder.textView.setText(downloadedContent.get(position).getContName());
 
-        holder.imageView.setOnClickListener(view -> Common.model = downloadedContent.get(position).getFile());
+        holder.imageView.setOnClickListener(view -> ArViewActivity.setSelectedARModel(downloadedContent.get(position).getFile()));
     }
 
     @Override
