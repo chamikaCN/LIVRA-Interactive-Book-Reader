@@ -42,5 +42,6 @@
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="MinusButtonContentDescription">Minus</string>
     <string name="PlusButtonContentDescription">Plus</string>
+    <string name="audio_settings">Audio Settings</string>
 
 </resources>

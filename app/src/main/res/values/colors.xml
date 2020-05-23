@@ -23,9 +23,9 @@
     <color name="lightDefaultText">#000000</color>
     <color name="lightTitleText">#37474F</color>
     <color name="lightHintText">#607D8B</color>
-    <color name="lightFancyOne">#5E35B1</color>
-    <color name="lightFancyTwo">#FFA000</color>
-    <color name="lightFancyThree">#558B2F</color>
+    <color name="lightFancyOne">#672178</color>
+    <color name="lightFancyTwo">#D4AA00</color>
+    <color name="lightFancyThree">#008033</color>
     <color name="lightFancyFour">#1E88E5</color>
     <color name="lightFancyFive">#E53935</color>
 
