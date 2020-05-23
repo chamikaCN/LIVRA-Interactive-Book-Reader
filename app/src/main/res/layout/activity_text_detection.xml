@@ -18,36 +18,22 @@
         app:layout_constraintVertical_bias="0.0">
 
     </SurfaceView>
+
     <ImageButton
         android:id="@+id/TextDetectionBackButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
         android:background="@drawable/rounded_button_four"
+        android:contentDescription="@string/back"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/Surface"
         app:layout_constraintEnd_toEndOf="@+id/Surface"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/Surface"
         app:layout_constraintTop_toTopOf="@+id/Surface"
-        android:contentDescription="@string/back"
-        app:srcCompat="@drawable/ic_back"
-        android:scaleType="fitXY"/>
-
-    <ImageButton
-        android:id="@+id/BarcodeButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/rounded_button_disabled"
-        android:contentDescription="@string/BarcodeContentDescription"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.4"
-        app:srcCompat="@drawable/ic_barcode"
-        android:scaleType="fitXY"/>
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_back" />
 
     <ImageButton
         android:id="@+id/CaptureButton"
@@ -61,7 +47,6 @@
         app:layout_constraintStart_toStartOf="@+id/Surface"
         app:layout_constraintTop_toTopOf="@id/Surface"
         app:layout_constraintVertical_bias="0.95"
-        app:srcCompat="@drawable/ic_capture"/>
-
-
+        app:srcCompat="@drawable/ic_capture" />
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

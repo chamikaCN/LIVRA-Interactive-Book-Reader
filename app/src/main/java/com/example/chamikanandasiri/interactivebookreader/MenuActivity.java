@@ -55,9 +55,9 @@ public class MenuActivity extends AppCompatActivity {
 
     private String currentTheme;
     private CardView libraryCard, textDetectorCard, savedItemsCard, alphaGameCard, addBookCard, settingsCard;
-    private Dialog savedItemPopup, settingsPopup, addBookPopup, complexBarcodePopup,barcodePopup,detailsPopup, contentPopup;;
-    private ImageButton str_closeButton, stn_closeButton, abk_closeButton, cbd_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
-    private Button str_commentButton, str_wordButton, stn_applyButton, abk_barcodeButton, abk_searchBookButton, cbd_searchButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
+    private Dialog savedItemPopup, settingsPopup, complexBarcodePopup,barcodePopup,detailsPopup, contentPopup;;
+    private ImageButton str_closeButton, stn_closeButton, cbd_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
+    private Button str_commentButton, str_wordButton, stn_applyButton, cbd_searchButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
     private SeekBar pitchBar, speedBar;
     private ImageView dtl_imageView;
     private Switch stn_themeSwitch;
@@ -125,8 +125,6 @@ public class MenuActivity extends AppCompatActivity {
         savedItemPopup.setContentView(R.layout.popup_storage);
         settingsPopup = new Dialog(this);
         settingsPopup.setContentView(R.layout.popup_settings);
-        addBookPopup = new Dialog(this);
-        addBookPopup.setContentView(R.layout.popup_addbook);
         complexBarcodePopup = new Dialog(this);
         complexBarcodePopup.setContentView(R.layout.popup_compexbarcode);
         barcodePopup = new Dialog(this);
@@ -138,7 +136,6 @@ public class MenuActivity extends AppCompatActivity {
 
         setupMainLayout();
         setupSavedItemPopup();
-        setupAddBookPopup();
         setupSettingsPopup();
         setupComplexBarcodePopup();
         setupBarcodePopup();
@@ -183,12 +180,6 @@ public class MenuActivity extends AppCompatActivity {
         str_wordButton = savedItemPopup.findViewById(R.id.WordLoadButton);
     }
 
-    private void setupAddBookPopup() {
-        abk_closeButton = addBookPopup.findViewById(R.id.AddBookCloseButton);
-        abk_barcodeButton = addBookPopup.findViewById(R.id.AddBookBarcodeButton);
-        abk_searchBookButton = addBookPopup.findViewById(R.id.AddBookSearchButton);
-    }
-
     private void setupComplexBarcodePopup() {
         cbd_closeButton = complexBarcodePopup.findViewById(R.id.ComplexBarcodeCloseButton);
         cbd_searchButton = complexBarcodePopup.findViewById(R.id.ComplexBarcodeSearchButton);
@@ -231,12 +222,6 @@ public class MenuActivity extends AppCompatActivity {
         str_commentButton.setOnClickListener(v2 -> loadStorageActivity("comment"));
         str_closeButton.setOnClickListener(v2 -> savedItemPopup.dismiss());
         savedItemPopup.show();
-    }
-
-    public void showAddBookPopup() {
-        abk_closeButton.setOnClickListener(v2 -> addBookPopup.dismiss());
-        abk_barcodeButton.setOnClickListener(this::showComplexBarcodePopup);
-        addBookPopup.show();
     }
 
     public void showSettingsPopup(View v) {

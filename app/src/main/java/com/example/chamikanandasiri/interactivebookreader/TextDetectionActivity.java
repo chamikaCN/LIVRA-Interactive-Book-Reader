@@ -10,8 +10,6 @@ import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -23,17 +21,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
-import com.google.android.gms.vision.MultiDetector;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.squareup.picasso.Picasso;
@@ -42,9 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,27 +47,22 @@ import okhttp3.Response;
 
 public class TextDetectionActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_barcodeButton, main_backButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
-            cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
+    ImageButton main_captureButton, main_backButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
+            cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton,
+            dict_closeButton, dict_backButton, dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton;
 
-    Button  brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
 
     TextRecognizer textRecognizer;
-    BarcodeDetector barcodeDetector;
-    MultiDetector multiDetector;
     ToneGenerator toneGenerator;
 
-    ListView cnt_contentListView;
-    ImageView dtl_imageView;
-    TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
+    TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView;
     EditText cmt_editText, cmt_titleText;
-    String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
-    JSONObject dictionaryResponse, detailsResponse;
+    String detectedString, capturedString, selectedString, searchedWord;
+    JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, barcodePopup, detailsPopup, contentPopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
@@ -90,8 +75,7 @@ public class TextDetectionActivity extends AppCompatActivity {
     String currentTheme;
 
     int timeStampUniqueCount = 0;
-    float speechSpeedValue,speechPitchValue;
-    BookObject book;
+    float speechSpeedValue, speechPitchValue;
 
     private String TAG = "Test";
 
@@ -146,13 +130,11 @@ public class TextDetectionActivity extends AppCompatActivity {
         setupAllPopups();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-        barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
-        multiDetector = new MultiDetector.Builder().add(textRecognizer).add(barcodeDetector).build();
+        //multiDetector = new MultiDetector.Builder().add(textRecognizer).add(barcodeDetector).build();
         toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
 
         detectText();
         constructText();
-        barCodeRecognize();
 
     }
 
@@ -162,24 +144,16 @@ public class TextDetectionActivity extends AppCompatActivity {
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
-        main_barcodeButton = findViewById(R.id.BarcodeButton);
         main_backButton = findViewById(R.id.TextDetectionBackButton);
 
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
             showCapturePopup(v1);
         });
-        main_barcodeButton.setOnClickListener(v2 -> {
-            showBarcodePopup(v2);
-            main_barcodeButton.clearAnimation();
-            main_barcodeButton.setBackgroundResource(R.drawable.rounded_button_disabled);
-            main_barcodeButton.setEnabled(false);
-        });
-        main_backButton.setOnClickListener(v->{
-            Intent intent = new Intent(this,MenuActivity.class);
+        main_backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         });
-        main_barcodeButton.setEnabled(false);
     }
 
     private void setupAllPopups() {
@@ -191,20 +165,11 @@ public class TextDetectionActivity extends AppCompatActivity {
         dictionaryPopup.setContentView(R.layout.popup_dictionary);
         commentPopup = new Dialog(this);
         commentPopup.setContentView(R.layout.popup_comment);
-        barcodePopup = new Dialog(this);
-        barcodePopup.setContentView(R.layout.popup_barcode);
-        detailsPopup = new Dialog(this);
-        detailsPopup.setContentView(R.layout.popup_details);
-        contentPopup = new Dialog(this);
-        contentPopup.setContentView(R.layout.popup_content);
 
         setupCapturePopup();
         setupSpeechPopup();
         setupDictionaryPopup();
         setupCommentPopup();
-        setupBarcodePopup();
-        setupDetailsPopup();
-        setupContentPopup();
     }
 
     private void setupCapturePopup() {
@@ -239,29 +204,6 @@ public class TextDetectionActivity extends AppCompatActivity {
         cmt_displayView = commentPopup.findViewById(R.id.CommentDisplayTextView);
         cmt_titleText = commentPopup.findViewById(R.id.CommentTitleEditText);
         cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
-    }
-
-    private void setupBarcodePopup() {
-        brc_closeButton = barcodePopup.findViewById(R.id.BarcodeCloseButton);
-        brc_detailsButton = barcodePopup.findViewById(R.id.BarcodeDetailsButton);
-        brc_loadButton = barcodePopup.findViewById(R.id.BarcodeActivityButton);
-        brc_displayView = barcodePopup.findViewById(R.id.BarcodeTextView);
-        brc_loadButton.setVisibility(View.GONE);
-    }
-
-    private void setupDetailsPopup() {
-        dtl_closeButton = detailsPopup.findViewById(R.id.DetailsCloseButton);
-        dtl_contentButton = detailsPopup.findViewById(R.id.DetailsContentButton);
-        dtl_imageView = detailsPopup.findViewById(R.id.DetailsImageView);
-        dtl_othersView = detailsPopup.findViewById(R.id.DetailsOtherTextView);
-        dtl_titleView = detailsPopup.findViewById(R.id.DetailsTitleTextView);
-    }
-
-    private void setupContentPopup() {
-        cnt_closeButton = contentPopup.findViewById(R.id.ContentCloseButton);
-        cnt_backButton = contentPopup.findViewById(R.id.ContentBackButton);
-        cnt_downloadButton = contentPopup.findViewById(R.id.ContentDownloadButton);
-        cnt_contentListView = contentPopup.findViewById(R.id.ContentListView);
     }
 
     public void showCapturePopup(View v) {
@@ -357,64 +299,6 @@ public class TextDetectionActivity extends AppCompatActivity {
         commentPopup.show();
     }
 
-    public void showBarcodePopup(View v2) {
-        boolean bookInLibrary = checkBarcodeAlreadyInLibrary(detectedISBN);
-        brc_detailsButton.setOnClickListener(v -> {
-            dtl_imageView.setImageDrawable(null);
-            dtl_titleView.setText("");
-            dtl_othersView.setText("");
-            showDetailsPopup(v);
-            barcodePopup.dismiss();
-        });
-        brc_loadButton.setOnClickListener(v -> {
-            loadARActivity(bookHandler.getBookIDByISBN(detectedISBN));
-            barcodePopup.dismiss();
-        });
-        if (bookInLibrary) {
-            String s = detectedISBN + "\n(The book with " + detectedISBN + " code is already in the library)";
-            brc_displayView.setText(s);
-            brc_loadButton.setVisibility(View.VISIBLE);
-
-        } else {
-            brc_loadButton.setVisibility(View.GONE);
-            brc_displayView.setText(detectedISBN);
-        }
-        brc_closeButton.setOnClickListener(v -> {
-            barcodePopup.dismiss();
-            detectedISBN = "";
-        });
-        barcodePopup.show();
-    }
-
-    public void showDetailsPopup(View v) {
-        getBackendResponse(detectedISBN);
-        dtl_closeButton.setOnClickListener(v2 -> {
-            detectedISBN = "";
-            dtl_titleView.setText("");
-            dtl_othersView.setText("");
-            dtl_imageView.setImageDrawable(null);
-            dtl_contentButton.setOnClickListener(v1 -> {
-            });
-            detailsPopup.dismiss();
-        });
-        detailsPopup.show();
-    }
-
-    public void showContentPopup(String bookID) {
-        loadContentDetails(bookID);
-        cnt_backButton.setOnClickListener(v1 -> {
-            contentPopup.dismiss();
-            showDetailsPopup(v1);
-        });
-        cnt_closeButton.setOnClickListener(v1 -> {
-            detectedISBN = "";
-            detailsPopup.dismiss();
-            contentPopup.dismiss();
-        });
-        contentPopup.show();
-    }
-
-
     // Main Functions
 
     private void detectText() {
@@ -423,7 +307,7 @@ public class TextDetectionActivity extends AppCompatActivity {
             Log.w("TextDetectionActivity", "Detector dependencies are not yet available");
         } else {
             //creating a video stream through camera
-            cameraSource = new CameraSource.Builder(getApplicationContext(), multiDetector)
+            cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
                     .setFacing(CameraSource.CAMERA_FACING_BACK)
                     .setRequestedPreviewSize(350, 350)
                     .setRequestedFps(2.0f)
@@ -485,34 +369,6 @@ public class TextDetectionActivity extends AppCompatActivity {
         });
     }
 
-    private void barCodeRecognize() {
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-
-            }
-
-            @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
-                final SparseArray<Barcode> items = detections.getDetectedItems();
-                if (items.size() != 0) {
-                    String barcode = items.valueAt(0).displayValue;
-                    if (barcode.length() == 10 || barcode.length() == 13) {
-                        if (!barcode.equals(detectedISBN)) {
-                            toneGenerator.startTone(ToneGenerator.TONE_CDMA_PIP, 350);
-                            detectedISBN = barcode;
-                            main_barcodeButton.setBackgroundResource(R.drawable.rounded_button_one);
-                            buttonAnimation2(main_barcodeButton);
-                            main_barcodeButton.setEnabled(true);
-                            //TODO deactivate animation, button and set detected string to "" after 5 seconds
-                        }
-                    }
-                }
-            }
-        });
-
-    }
-
     private void getDictionaryResponse(String word) {
 
         OkHttpClient client = new OkHttpClient();
@@ -571,101 +427,6 @@ public class TextDetectionActivity extends AppCompatActivity {
         }
     }
 
-    private void getBackendResponse(String isbn) {
-
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("https://ar-content-platform-backend.herokuapp.com/api/book/by-isbn/" + isbn)
-                .get()
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                String message = e.getMessage();
-                Log.w("failure Response", message);
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    String s = "Cannot Connect to Server";
-                    dtl_othersView.setText(s);
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String message = response.body().string();
-                Log.d("Test", message);
-                try {
-                    formatDetailsResponse(message);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void formatDetailsResponse(String message) throws JSONException {
-        detailsResponse = new JSONObject(message);
-        ArrayList<DownloadContentObject> downloadContentDetails;
-
-        if (detailsResponse.has("title")) {
-            Log.d(TAG, "formatDetailsResponse: " + message);
-            downloadContentDetails = new ArrayList<>();
-            String bookID = detailsResponse.getString("id");
-            String title = detailsResponse.getString("title");
-            String[] isbns = JSONArrayToStringArray(detailsResponse.getJSONArray("isbns"));
-            String[] authors = JSONArrayToStringArray(detailsResponse.getJSONArray("authors"));
-            String publisherID = detailsResponse.getJSONObject("publisher").getString("id");
-            String publisherName = detailsResponse.getJSONObject("publisher").getString("name");
-            String[] covers = JSONArrayToStringArray(detailsResponse.getJSONArray("covers"));
-            boolean active = detailsResponse.getBoolean("active");
-            JSONArray content = detailsResponse.getJSONArray("content");
-            int contentAmount = content.length();
-            for (int i = 0; i < contentAmount; i++) {
-                String[] im = JSONArrayToStringArray(content.getJSONObject(i).getJSONArray("images"));
-                String ti = content.getJSONObject(i).getString("title");
-                String si = content.getJSONObject(i).getString("size");
-                float size1 = Float.parseFloat(si);
-                float sizeInKB = size1 / 1024;
-                String size;
-                if (sizeInKB > 99.99) {
-                    float sizeInMB = sizeInKB / 1024;
-                    size = String.format("%.2f", sizeInMB) + " MB";
-                } else {
-                    size = String.format("%.2f", sizeInKB) + " KB";
-                }
-                String id = content.getJSONObject(i).getString("id");
-                String fi = content.getJSONObject(i).getString("file");
-                String des = content.getJSONObject(i).getString("description");
-                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID, des, size, fi, i));
-            }
-            book = new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, publisherID, publisherName);
-
-            StringBuilder other = new StringBuilder();
-            other.append("Author : ").append(authors[0]).append("\nPublisher : ").append(publisherName).append("\nISBN : ").append(isbns[0]);
-            if (contentAmount == 0) {
-                other.append("\n\nNo AR content is available for this book");
-                dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_disabled);
-            } else {
-                other.append("\n\n").append(contentAmount).append(" models are available");
-                dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_three);
-                dtl_contentButton.setOnClickListener(v2 -> {
-                    showContentPopup(bookID);
-                    detailsPopup.dismiss();
-                });
-            }
-            dtl_titleView.setText(title);
-            dtl_othersView.setText(other);
-
-            new Handler(Looper.getMainLooper()).post(() -> loadImage(covers[0], dtl_imageView));
-
-        } else {
-            String s = "No Details Available for the Book on Our Database";
-            dtl_othersView.setText(s);
-        }
-    }
-
     //Supporting Functions
 
     private void speak(String s) {
@@ -679,22 +440,12 @@ public class TextDetectionActivity extends AppCompatActivity {
         speaker.stop();
     }
 
-    private boolean checkBarcodeAlreadyInLibrary(String ISBN) {
-        String databaseResult = bookHandler.getBookIDByISBN(ISBN);
-        return !databaseResult.equals("empty");
-        //Returned book ID can be used later
-    }
-
     private void saveComment() {
         String phrase = selectedString;
         String title = cmt_titleText.getText().toString();
         String comment = cmt_editText.getText().toString();
         CommentObject commentObject = new CommentObject(title, phrase, comment);
         commentHandler.addComment(commentObject);
-    }
-
-    private void saveBook(BookObject book) {
-        bookHandler.addBook(book);
     }
 
     private void saveDictionaryDefinitions(JSONArray array) throws JSONException {
@@ -717,25 +468,6 @@ public class TextDetectionActivity extends AppCompatActivity {
             timeStampUniqueCount += 1;
         }
         wordHandler.addWord(wordObject);
-    }
-
-    private void loadContentDetails(String bookID) {
-        ArrayList<String> databaseContents = contentHandler.getContentIDsByBookIDs(bookID);
-        DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent(), databaseContents);
-        cnt_contentListView.setAdapter(adapter);
-        cnt_downloadButton.setOnClickListener(v -> {
-            saveBook(book);
-            buttonAnimation4(cnt_downloadButton);
-            ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
-            File bookFile = makeDir(book.getBookId());
-            for (DownloadContentObject d : selected) {
-                ContentDownloader cd = new ContentDownloader(this, d, bookFile);
-                cd.execute();
-                contentHandler.addContent(d);
-                Log.d("Test", d.getContName());
-            }
-        });
-
     }
 
     //Reusable Functions
@@ -810,23 +542,5 @@ public class TextDetectionActivity extends AppCompatActivity {
         BounceInterpolator bi = new BounceInterpolator(0.2, 20);
         animation.setInterpolator(bi);
         button.startAnimation(animation);
-    }
-
-    //Redirection Functions
-
-    private void loadARActivity(String bookID) {
-        Intent intent = new Intent(this, ArViewActivity.class);
-        intent.putExtra("booID", bookID);
-        startActivity(intent);
-    }
-
-    public File makeDir(String fileName) {
-        File f = new File(this.getFilesDir(), fileName);
-        if (!f.exists()) {
-            f.mkdir();
-            File ar = new File(f, "ar");
-            ar.mkdir();
-        }
-        return f;
     }
 }
