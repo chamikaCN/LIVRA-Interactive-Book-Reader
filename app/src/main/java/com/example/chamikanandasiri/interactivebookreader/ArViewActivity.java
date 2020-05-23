@@ -79,7 +79,7 @@ public class ArViewActivity extends AppCompatActivity {
         });
         btnRemove.setOnClickListener(view -> removeAnchorNode(anchorNode));
         btnBack.setOnClickListener(view -> {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         });
     }

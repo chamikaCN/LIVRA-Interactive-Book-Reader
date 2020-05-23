@@ -121,6 +121,7 @@ public class StorageActivity extends AppCompatActivity {
             StringBuilder definitions = new StringBuilder();
             StringBuilder POSs = new StringBuilder();
             for (String[] a : defpos) {
+                Log.d(TAG, "loadAllWords: "+ Arrays.toString(a));
                 definitions.append("\u2606 ").append("( ").append(a[0].toUpperCase()).append(" ) -  ").append(a[1]).append("\n");
                 POSs.append(a[0]).append("\n");
             }
