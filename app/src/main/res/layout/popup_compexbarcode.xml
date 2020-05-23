@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="350dp"
+    android:layout_height="500dp"
+    android:layout_gravity="center"
+    android:background="?attr/editTextBackground"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="end"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ComplexBarcodeCloseButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button_five"
+            android:contentDescription="@string/CloseButtonContentDescription"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_close" />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:text="Hold The Barcode"
+        android:textColor="?attr/titleTextColor" />
+
+    <SurfaceView
+        android:id="@+id/ComplexBarcodeSurface"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="10dp">
+
+    </SurfaceView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:scrollY="40dp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:text="OR"
+        android:textColor="?attr/titleTextColor" />
+
+    <Button
+        android:id="@+id/ComplexBarcodeSearchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="12dp"
+        android:background="@drawable/rounded_button_two"
+        android:text="Search Database"
+        android:textColor="?attr/colorPrimary"
+        />
+
+
+</LinearLayout>
+
+
