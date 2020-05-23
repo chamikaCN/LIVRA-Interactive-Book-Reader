@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".LibraryActivity"
     android:orientation="vertical"
-    android:background="?attr/panelBackground"
+    android:background="?attr/actionModeBackground"
     android:weightSum="10">
 
     <LinearLayout
