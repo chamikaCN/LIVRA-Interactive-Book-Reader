@@ -55,14 +55,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class TextDetectionActivity extends AppCompatActivity {
 
-    ImageButton main_captureButton, main_storageButton, main_libraryButton, main_barcodeButton, main_gameButton, main_settingsButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
+    ImageButton main_captureButton, main_barcodeButton, main_backButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton, dict_closeButton, dict_backButton,
-            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, str_closeButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton, stn_closeButton;
+            dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
 
-    Switch stn_themeSwitch;
-    Button str_wordButton, str_commentButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton, stn_applyButton;
+    Button  brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
     SurfaceView cameraView;
     CameraSource cameraSource;
 
@@ -74,12 +73,11 @@ public class MainActivity extends AppCompatActivity {
     ListView cnt_contentListView;
     ImageView dtl_imageView;
     TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView, brc_displayView, dtl_titleView, dtl_othersView;
-    SeekBar speedBar, pitchBar;
     EditText cmt_editText, cmt_titleText;
     String detectedString, capturedString, selectedString, searchedWord, detectedISBN;
     JSONObject dictionaryResponse, detailsResponse;
     JSONArray searchResultDefinitions;
-    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, storagePopup, barcodePopup, detailsPopup, contentPopup, settingsPopup;
+    Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup, barcodePopup, detailsPopup, contentPopup;
 
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
@@ -87,11 +85,12 @@ public class MainActivity extends AppCompatActivity {
     BookHandler bookHandler;
     ContentHandler contentHandler;
     Speaker speaker;
+    SharedPreferences sharedPreferences;
 
     String currentTheme;
 
     int timeStampUniqueCount = 0;
-
+    float speechSpeedValue,speechPitchValue;
     BookObject book;
 
     private String TAG = "Test";
@@ -124,15 +123,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         currentTheme = sharedPreferences.getString("Theme", "Light");
+        speechPitchValue = sharedPreferences.getFloat("Pitch", 0.5f);
+        speechSpeedValue = sharedPreferences.getFloat("Speed", 0.5f);
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
         } else if (currentTheme.equals("Dark")) {
             setTheme(R.style.DarkTheme);
         }
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_text_detection);
 
         dbHelper = new DataBaseHelper(this);
         commentHandler = new CommentHandler(dbHelper, this);
@@ -161,11 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
         cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
-        main_storageButton = findViewById(R.id.StorageButton);
-        main_libraryButton = findViewById(R.id.LibraryButton);
         main_barcodeButton = findViewById(R.id.BarcodeButton);
-        main_gameButton = findViewById(R.id.GameButton);
-        main_settingsButton = findViewById(R.id.SettingsButton);
+        main_backButton = findViewById(R.id.TextDetectionBackButton);
 
         main_captureButton.setOnClickListener(v1 -> {
             capturedString = detectedString;
@@ -177,10 +175,10 @@ public class MainActivity extends AppCompatActivity {
             main_barcodeButton.setBackgroundResource(R.drawable.rounded_button_disabled);
             main_barcodeButton.setEnabled(false);
         });
-        main_storageButton.setOnClickListener(this::showStoragePopup);
-        main_settingsButton.setOnClickListener(this::showSettingsPopup);
-        main_libraryButton.setOnClickListener(v2 -> loadLibraryActivity());
-        main_gameButton.setOnClickListener(v2 -> loadGameActivity());
+        main_backButton.setOnClickListener(v->{
+            Intent intent = new Intent(this,MenuActivity.class);
+            startActivity(intent);
+        });
         main_barcodeButton.setEnabled(false);
     }
 
@@ -193,26 +191,20 @@ public class MainActivity extends AppCompatActivity {
         dictionaryPopup.setContentView(R.layout.popup_dictionary);
         commentPopup = new Dialog(this);
         commentPopup.setContentView(R.layout.popup_comment);
-        storagePopup = new Dialog(this);
-        storagePopup.setContentView(R.layout.popup_storage);
         barcodePopup = new Dialog(this);
         barcodePopup.setContentView(R.layout.popup_barcode);
         detailsPopup = new Dialog(this);
         detailsPopup.setContentView(R.layout.popup_details);
         contentPopup = new Dialog(this);
         contentPopup.setContentView(R.layout.popup_content);
-        settingsPopup = new Dialog(this);
-        settingsPopup.setContentView(R.layout.popup_settings);
 
         setupCapturePopup();
         setupSpeechPopup();
         setupDictionaryPopup();
         setupCommentPopup();
-        setupStoragePopup();
         setupBarcodePopup();
         setupDetailsPopup();
         setupContentPopup();
-        setupSettingsPopup();
     }
 
     private void setupCapturePopup() {
@@ -230,8 +222,6 @@ public class MainActivity extends AppCompatActivity {
         spk_closeButton = speechPopup.findViewById(R.id.SpeakCloseButton);
         spk_backButton = speechPopup.findViewById(R.id.SpeakBackButton);
         spk_displayView = speechPopup.findViewById(R.id.SpeakDisplayTextView);
-        speedBar = speechPopup.findViewById(R.id.SpeedSeekBar);
-        pitchBar = speechPopup.findViewById(R.id.PitchSeekBar);
     }
 
     private void setupDictionaryPopup() {
@@ -249,12 +239,6 @@ public class MainActivity extends AppCompatActivity {
         cmt_displayView = commentPopup.findViewById(R.id.CommentDisplayTextView);
         cmt_titleText = commentPopup.findViewById(R.id.CommentTitleEditText);
         cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
-    }
-
-    private void setupStoragePopup() {
-        str_closeButton = storagePopup.findViewById(R.id.StorageCloseButton);
-        str_commentButton = storagePopup.findViewById(R.id.CommentLoadButton);
-        str_wordButton = storagePopup.findViewById(R.id.WordLoadButton);
     }
 
     private void setupBarcodePopup() {
@@ -278,12 +262,6 @@ public class MainActivity extends AppCompatActivity {
         cnt_backButton = contentPopup.findViewById(R.id.ContentBackButton);
         cnt_downloadButton = contentPopup.findViewById(R.id.ContentDownloadButton);
         cnt_contentListView = contentPopup.findViewById(R.id.ContentListView);
-    }
-
-    private void setupSettingsPopup() {
-        stn_closeButton = settingsPopup.findViewById(R.id.SettingsCloseButton);
-        stn_themeSwitch = settingsPopup.findViewById(R.id.SettingsThemeSwitch);
-        stn_applyButton = settingsPopup.findViewById(R.id.SettingsApplyButton);
     }
 
     public void showCapturePopup(View v) {
@@ -379,13 +357,6 @@ public class MainActivity extends AppCompatActivity {
         commentPopup.show();
     }
 
-    public void showStoragePopup(View v1) {
-        str_wordButton.setOnClickListener(v2 -> loadStorageActivity("word"));
-        str_commentButton.setOnClickListener(v2 -> loadStorageActivity("comment"));
-        str_closeButton.setOnClickListener(v2 -> storagePopup.dismiss());
-        storagePopup.show();
-    }
-
     public void showBarcodePopup(View v2) {
         boolean bookInLibrary = checkBarcodeAlreadyInLibrary(detectedISBN);
         brc_detailsButton.setOnClickListener(v -> {
@@ -443,21 +414,6 @@ public class MainActivity extends AppCompatActivity {
         contentPopup.show();
     }
 
-    public void showSettingsPopup(View v) {
-        if (currentTheme.equals("Dark")) {
-            stn_themeSwitch.setChecked(true);
-        } else {
-            stn_themeSwitch.setChecked(false);
-        }
-        stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
-//        stn_themeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> changeTheme(isChecked));
-        stn_applyButton.setOnClickListener(v1 -> {
-            applySettings();
-            settingsPopup.dismiss();
-        });
-        settingsPopup.show();
-    }
-
 
     // Main Functions
 
@@ -479,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(MainActivity.this,
+                            ActivityCompat.requestPermissions(TextDetectionActivity.this,
                                     new String[]{Manifest.permission.CAMERA}, RequestCameraPermissionID);
                             return;
                         }
@@ -713,9 +669,7 @@ public class MainActivity extends AppCompatActivity {
     //Supporting Functions
 
     private void speak(String s) {
-        float speedValue = (float) speedBar.getProgress() / 50;
-        float pitchValue = (float) pitchBar.getProgress() / 50;
-        speaker.speak(s, speedValue, pitchValue);
+        speaker.speak(s, speechSpeedValue, speechPitchValue);
     }
 
     private void speechPause() {
@@ -752,28 +706,6 @@ public class MainActivity extends AppCompatActivity {
             String pos = jo.getString("partOfSpeech");
             saveWord(word, def, pos);
         }
-    }
-
-    private void applySettings() {
-        boolean themeSwitchValue = stn_themeSwitch.isChecked();
-        if ((themeSwitchValue && (currentTheme.equals("Light")))) {
-            changeTheme(true);
-        } else if (!themeSwitchValue && (currentTheme.equals("Dark"))) {
-            changeTheme(false);
-        }
-    }
-
-    private void changeTheme(boolean isDarkMode) {
-        SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (isDarkMode) {
-            editor.putString("Theme", "Dark");
-        } else {
-            editor.putString("Theme", "Light");
-        }
-        editor.apply();
-        recreate();
-        //showSettingsPopup();
     }
 
     private void saveWord(String word, String definition, String pos) {
@@ -882,25 +814,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Redirection Functions
 
-    private void loadStorageActivity(String type) {
-        Intent intent = new Intent(this, StorageActivity.class);
-        intent.putExtra("type", type);
-        startActivity(intent);
-    }
-
     private void loadARActivity(String bookID) {
         Intent intent = new Intent(this, ArViewActivity.class);
         intent.putExtra("booID", bookID);
-        startActivity(intent);
-    }
-
-    private void loadLibraryActivity() {
-        Intent intent = new Intent(this, LibraryActivity.class);
-        startActivity(intent);
-    }
-
-    private void loadGameActivity() {
-        Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".TextDetectionActivity">
 
     <SurfaceView
         android:id="@+id/Surface"
@@ -18,35 +18,20 @@
         app:layout_constraintVertical_bias="0.0">
 
     </SurfaceView>
-
     <ImageButton
-        android:id="@+id/GameButton"
+        android:id="@+id/TextDetectionBackButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/rounded_button"
-        android:contentDescription="@string/ARButtonContentDescription"
+        android:layout_margin="20dp"
+        android:background="@drawable/rounded_button_four"
         app:layout_constraintBottom_toBottomOf="@+id/Surface"
         app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.1"
-        app:srcCompat="@drawable/ic_model"
-        android:scaleType="fitXY"/>
-
-    <ImageButton
-        android:id="@+id/SettingsButton"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/rounded_button"
-        android:contentDescription="@string/SettingsButtonContentDescription"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.25"
-        app:srcCompat="@drawable/ic_settings"
+        app:layout_constraintTop_toTopOf="@+id/Surface"
+        android:contentDescription="@string/back"
+        app:srcCompat="@drawable/ic_back"
         android:scaleType="fitXY"/>
 
     <ImageButton
@@ -78,34 +63,5 @@
         app:layout_constraintVertical_bias="0.95"
         app:srcCompat="@drawable/ic_capture"/>
 
-    <ImageButton
-        android:id="@+id/LibraryButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@drawable/rounded_button"
-        android:contentDescription="@string/LibraryButtonContentDescription"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.93"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:srcCompat="@drawable/ic_library"/>
-
-    <ImageButton
-        android:id="@+id/StorageButton"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@drawable/rounded_button"
-        android:contentDescription="@string/StorageButtonContentDescription"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
-        app:layout_constraintVertical_bias="0.93"
-        app:layout_constraintHorizontal_bias="0.92"
-        app:srcCompat="@drawable/ic_storage"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
