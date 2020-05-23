@@ -39,16 +39,34 @@ public class LibraryActivity extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(this);
         bookHandler = new BookHandler(dataBaseHelper,this);
-        displayingBooks = new ArrayList<>();
+
         lib_gridView = findViewById(R.id.LibraryGridView);
         lib_searchButton = findViewById(R.id.LibrarySearchButton);
         lib_searchText = findViewById(R.id.LibraryEditText);
+
+        lib_searchButton.setOnClickListener(v->searchBooks());
 
         loadBookDetails();
     }
 
     private void loadBookDetails() {
+        displayingBooks = new ArrayList<>();
         ArrayList<String> bookIDs = bookHandler.getAllBookIDs();
+        for (String id : bookIDs) {
+            ArrayList<String> bookdet = bookHandler.getBooksByID(id);
+            String title = bookdet.get(0);
+            String auth = bookdet.get(1);
+            String isbn = bookdet.get(2);
+            String img = bookdet.get(3);
+            displayingBooks.add(new SimpleBookObject(id,title.toUpperCase(), auth, isbn, img));
+        }
+        loadView();
+    }
+
+    private void searchBooks(){
+        String q = lib_searchText.getText().toString();
+        displayingBooks = new ArrayList<>();
+        ArrayList<String> bookIDs = bookHandler.getSimilarBookIDs(q);
         for (String id : bookIDs) {
             ArrayList<String> bookdet = bookHandler.getBooksByID(id);
             String title = bookdet.get(0);
