@@ -146,6 +146,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return db.query(TABLE_BOOK, new String[]{"Title", "Author", "ISBN", "CoverURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
 
+    public Cursor getSimilarBookIDs(String title) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(true, TABLE_BOOK, new String[]{"BookID"}, "Title" + " LIKE ?", new String[]{"%" + title + "%"}, null, null, "TimeStamp", null);
+    }
+
+    public Cursor getRecentBookIDs() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(true, TABLE_BOOK, new String[]{"BookID"}, null , null, null, null, "TimeStamp", "3");
+    }
+
     public Cursor getBookIDByISBN(String ISBN) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_BOOK, new String[]{"BookID"}, "ISBN = ?", new String[]{ISBN}, null, null, null);

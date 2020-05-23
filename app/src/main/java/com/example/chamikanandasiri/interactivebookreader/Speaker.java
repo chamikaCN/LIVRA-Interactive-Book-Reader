@@ -30,9 +30,9 @@ public class Speaker {
 
     public void speak(String phrase, float speed, float pitch ) {
         float speedValue = speed;
-        if (speedValue < 0.1) speedValue = 0.1f;
+        if (speedValue < 0.1f) speedValue = 0.1f;
         float pitchValue = pitch;
-        if (pitchValue < 0.1) pitchValue = 0.1f;
+        if (pitchValue < 0.1f) pitchValue = 0.1f;
         speech.setPitch(pitchValue);
         speech.setSpeechRate(speedValue);
         speech.speak(phrase, TextToSpeech.QUEUE_FLUSH, null);
@@ -40,5 +40,13 @@ public class Speaker {
 
     public void stop(){
         speech.stop();
+    }
+
+    public void changePitch(float newValue){
+        if (newValue < 0.1) speech.setPitch(newValue);
+    }
+
+    public void changeSpeed(float newValue){
+        if (newValue < 0.1) speech.setSpeechRate(newValue);
     }
 }

@@ -42,6 +42,28 @@ public class BookHandler {
         return results;
     }
 
+    public ArrayList<String> getRecentBookIDs() {
+        Cursor res = dbHelper.getRecentBookIDs();
+        ArrayList<String> results = new ArrayList<>();
+
+        while (res.moveToNext()) {
+            String Ac = res.getString(0);
+            results.add(Ac);
+        }
+        return results;
+    }
+
+    public ArrayList<String> getSimilarBookIDs(String similar) {
+        Cursor res = dbHelper.getSimilarBookIDs(similar);
+        ArrayList<String> results = new ArrayList<>();
+
+        while (res.moveToNext()) {
+            String Ac = res.getString(0);
+            results.add(Ac);
+        }
+        return results;
+    }
+
     public String getBookIDByISBN(String ISBN){
         Cursor res = dbHelper.getBookIDByISBN(ISBN);
         String Ac = "empty";
