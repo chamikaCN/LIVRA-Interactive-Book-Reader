@@ -43,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
         app:layout_constraintEnd_toEndOf="@+id/GameFragment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintVertical_bias="0.18"
         app:layout_constraintStart_toStartOf="@+id/GameFragment"
         app:layout_constraintTop_toTopOf="@+id/GameFragment"
         app:srcCompat="@drawable/ic_restart" />
@@ -59,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/GameFragment"
         app:layout_constraintEnd_toEndOf="@+id/GameFragment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.30"
+        app:layout_constraintVertical_bias="0.36"
         app:layout_constraintStart_toStartOf="@+id/GameFragment"
         app:layout_constraintTop_toTopOf="@+id/GameFragment"
         app:srcCompat="@drawable/ic_remove" />
