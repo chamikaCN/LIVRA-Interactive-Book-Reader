@@ -2,8 +2,8 @@
 <resources>
     <array name="autosize_text_sizes">
         <item>12sp</item>
-        <item>15sp</item>
-        <item>20sp</item>
-        <item>32sp</item>
+        <item>16sp</item>
+        <item>22sp</item>
+        <item>33sp</item>
     </array>
 </resources>
