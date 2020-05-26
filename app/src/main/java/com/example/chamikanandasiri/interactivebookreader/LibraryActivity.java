@@ -28,7 +28,7 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        currentTheme = sharedPreferences.getString("Theme","Light");
+        currentTheme = sharedPreferences.getString("Theme", "Light");
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
         } else if (currentTheme.equals("Dark")) {
@@ -38,16 +38,15 @@ public class LibraryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_library);
 
         dataBaseHelper = new DataBaseHelper(this);
-        bookHandler = new BookHandler(dataBaseHelper,this);
+        bookHandler = new BookHandler(dataBaseHelper, this);
 
         lib_gridView = findViewById(R.id.LibraryGridView);
         lib_searchButton = findViewById(R.id.LibrarySearchButton);
         lib_searchText = findViewById(R.id.LibraryEditText);
-
-        lib_searchButton.setOnClickListener(v->searchBooks());
-
+        lib_searchButton.setOnClickListener(v -> searchBooks());
         loadBookDetails();
     }
+
 
     private void loadBookDetails() {
         displayingBooks = new ArrayList<>();
@@ -58,12 +57,12 @@ public class LibraryActivity extends AppCompatActivity {
             String auth = bookdet.get(1);
             String isbn = bookdet.get(2);
             String img = bookdet.get(3);
-            displayingBooks.add(new SimpleBookObject(id,title.toUpperCase(), auth, isbn, img));
+            displayingBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
         }
         loadView();
     }
 
-    private void searchBooks(){
+    private void searchBooks() {
         String q = lib_searchText.getText().toString();
         displayingBooks = new ArrayList<>();
         ArrayList<String> bookIDs = bookHandler.getSimilarBookIDs(q);
@@ -73,7 +72,7 @@ public class LibraryActivity extends AppCompatActivity {
             String auth = bookdet.get(1);
             String isbn = bookdet.get(2);
             String img = bookdet.get(3);
-            displayingBooks.add(new SimpleBookObject(id,title.toUpperCase(), auth, isbn, img));
+            displayingBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
         }
         loadView();
     }

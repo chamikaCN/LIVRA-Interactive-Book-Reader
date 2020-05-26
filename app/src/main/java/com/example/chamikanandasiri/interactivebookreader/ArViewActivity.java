@@ -53,6 +53,7 @@ public class ArViewActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
         this.bookID = getIntent().getExtras().getString("bookID");
+        Log.d(TAG, "onCreate: "+ bookID);
         contentAvailable = new ArrayList<>();
 
         ArrayList<String[]> arrayList = contentHandler.getContentsByBookID(bookID);

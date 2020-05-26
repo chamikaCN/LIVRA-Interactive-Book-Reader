@@ -39,7 +39,6 @@
             app:srcCompat="@drawable/ic_close" />
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/CommentDisplayTextView"
         android:layout_width="match_parent"
@@ -62,7 +61,8 @@
         android:importantForAutofill="no"
         android:textColorHint="?attr/hintTextColor"
         android:textColor="?attr/editTextColor"
-        android:textIsSelectable="true" />
+        android:textIsSelectable="true"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/CommentEditText"

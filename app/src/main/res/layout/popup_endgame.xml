@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
     android:layout_height="200dp"
     android:layout_gravity="center"
@@ -14,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:textSize="20sp"
         android:textAlignment="center"
-        android:textColor="?attr/titleTextColor" />
+        android:textColor="?attr/titleTextColor"
+        android:textSize="20sp" />
 
 
     <LinearLayout
@@ -31,8 +30,8 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:padding="10dp"
             android:background="@drawable/rounded_button_one"
+            android:padding="10dp"
             android:text="RETRY"
             android:textColor="?attr/colorPrimary" />
 
@@ -41,8 +40,8 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:padding="10dp"
             android:background="@drawable/rounded_button_four"
+            android:padding="10dp"
             android:text="BACK"
             android:textColor="?attr/colorPrimary" />
 

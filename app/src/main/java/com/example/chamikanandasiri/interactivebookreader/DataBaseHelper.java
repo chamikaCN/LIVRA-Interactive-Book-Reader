@@ -153,7 +153,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getRecentBookIDs() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(true, TABLE_BOOK, new String[]{"BookID"}, null , null, null, null, "TimeStamp", "3");
+        return db.query(true, TABLE_BOOK, new String[]{"BookID"}, null , null, null, null, "TimeStamp DESC", "3");
     }
 
     public Cursor getBookIDByISBN(String ISBN) {
