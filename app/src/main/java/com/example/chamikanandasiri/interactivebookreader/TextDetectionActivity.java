@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
@@ -39,6 +42,7 @@ import java.io.IOException;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -53,17 +57,17 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     SurfaceView cameraView;
     CameraSource cameraSource;
-
+    RecyclerView recyclerView;
     TextRecognizer textRecognizer;
     ToneGenerator toneGenerator;
 
     TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView;
     EditText cmt_editText, cmt_titleText;
-    String detectedString, capturedString, selectedString, searchedWord;
+    String detectedString, capturedString, currentTheme, searchedWord;
     JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
     Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
-
+    FlexboxLayoutManager layoutManager;
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
@@ -72,7 +76,7 @@ public class TextDetectionActivity extends AppCompatActivity {
     Speaker speaker;
     SharedPreferences sharedPreferences;
 
-    String currentTheme;
+    private static String selectedString;
 
     int timeStampUniqueCount = 0;
     float speechSpeedValue, speechPitchValue;
@@ -177,7 +181,7 @@ public class TextDetectionActivity extends AppCompatActivity {
         cap_speechButton = capturePopup.findViewById(R.id.SpeechButton);
         cap_commentButton = capturePopup.findViewById(R.id.CommentButton);
         cap_closeButton = capturePopup.findViewById(R.id.CloseButton);
-        cap_displayView = capturePopup.findViewById(R.id.DisplayTextView);
+        initializeRecyclerView();  //        cap_displayView = capturePopup.findViewById(R.id.DisplayTextView);
     }
 
     private void setupSpeechPopup() {
@@ -207,25 +211,25 @@ public class TextDetectionActivity extends AppCompatActivity {
     }
 
     public void showCapturePopup(View v) {
-
+        selectedString=capturedString;
         cap_closeButton.setOnClickListener(v1 -> capturePopup.dismiss());
         cap_speechButton.setOnClickListener(v2 -> {
-            selectedString = getSelectedString(cap_displayView);
+//            selectedString = getSelectedString(cap_displayView);
             capturePopup.dismiss();
             showSpeechPopup(v2);
         });
         cap_dictionaryButton.setOnClickListener(v2 -> {
-            selectedString = getSelectedString(cap_displayView);
+//            selectedString = getSelectedString(cap_displayView);
             capturePopup.dismiss();
             showDictionaryPopup(v2);
         });
         cap_commentButton.setOnClickListener(v2 -> {
-            selectedString = getSelectedString(cap_displayView);
+//            selectedString = getSelectedString(cap_displayView);
             capturePopup.dismiss();
             showCommentPopup(v2);
         });
-        cap_displayView.setText(capturedString);
-
+//        cap_displayView.setText(capturedString);
+        showDetections(capturedString);
         capturePopup.show();
     }
 
@@ -309,7 +313,7 @@ public class TextDetectionActivity extends AppCompatActivity {
             //creating a video stream through camera
             cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
                     .setFacing(CameraSource.CAMERA_FACING_BACK)
-                    .setRequestedPreviewSize(350, 350)
+//                    .setRequestedPreviewSize(350, 350)  //TODO: better assign preview size dynamicaly
                     .setRequestedFps(2.0f)
                     .setAutoFocusEnabled(true)
                     .build();
@@ -511,7 +515,7 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     private void copyToClipboard() {
 
-        selectedString = getSelectedString(cap_displayView);
+//        selectedString = getSelectedString(cap_displayView);
         ClipboardManager myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData myClip = ClipData.newPlainText("text", selectedString);
         myClipboard.setPrimaryClip(myClip);
@@ -542,5 +546,21 @@ public class TextDetectionActivity extends AppCompatActivity {
         BounceInterpolator bi = new BounceInterpolator(0.2, 20);
         animation.setInterpolator(bi);
         button.startAnimation(animation);
+    }
+
+    public static void  setSelectedText(String s){
+        selectedString=s;
+    }
+
+    public void showDetections(String detection){
+        String[] detections=detection.split("\n");
+        recyclerView.setAdapter(new GridViewAdapter(this, detections));
+    }
+    public void initializeRecyclerView(){
+        recyclerView=capturePopup.findViewById(R.id.detection);
+        layoutManager=new FlexboxLayoutManager(this);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.CENTER);
+        recyclerView.setLayoutManager(layoutManager);
     }
 }

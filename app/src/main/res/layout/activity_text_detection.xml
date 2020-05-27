@@ -8,8 +8,8 @@
 
     <SurfaceView
         android:id="@+id/Surface"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -27,11 +27,11 @@
         android:background="@drawable/rounded_button_four"
         android:contentDescription="@string/back"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@+id/Surface"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_back" />
 
@@ -42,10 +42,10 @@
         android:background="@drawable/rounded_button"
         android:contentDescription="@string/CaptureButtonContentDescription"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="@+id/Surface"
-        app:layout_constraintEnd_toEndOf="@+id/Surface"
-        app:layout_constraintStart_toStartOf="@+id/Surface"
-        app:layout_constraintTop_toTopOf="@id/Surface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.95"
         app:srcCompat="@drawable/ic_capture" />
     
