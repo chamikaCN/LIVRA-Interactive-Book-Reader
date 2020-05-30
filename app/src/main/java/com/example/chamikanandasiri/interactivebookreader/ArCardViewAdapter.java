@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.ViewHolder> {
 
 
     private ArrayList<SimpleContentObject> downloadedContent;
     private Context context;
 
-    public RecyclerViewAdapter(Context context, ArrayList<SimpleContentObject> objects) {
+    public ArCardViewAdapter(Context context, ArrayList<SimpleContentObject> objects) {
         this.downloadedContent = objects;
         this.context = context;
     }
