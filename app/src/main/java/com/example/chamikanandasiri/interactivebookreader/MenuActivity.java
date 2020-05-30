@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -61,12 +62,13 @@ public class MenuActivity extends AppCompatActivity {
     private String currentTheme;
     private CardView libraryCard, textDetectorCard, savedItemsCard, alphaGameCard, addBookCard, settingsCard;
     private Dialog savedItemPopup, settingsPopup, complexBarcodePopup, searchBookPopup, barcodePopup, detailsPopup, contentPopup;
-    private ImageButton str_closeButton, stn_closeButton, cbd_closeButton, sbk_closeButton, sbk_searchButton, brc_closeButton, dtl_closeButton, cnt_closeButton, cnt_backButton;
+    private ImageButton str_closeButton, stn_closeButton, cbd_closeButton, sbk_closeButton, sbk_searchButton, brc_closeButton, dtl_closeButton, dtl_backButton, cnt_closeButton, cnt_backButton;
     private Button str_commentButton, str_wordButton, stn_applyButton, cbd_searchButton, sbk_proceedButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
     private SeekBar pitchBar, speedBar;
     private ImageView dtl_imageView;
-    private Switch stn_themeSwitch;
-    private TextView brc_displayView, dtl_othersView, dtl_titleView;
+    private Switch stn_themeSwitch, stn_voiceSwitch;
+    private CheckBox stn_voiceCheckBox;
+    private TextView brc_displayView, dtl_othersView, dtl_titleView, stn_applyVoiceConfigLabel;
     private ListView cnt_contentListView;
     private SurfaceView cbd_surfaceView;
     private EditText sbk_searchText;
@@ -75,8 +77,8 @@ public class MenuActivity extends AppCompatActivity {
 
     private String detectedISBN;
     private float speechSpeedValue, speechPitchValue;
-    private ArrayList<SimpleBookObject> displayingBooks;
-    private JSONObject detailsResponse;
+    private ArrayList<SimpleBookObject> displayingRecentBooks;
+    private ArrayList<BookObject> bookResponceObjects;
     private static BookObject book;
     private JSONArray bookResponse;
 
@@ -88,6 +90,7 @@ public class MenuActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private DataBaseHelper dataBaseHelper;
     private BookHandler bookHandler;
+    private ToastManager toastManager;
     ContentHandler contentHandler;
     final int RequestCameraPermissionID = 1001;
 
@@ -127,7 +130,9 @@ public class MenuActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(this);
         bookHandler = new BookHandler(dataBaseHelper, this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
-        displayingBooks = new ArrayList<>();
+        toastManager = new ToastManager(this);
+        displayingRecentBooks = new ArrayList<>();
+        bookResponceObjects = new ArrayList<>();
 
         savedItemPopup = new Dialog(this);
         savedItemPopup.setContentView(R.layout.popup_storage);
@@ -204,6 +209,9 @@ public class MenuActivity extends AppCompatActivity {
         stn_applyButton = settingsPopup.findViewById(R.id.SettingsApplyButton);
         speedBar = settingsPopup.findViewById(R.id.SpeedSeekBar);
         pitchBar = settingsPopup.findViewById(R.id.PitchSeekBar);
+        stn_voiceSwitch = settingsPopup.findViewById(R.id.SettingsVoiceSupportSwitch);
+        stn_voiceCheckBox = settingsPopup.findViewById(R.id.SettingsVoiceConfigCheckBox);
+        stn_applyVoiceConfigLabel = settingsPopup.findViewById(R.id.SettingsVoiceConfigLabel);
     }
 
     private void setupSearchBookPopup() {
@@ -228,6 +236,7 @@ public class MenuActivity extends AppCompatActivity {
         dtl_imageView = detailsPopup.findViewById(R.id.DetailsImageView);
         dtl_othersView = detailsPopup.findViewById(R.id.DetailsOtherTextView);
         dtl_titleView = detailsPopup.findViewById(R.id.DetailsTitleTextView);
+        dtl_backButton = detailsPopup.findViewById(R.id.DetailsBackButton);
     }
 
     private void setupContentPopup() {
@@ -250,6 +259,18 @@ public class MenuActivity extends AppCompatActivity {
         } else {
             stn_themeSwitch.setChecked(false);
         }
+        boolean voice = toastManager.getVoiceSupport();
+        stn_voiceSwitch.setChecked(voice);
+        stn_voiceCheckBox.setChecked(toastManager.getVoiceSupportConfigurability());
+        stn_voiceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                stn_voiceCheckBox.setEnabled(true);
+                stn_applyVoiceConfigLabel.setEnabled(true);
+            } else {
+                stn_voiceCheckBox.setEnabled(false);
+                stn_applyVoiceConfigLabel.setEnabled(false);
+            }
+        });
         pitchBar.setProgress(Math.round(speechPitchValue * 50), true);
         speedBar.setProgress(Math.round(speechSpeedValue * 50), true);
         stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
@@ -276,12 +297,27 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void showBookSearchPopup() {
-        sbk_closeButton.setOnClickListener(v -> searchBookPopup.dismiss());
-        sbk_searchButton.setOnClickListener(v -> searchDatabase());
-        sbk_proceedButton.setOnClickListener(v -> {
+        sbk_closeButton.setOnClickListener(v -> {
             searchBookPopup.dismiss();
-            buildDetailsPopupWithBook();
-            showDetailsPopup(v);
+            if (!bookResponceObjects.isEmpty()) {
+                bookResponceObjects.clear();
+            }
+            sbk_searchText.setText("");
+        });
+        sbk_searchButton.setOnClickListener(v -> {
+            searchDatabase();
+            buttonAnimation1(sbk_searchButton);
+        });
+        sbk_proceedButton.setOnClickListener(v -> {
+            if (book != null) {
+                searchBookPopup.dismiss();
+                buildDetailsPopupWithBook();
+                dtl_backButton.setVisibility(View.VISIBLE);
+                dtl_contentButton.setVisibility(View.GONE);
+                showDetailsPopup(v);
+            } else {
+                toastManager.showShortToast("You should select a book first");
+            }
         });
         searchBookPopup.show();
     }
@@ -293,6 +329,8 @@ public class MenuActivity extends AppCompatActivity {
             dtl_titleView.setText("");
             dtl_othersView.setText("");
             getBackendResponse(detectedISBN);
+            dtl_backButton.setVisibility(View.GONE);
+            dtl_contentButton.setVisibility(View.GONE);
             showDetailsPopup(v);
             barcodePopup.dismiss();
         });
@@ -320,11 +358,25 @@ public class MenuActivity extends AppCompatActivity {
     public void showDetailsPopup(View v) {
         dtl_closeButton.setOnClickListener(v2 -> {
             detectedISBN = "";
+            book = null;
+            if (!bookResponceObjects.isEmpty()) {
+                bookResponceObjects.clear();
+            }
+            sbk_searchText.setText("");
             dtl_titleView.setText("");
             dtl_othersView.setText("");
             dtl_imageView.setImageDrawable(null);
             dtl_contentButton.setOnClickListener(v1 -> {
             });
+            detailsPopup.dismiss();
+        });
+        dtl_backButton.setOnClickListener(v2 -> {
+            dtl_titleView.setText("");
+            dtl_othersView.setText("");
+            dtl_imageView.setImageDrawable(null);
+            dtl_contentButton.setOnClickListener(v1 -> {
+            });
+            showBookSearchPopup();
             detailsPopup.dismiss();
         });
         detailsPopup.show();
@@ -338,6 +390,7 @@ public class MenuActivity extends AppCompatActivity {
         });
         cnt_closeButton.setOnClickListener(v1 -> {
             detectedISBN = "";
+            book = null;
             detailsPopup.dismiss();
             contentPopup.dismiss();
         });
@@ -483,7 +536,6 @@ public class MenuActivity extends AppCompatActivity {
 
     private void formatDatabaseResponse(JSONArray array) throws JSONException {
         bookResponse = array;
-        ArrayList<BookObject> bookResponceObjects = new ArrayList<>();
 
         if (bookResponse.length() > 0) {
             for (int k = 0; k < bookResponse.length(); k++) {
@@ -501,6 +553,8 @@ public class MenuActivity extends AppCompatActivity {
     private void loadBookSearchResultGrid(ArrayList<BookObject> books) {
         BookArrayAdapter adapter = new BookArrayAdapter(this, R.layout.listitem_searchbook, books);
         sbk_bookGridView.setAdapter(adapter);
+        sbk_bookGridView.setOnItemClickListener((parent, view, position, arg3) -> {
+        });
     }
 
     private void formatDetailsResponse(JSONObject obj) throws JSONException {
@@ -533,6 +587,7 @@ public class MenuActivity extends AppCompatActivity {
         loadImage(book.getCovers()[0], dtl_imageView);
         dtl_titleView.setText(book.getTitle());
         dtl_othersView.setText(other);
+        dtl_contentButton.setVisibility(View.VISIBLE);
     }
 
     private BookObject JsonBookResponseToBookObject(JSONObject jsonObject) throws JSONException {
@@ -613,6 +668,16 @@ public class MenuActivity extends AppCompatActivity {
             editor.putString("Theme", "Light");
             themechanged = true;
         }
+        boolean voiceConf = stn_voiceCheckBox.isChecked();
+        if (voiceConf !=  toastManager.getVoiceSupportConfigurability()){
+            toastManager.setVoiceSupportConfigurability(voiceConf);
+            editor.putBoolean("VoiceConfig",voiceConf);
+        }
+        boolean voiceSup = stn_voiceSwitch.isChecked();
+        if (voiceSup !=  toastManager.getVoiceSupport()){
+            toastManager.setVoiceSupport(voiceSup);
+            editor.putBoolean("VoiceSupport",voiceSup);
+        }
         if (speechPitchValue != pitch) {
             speechPitchValue = pitch;
             editor.putFloat("Pitch", pitch);
@@ -650,12 +715,12 @@ public class MenuActivity extends AppCompatActivity {
             String auth = bookdet.get(1);
             String isbn = bookdet.get(2);
             String img = bookdet.get(3);
-            displayingBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
+            displayingRecentBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.MenuRecentBookView);
         recyclerView.setLayoutManager(layoutManager);
-        RecentBookAdapter adapter = new RecentBookAdapter(this, displayingBooks);
+        RecentBookAdapter adapter = new RecentBookAdapter(this, displayingRecentBooks);
         recyclerView.setAdapter(adapter);
     }
 
@@ -685,6 +750,13 @@ public class MenuActivity extends AppCompatActivity {
             ar.mkdir();
         }
         return f;
+    }
+
+    private void buttonAnimation1(ImageButton button) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        BounceInterpolator bi = new BounceInterpolator(0.2, 20);
+        animation.setInterpolator(bi);
+        button.startAnimation(animation);
     }
 
     private void buttonAnimation4(Button button) {
