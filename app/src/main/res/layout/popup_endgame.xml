@@ -27,7 +27,7 @@
 
         <Button
             android:id="@+id/EndgameRetryButton"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_button_one"
@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/EndgameBackButton"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_button_four"

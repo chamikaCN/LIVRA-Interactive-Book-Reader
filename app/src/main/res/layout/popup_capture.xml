@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
     android:layout_height="475dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="?attr/panelBackground"
     android:orientation="vertical"
@@ -14,20 +14,21 @@
         android:layout_height="40dp"
         android:layout_gravity="end"
         android:background="@drawable/rounded_button_five"
-        android:scaleType="fitXY"
-        android:drawablePadding = "5dp"
         android:contentDescription="@string/CloseButtonContentDescription"
-        app:srcCompat="@drawable/ic_close"/>
+        android:drawablePadding="5dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_close" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-
-        android:id="@+id/detection"
+    <TextView
+        android:id="@+id/DisplayTextView"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
         android:layout_height="305dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="20dp"
+        android:scrollY="0dp"
+        android:textColor="?attr/editTextColor"
+        android:textIsSelectable="true" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -65,7 +66,6 @@
             android:contentDescription="@string/CommentButtonContentDescription"
             android:scaleType="fitXY"
             app:srcCompat="@drawable/ic_comment" />
-
 
 
     </LinearLayout>

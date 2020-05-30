@@ -25,7 +25,7 @@
             android:layout_weight="0.95"
             android:hint="  Search for books "
             android:inputType="text"
-            android:textColor="?attr/editTextColor"
+            android:textColor="?attr/colorPrimary"
             android:textColorHint="?attr/hintTextColor" />
 
         <ImageButton

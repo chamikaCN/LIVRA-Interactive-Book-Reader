@@ -28,6 +28,7 @@ public class ArViewActivity extends AppCompatActivity {
     private String bookID;
     private DataBaseHelper dataBaseHelper;
     private ContentHandler contentHandler;
+    private ToastManager toastManager;
     private ArFragment arFragment;
     private ArrayList<SimpleContentObject> contentAvailable;
     private static File selectedARModel;
@@ -52,6 +53,7 @@ public class ArViewActivity extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
+        toastManager = new ToastManager(this);
         this.bookID = getIntent().getExtras().getString("bookID");
         Log.d(TAG, "onCreate: "+ bookID);
         contentAvailable = new ArrayList<>();
@@ -76,10 +78,13 @@ public class ArViewActivity extends AppCompatActivity {
                         .setSource(this, Uri.fromFile(selectedARModel))
                         .build()
                         .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
+            }else{
+                toastManager.showShortToast("Select a card to display model");
             }
         });
         btnRemove.setOnClickListener(view -> removeAnchorNode(anchorNode));
         btnBack.setOnClickListener(view -> {
+            selectedARModel = null;
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         });
@@ -101,7 +106,7 @@ public class ArViewActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, contentAvailable);
+        ArCardViewAdapter adapter = new ArCardViewAdapter(this, contentAvailable);
         recyclerView.setAdapter(adapter);
     }
 

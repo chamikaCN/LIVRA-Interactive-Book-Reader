@@ -32,8 +32,8 @@
     <LinearLayout
         android:layout_width="350dp"
         android:layout_height="0dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_weight="1.5"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
@@ -51,10 +51,11 @@
 
         <ImageButton
             android:id="@+id/BookSearchSearchButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/rounded_button_three"
             android:contentDescription="@string/SearchButtonContentDescription"
             android:scaleType="fitXY"

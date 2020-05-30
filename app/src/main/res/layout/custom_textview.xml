@@ -7,10 +7,10 @@
     android:layout_centerVertical="false"
     android:layout_marginLeft="5dp"
     android:layout_marginTop="5dp"
-    android:background="@drawable/gradient_box"
+    android:background="?attr/colorPrimary"
     android:foreground="?android:attr/selectableItemBackgroundBorderless"
     android:clickable="true"
     android:focusable="true"
     android:textAlignment="center"
-    android:textColor="#000000"
+    android:textColor="?attr/editTextColor"
     android:textSize="32px"></TextView>

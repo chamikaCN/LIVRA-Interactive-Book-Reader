@@ -18,6 +18,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private DataBaseHelper dataBaseHelper;
     private BookHandler bookHandler;
+    private ToastManager toastManager;
 
     private String TAG = "Test";
     String currentTheme;
@@ -39,6 +40,7 @@ public class LibraryActivity extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(this);
         bookHandler = new BookHandler(dataBaseHelper, this);
+        toastManager = new ToastManager(this);
 
         lib_gridView = findViewById(R.id.LibraryGridView);
         lib_searchButton = findViewById(R.id.LibrarySearchButton);
@@ -64,17 +66,21 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void searchBooks() {
         String q = lib_searchText.getText().toString();
-        displayingBooks = new ArrayList<>();
-        ArrayList<String> bookIDs = bookHandler.getSimilarBookIDs(q);
-        for (String id : bookIDs) {
-            ArrayList<String> bookdet = bookHandler.getBooksByID(id);
-            String title = bookdet.get(0);
-            String auth = bookdet.get(1);
-            String isbn = bookdet.get(2);
-            String img = bookdet.get(3);
-            displayingBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
+        if(q.length() > 0) {
+            displayingBooks = new ArrayList<>();
+            ArrayList<String> bookIDs = bookHandler.getSimilarBookIDs(q);
+            for (String id : bookIDs) {
+                ArrayList<String> bookdet = bookHandler.getBooksByID(id);
+                String title = bookdet.get(0);
+                String auth = bookdet.get(1);
+                String isbn = bookdet.get(2);
+                String img = bookdet.get(3);
+                displayingBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
+            }
+            loadView();
+        }else{
+            toastManager.showShortToast("Search query Can not be empty");
         }
-        loadView();
     }
 
     private void loadView() {

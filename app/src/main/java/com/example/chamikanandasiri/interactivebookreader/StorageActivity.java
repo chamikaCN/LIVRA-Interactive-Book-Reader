@@ -136,7 +136,7 @@ public class StorageActivity extends AppCompatActivity {
         for (String title : titles) {
             ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentbyTitle(title);
             for (String[] a : phrcmt) {
-                commentObjects.add(new CommentObject(title, a[0],a[1]));
+                commentObjects.add(new CommentObject(title, "\u2606 " + a[0], "\u2606 " + a[1]));
             }
         }
         commentListGenerate();

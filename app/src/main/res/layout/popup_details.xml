@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
-    android:layout_height="500dp"
+    android:layout_height="530dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:background="?attr/panelBackground"
@@ -14,6 +14,17 @@
         android:layout_gravity="center_horizontal"
         android:gravity="end"
         android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/DetailsBackButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_button_four"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/BackButtonContentDescription"
+            app:srcCompat="@drawable/ic_back"/>
 
         <ImageButton
             android:id="@+id/DetailsCloseButton"
@@ -51,7 +62,9 @@
     <TextView
         android:id="@+id/DetailsOtherTextView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="100dp"
+        android:scrollY="0dp"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -62,7 +75,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp">
 
         <Button

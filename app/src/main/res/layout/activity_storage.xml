@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_margin="10dp"
             android:layout_height="wrap_content"
-            android:textColor="?attr/editTextColor"
+            android:textColor="?attr/colorPrimary"
             android:textColorHint="?attr/hintTextColor"
             android:layout_weight="0.95"/>
         <ImageButton
