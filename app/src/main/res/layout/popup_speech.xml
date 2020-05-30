@@ -65,15 +65,7 @@
             android:contentDescription="@string/SpeakButtonContentDescription"
             app:srcCompat="@drawable/ic_play"
             android:scaleType="fitXY"/>
-        <ImageButton
-            android:id="@+id/PauseButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:background="@drawable/rounded_button_two"
-            android:contentDescription="@string/PauseButtonContentDescription"
-            app:srcCompat="@drawable/ic_pause"
-            android:scaleType="fitXY"/>
+
 
         <ImageButton
             android:id="@+id/StopButton"

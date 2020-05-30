@@ -20,18 +20,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +37,6 @@ import java.io.IOException;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -52,12 +46,11 @@ import okhttp3.Response;
 public class TextDetectionActivity extends AppCompatActivity {
 
     ImageButton main_captureButton, main_backButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
-            cap_closeButton, spk_speakButton, spk_stopButton, spk_pauseButton, spk_closeButton, spk_backButton,
+            cap_closeButton, spk_speakButton, spk_stopButton, spk_closeButton, spk_backButton,
             dict_closeButton, dict_backButton, dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton;
 
     SurfaceView cameraView;
     CameraSource cameraSource;
-    RecyclerView recyclerView;
     TextRecognizer textRecognizer;
     ToneGenerator toneGenerator;
 
@@ -67,7 +60,6 @@ public class TextDetectionActivity extends AppCompatActivity {
     JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
     Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
-    FlexboxLayoutManager layoutManager;
     DataBaseHelper dbHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
@@ -181,13 +173,12 @@ public class TextDetectionActivity extends AppCompatActivity {
         cap_speechButton = capturePopup.findViewById(R.id.SpeechButton);
         cap_commentButton = capturePopup.findViewById(R.id.CommentButton);
         cap_closeButton = capturePopup.findViewById(R.id.CloseButton);
-        initializeRecyclerView();  //        cap_displayView = capturePopup.findViewById(R.id.DisplayTextView);
+        cap_displayView = capturePopup.findViewById(R.id.DisplayTextView);
     }
 
     private void setupSpeechPopup() {
         spk_speakButton = speechPopup.findViewById(R.id.SpeakButton);
         spk_stopButton = speechPopup.findViewById(R.id.StopButton);
-        spk_pauseButton = speechPopup.findViewById(R.id.PauseButton);
         spk_closeButton = speechPopup.findViewById(R.id.SpeakCloseButton);
         spk_backButton = speechPopup.findViewById(R.id.SpeakBackButton);
         spk_displayView = speechPopup.findViewById(R.id.SpeakDisplayTextView);
@@ -211,25 +202,24 @@ public class TextDetectionActivity extends AppCompatActivity {
     }
 
     public void showCapturePopup(View v) {
-        selectedString=capturedString;
+        selectedString = capturedString;
         cap_closeButton.setOnClickListener(v1 -> capturePopup.dismiss());
         cap_speechButton.setOnClickListener(v2 -> {
-//            selectedString = getSelectedString(cap_displayView);
+            selectedString = getSelectedString(cap_displayView);
             capturePopup.dismiss();
             showSpeechPopup(v2);
         });
         cap_dictionaryButton.setOnClickListener(v2 -> {
-//            selectedString = getSelectedString(cap_displayView);
+            selectedString = getSelectedString(cap_displayView);
             capturePopup.dismiss();
             showDictionaryPopup(v2);
         });
         cap_commentButton.setOnClickListener(v2 -> {
-//            selectedString = getSelectedString(cap_displayView);
+            selectedString = getSelectedString(cap_displayView);
             capturePopup.dismiss();
             showCommentPopup(v2);
         });
-//        cap_displayView.setText(capturedString);
-        showDetections(capturedString);
+        cap_displayView.setText(capturedString);
         capturePopup.show();
     }
 
@@ -280,7 +270,6 @@ public class TextDetectionActivity extends AppCompatActivity {
             buttonAnimation1(spk_stopButton);
             speechStop();
         });
-        spk_pauseButton.setOnClickListener(v2 -> speechPause());
         spk_displayView.setText(selectedString);
         speechPopup.show();
     }
@@ -437,9 +426,6 @@ public class TextDetectionActivity extends AppCompatActivity {
         speaker.speak(s, speechSpeedValue, speechPitchValue);
     }
 
-    private void speechPause() {
-    }
-
     private void speechStop() {
         speaker.stop();
     }
@@ -476,35 +462,6 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     //Reusable Functions
 
-    private void loadImage(String Url, ImageView im) {
-        Picasso.with(this).load(Url)
-                .placeholder(R.drawable.bookcover_loading_anim)
-                .into(im, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
-    }
-
-    public String[] JSONArrayToStringArray(JSONArray array) {
-        int len = array.length();
-        String[] newArray = new String[len];
-        for (int j = 0; j < len; j++) {
-            String s;
-            try {
-                s = array.getString(j);
-                newArray[j] = s;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return newArray;
-    }
-
     private String getSelectedString(TextView view) {
         String s = view.getText().subSequence(view.getSelectionStart(), view.getSelectionEnd()).toString();
         if (s.equals("")) {
@@ -514,7 +471,6 @@ public class TextDetectionActivity extends AppCompatActivity {
     }
 
     private void copyToClipboard() {
-
 //        selectedString = getSelectedString(cap_displayView);
         ClipboardManager myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData myClip = ClipData.newPlainText("text", selectedString);
@@ -546,21 +502,5 @@ public class TextDetectionActivity extends AppCompatActivity {
         BounceInterpolator bi = new BounceInterpolator(0.2, 20);
         animation.setInterpolator(bi);
         button.startAnimation(animation);
-    }
-
-    public static void  setSelectedText(String s){
-        selectedString=s;
-    }
-
-    public void showDetections(String detection){
-        String[] detections=detection.split("\n");
-        recyclerView.setAdapter(new GridViewAdapter(this, detections));
-    }
-    public void initializeRecyclerView(){
-        recyclerView=capturePopup.findViewById(R.id.detection);
-        layoutManager=new FlexboxLayoutManager(this);
-        layoutManager.setFlexDirection(FlexDirection.ROW);
-        layoutManager.setJustifyContent(JustifyContent.CENTER);
-        recyclerView.setLayoutManager(layoutManager);
     }
 }
