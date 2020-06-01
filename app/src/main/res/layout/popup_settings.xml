@@ -60,7 +60,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:gravity="center"
         android:orientation="vertical">
@@ -86,8 +86,8 @@
 
             <ImageButton
                 android:id="@+id/SettingsMinusButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/rounded_button_inverse"
@@ -96,17 +96,18 @@
                 app:srcCompat="@drawable/ic_minus" />
 
             <TextView
-                android:layout_width="60dp"
+                android:id="@+id/SettingsTextSizeView"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="25"
+                android:text="Small"
                 android:textAlignment="center"
-                android:textColor="?attr/titleTextColor"
-                android:textSize="30sp" />
+                android:textColor="?attr/editTextColor"
+                android:textSize="20sp" />
 
             <ImageButton
                 android:id="@+id/SettingsPlusButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/rounded_button_inverse"

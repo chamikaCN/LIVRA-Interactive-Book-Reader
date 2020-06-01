@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,8 +73,9 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     int timeStampUniqueCount = 0;
     float speechSpeedValue, speechPitchValue;
-
+    private HashMap<String,Integer> textSizeConfig;
     private String TAG = "Test";
+    private String textSize;
 
     final int RequestCameraPermissionID = 1001;
     final int RequestWriteStoragePermissionID = 1002;
@@ -107,6 +109,11 @@ public class TextDetectionActivity extends AppCompatActivity {
         currentTheme = sharedPreferences.getString("Theme", "Light");
         speechPitchValue = sharedPreferences.getFloat("Pitch", 0.5f);
         speechSpeedValue = sharedPreferences.getFloat("Speed", 0.5f);
+        textSize = sharedPreferences.getString("TextSize","Medium");
+        textSizeConfig = new HashMap<>();
+        textSizeConfig.put("Small",12);
+        textSizeConfig.put("Medium",15);
+        textSizeConfig.put("Large",18);
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
         } else if (currentTheme.equals("Dark")) {
@@ -219,6 +226,7 @@ public class TextDetectionActivity extends AppCompatActivity {
             capturePopup.dismiss();
             showCommentPopup(v2);
         });
+        cap_displayView.setTextSize(textSizeConfig.get(textSize));
         cap_displayView.setText(capturedString);
         capturePopup.show();
     }
@@ -270,6 +278,7 @@ public class TextDetectionActivity extends AppCompatActivity {
             buttonAnimation1(spk_stopButton);
             speechStop();
         });
+        spk_displayView.setTextSize(textSizeConfig.get(textSize));
         spk_displayView.setText(selectedString);
         speechPopup.show();
     }

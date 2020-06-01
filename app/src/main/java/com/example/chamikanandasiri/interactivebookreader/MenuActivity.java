@@ -42,6 +42,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,16 +60,16 @@ import okhttp3.Response;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private String currentTheme;
+    private String currentTheme, textSize;
     private CardView libraryCard, textDetectorCard, savedItemsCard, alphaGameCard, addBookCard, settingsCard;
     private Dialog savedItemPopup, settingsPopup, complexBarcodePopup, searchBookPopup, barcodePopup, detailsPopup, contentPopup;
-    private ImageButton str_closeButton, stn_closeButton, cbd_closeButton, sbk_closeButton, sbk_searchButton, brc_closeButton, dtl_closeButton, dtl_backButton, cnt_closeButton, cnt_backButton;
+    private ImageButton str_closeButton, stn_closeButton, stn_textPlusButton, stn_textMinusButton, cbd_closeButton, sbk_closeButton, sbk_searchButton, brc_closeButton, dtl_closeButton, dtl_backButton, cnt_closeButton, cnt_backButton;
     private Button str_commentButton, str_wordButton, stn_applyButton, cbd_searchButton, sbk_proceedButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
     private SeekBar pitchBar, speedBar;
     private ImageView dtl_imageView;
     private Switch stn_themeSwitch, stn_voiceSwitch;
     private CheckBox stn_voiceCheckBox;
-    private TextView brc_displayView, dtl_othersView, dtl_titleView, stn_applyVoiceConfigLabel;
+    private TextView brc_displayView, dtl_othersView, dtl_titleView, stn_textSizeView;
     private ListView cnt_contentListView;
     private SurfaceView cbd_surfaceView;
     private EditText sbk_searchText;
@@ -81,6 +82,7 @@ public class MenuActivity extends AppCompatActivity {
     private ArrayList<BookObject> bookResponceObjects;
     private static BookObject book;
     private JSONArray bookResponse;
+    private HashMap<String,Integer> textSizeConfig;
 
     private String TAG = "Test";
 
@@ -118,6 +120,12 @@ public class MenuActivity extends AppCompatActivity {
         currentTheme = sharedPreferences.getString("Theme", "Light");
         speechSpeedValue = sharedPreferences.getFloat("Speed", 0.5f);
         speechPitchValue = sharedPreferences.getFloat("Pitch", 0.5f);
+        textSize = sharedPreferences.getString("TextSize","Medium");
+        textSizeConfig = new HashMap<>();
+        textSizeConfig.put("Small",12);
+        textSizeConfig.put("Medium",15);
+        textSizeConfig.put("Large",18);
+
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
         } else if (currentTheme.equals("Dark")) {
@@ -207,11 +215,13 @@ public class MenuActivity extends AppCompatActivity {
         stn_closeButton = settingsPopup.findViewById(R.id.SettingsCloseButton);
         stn_themeSwitch = settingsPopup.findViewById(R.id.SettingsThemeSwitch);
         stn_applyButton = settingsPopup.findViewById(R.id.SettingsApplyButton);
+        stn_textPlusButton = settingsPopup.findViewById(R.id.SettingsPlusButton);
+        stn_textMinusButton = settingsPopup.findViewById(R.id.SettingsMinusButton);
         speedBar = settingsPopup.findViewById(R.id.SpeedSeekBar);
         pitchBar = settingsPopup.findViewById(R.id.PitchSeekBar);
         stn_voiceSwitch = settingsPopup.findViewById(R.id.SettingsVoiceSupportSwitch);
         stn_voiceCheckBox = settingsPopup.findViewById(R.id.SettingsVoiceConfigCheckBox);
-        stn_applyVoiceConfigLabel = settingsPopup.findViewById(R.id.SettingsVoiceConfigLabel);
+        stn_textSizeView = settingsPopup.findViewById(R.id.SettingsTextSizeView);
     }
 
     private void setupSearchBookPopup() {
@@ -265,10 +275,29 @@ public class MenuActivity extends AppCompatActivity {
         stn_voiceSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 stn_voiceCheckBox.setEnabled(true);
-                stn_applyVoiceConfigLabel.setEnabled(true);
             } else {
                 stn_voiceCheckBox.setEnabled(false);
-                stn_applyVoiceConfigLabel.setEnabled(false);
+            }
+        });
+        stn_textSizeView.setText(textSize);
+        stn_textMinusButton.setOnClickListener(v1->{
+            String text = stn_textSizeView.getText().toString();
+            if(text.equals("Medium")){
+                stn_textSizeView.setText("Small");
+                stn_textMinusButton.setEnabled(false);
+            }else if(text.equals("Large")){
+                stn_textSizeView.setText("Medium");
+                stn_textPlusButton.setEnabled(true);
+            }
+        });
+        stn_textPlusButton.setOnClickListener(v1->{
+            String text = stn_textSizeView.getText().toString();
+            if(text.equals("Medium")){
+                stn_textSizeView.setText("Large");
+                stn_textPlusButton.setEnabled(false);
+            }else if(text.equals("Small")){
+                stn_textSizeView.setText("Medium");
+                stn_textMinusButton.setEnabled(true);
             }
         });
         pitchBar.setProgress(Math.round(speechPitchValue * 50), true);
@@ -667,6 +696,11 @@ public class MenuActivity extends AppCompatActivity {
         } else if (!themeSwitchValue && (currentTheme.equals("Dark"))) {
             editor.putString("Theme", "Light");
             themechanged = true;
+        }
+        String currentSize = stn_textSizeView.getText().toString();
+        if(!currentSize.equals(textSize)){
+            textSize = currentSize;
+            editor.putString("TextSize",currentSize);
         }
         boolean voiceConf = stn_voiceCheckBox.isChecked();
         if (voiceConf !=  toastManager.getVoiceSupportConfigurability()){
