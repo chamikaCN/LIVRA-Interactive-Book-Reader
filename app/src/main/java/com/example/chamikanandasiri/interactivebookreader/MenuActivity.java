@@ -48,6 +48,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import okhttp3.Call;
@@ -73,7 +74,6 @@ public class MenuActivity extends AppCompatActivity {
     private ListView cnt_contentListView;
     private SurfaceView cbd_surfaceView;
     private EditText sbk_searchText;
-    private GridView sbk_bookGridView;
 
 
     private String detectedISBN;
@@ -228,7 +228,6 @@ public class MenuActivity extends AppCompatActivity {
         sbk_closeButton = searchBookPopup.findViewById(R.id.BookSearchCloseButton);
         sbk_searchButton = searchBookPopup.findViewById(R.id.BookSearchSearchButton);
         sbk_searchText = searchBookPopup.findViewById(R.id.BookSearchEditText);
-        sbk_bookGridView = searchBookPopup.findViewById(R.id.BookSearchGridView);
         sbk_proceedButton = searchBookPopup.findViewById(R.id.BookSearchProceedButton);
     }
 
@@ -580,10 +579,14 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void loadBookSearchResultGrid(ArrayList<BookObject> books) {
-        BookArrayAdapter adapter = new BookArrayAdapter(this, R.layout.listitem_searchbook, books);
-        sbk_bookGridView.setAdapter(adapter);
-        sbk_bookGridView.setOnItemClickListener((parent, view, position, arg3) -> {
-        });
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        RecyclerView recyclerView = searchBookPopup.findViewById(R.id.BookSearchGridView);
+        if(recyclerView == null){
+            Log.d(TAG, "loadBookSearchResultGrid: cat");
+        }
+        recyclerView.setLayoutManager(layoutManager);
+        BookArrayAdapter adapter = new BookArrayAdapter(this, books);
+        recyclerView.setAdapter(adapter);
     }
 
     private void formatDetailsResponse(JSONObject obj) throws JSONException {

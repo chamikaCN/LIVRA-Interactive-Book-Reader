@@ -1,11 +1,9 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,39 +12,74 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class BookArrayAdapter extends ArrayAdapter<BookObject> {
-    private Context context;
-    private int resource;
-    private String TAG = "Test";
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-    public BookArrayAdapter(Context context, int resource, ArrayList<BookObject> objects) {
-        super(context, resource, objects);
+class BookArrayAdapter extends RecyclerView.Adapter<BookArrayAdapter.ViewHolder> {
+    private Context context;
+    private int selectedPos;
+    private String TAG = "Test";
+    private ArrayList<BookObject> books;
+
+    public BookArrayAdapter(Context context, ArrayList<BookObject> objects) {
         this.context = context;
-        this.resource = resource;
+        this.books = objects;
+        selectedPos = RecyclerView.NO_POSITION;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_searchbook, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        String imageURL = getItem(position).getCovers()[0];
-        String name = getItem(position).getTitle();
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(resource, parent, false);
+        holder.itemView.setSelected(selectedPos == position);
 
-        ImageView imageView = convertView.findViewById(R.id.SearchBookArrayImageView);
-        TextView tvName = convertView.findViewById(R.id.SearchBookArrayTitleView);
-
-        Picasso.with(context).load(imageURL)
+        Picasso.with(context).load(books.get(position).getCovers()[0])
                 .placeholder(R.drawable.bookcover_loading_anim)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
-                .into(imageView);
-        tvName.setText(name);
+                .into(holder.imageView);
 
-        imageView.setOnClickListener(v -> {
-            MenuActivity.setBook(getItem(position));
+        holder.textView.setText(books.get(position).getTitle());
+
+        holder.itemView.setOnClickListener(view -> {
+            notifyItemChanged(selectedPos);
+            selectedPos = holder.getLayoutPosition();
+            notifyItemChanged(selectedPos);
+            MenuActivity.setBook(books.get(position));
         });
-
-        return convertView;
     }
+
+    @Override
+    public int getItemCount() {
+        return books.size();
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageView;
+        TextView textView;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.SearchBookArrayImageView);
+            textView = itemView.findViewById(R.id.SearchBookArrayTitleView);
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+

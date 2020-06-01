@@ -1,46 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="100dp"
+    android:id="@+id/ARcardView"
+    android:layout_height="150dp"
     android:layout_marginStart="5dp"
-    android:layout_marginTop="5dp"
     android:layout_marginEnd="5dp"
-    android:layout_marginBottom="20dp">
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="@drawable/selected_card_background"
+    app:cardElevation="5dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:padding="5dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:gravity="center_horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/ARcardImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/imageview"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerHorizontal="true"
-                android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_below="@id/imageview"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:autoSizeTextType="uniform"
-                android:textColor="@color/colorLightTitle"
-                android:textStyle="bold" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-</RelativeLayout>
+        <TextView
+            android:id="@+id/ARcardTextView"
+            android:layout_width="wrap_content"
+            android:maxWidth="100dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="30sp"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/commonPrimaryText"
+            android:textStyle="bold" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
