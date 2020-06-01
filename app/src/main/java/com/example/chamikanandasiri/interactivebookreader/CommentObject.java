@@ -11,7 +11,7 @@ public class CommentObject {
     private String phrase;
     private String comment;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     public CommentObject(String title, String phrase, String comment) {
         this.title = title;
@@ -39,7 +39,7 @@ public class CommentObject {
         return comment;
     }
 
-    public String getTimeStamp(){
+    public String getTimeStamp() {
         return timestamp.toString();
     }
 

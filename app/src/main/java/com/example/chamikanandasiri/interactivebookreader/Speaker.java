@@ -10,12 +10,12 @@ public class Speaker {
     TextToSpeech speech;
     Context context;
 
-    public Speaker(Context context){
+    public Speaker(Context context) {
         this.context = context;
         Initialization();
     }
 
-    private void Initialization(){
+    private void Initialization() {
         speech = new TextToSpeech(context, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 int result = speech.setLanguage(Locale.UK);
@@ -28,7 +28,7 @@ public class Speaker {
         });
     }
 
-    public void speak(String phrase, float speed, float pitch ) {
+    public void speak(String phrase, float speed, float pitch) {
         float speedValue = speed;
         if (speedValue < 0.1f) speedValue = 0.1f;
         float pitchValue = pitch;
@@ -38,15 +38,15 @@ public class Speaker {
         speech.speak(phrase, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    public void stop(){
+    public void stop() {
         speech.stop();
     }
 
-    public void changePitch(float newValue){
+    public void changePitch(float newValue) {
         if (newValue < 0.1) speech.setPitch(newValue);
     }
 
-    public void changeSpeed(float newValue){
+    public void changeSpeed(float newValue) {
         if (newValue < 0.1) speech.setSpeechRate(newValue);
     }
 }

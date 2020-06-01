@@ -18,8 +18,8 @@ public class ToastManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         speed = sharedPreferences.getFloat("Speed", 0.5f);
         pitch = sharedPreferences.getFloat("Pitch", 0.5f);
-        voiceSupportActive = sharedPreferences.getBoolean("VoiceSupport",false);
-        isVoiceSupportSettingsConfigurable = sharedPreferences.getBoolean("VoiceConfig",false);
+        voiceSupportActive = sharedPreferences.getBoolean("VoiceSupport", false);
+        isVoiceSupportSettingsConfigurable = sharedPreferences.getBoolean("VoiceConfig", false);
     }
 
     public void showLongToast(String phrase) {
@@ -39,7 +39,7 @@ public class ToastManager {
     private void speakToast(String phrase) {
         if (isVoiceSupportSettingsConfigurable) {
             speaker.speak(phrase, speed, pitch);
-        }else{
+        } else {
             speaker.speak(phrase, 0.5f, 0.5f);
         }
     }
@@ -48,7 +48,7 @@ public class ToastManager {
         voiceSupportActive = value;
     }
 
-    public boolean getVoiceSupport(){
+    public boolean getVoiceSupport() {
         return voiceSupportActive;
     }
 
@@ -56,7 +56,7 @@ public class ToastManager {
         isVoiceSupportSettingsConfigurable = value;
     }
 
-    public boolean getVoiceSupportConfigurability(){
+    public boolean getVoiceSupportConfigurability() {
         return isVoiceSupportSettingsConfigurable;
     }
 }

@@ -21,7 +21,7 @@ public class BookObject implements Serializable {
     private String publisherName;
     private Timestamp timeStamp;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     public BookObject(String id, String title, String[] authors, String[] isbns, String[] covers, boolean active, ArrayList<DownloadContentObject> content, String publisherId, String publisherName) {
         this.id = id;
@@ -79,5 +79,7 @@ public class BookObject implements Serializable {
         return publisherName;
     }
 
-    public String getTimeStamp() {return  timeStamp.toString();}
+    public String getTimeStamp() {
+        return timeStamp.toString();
+    }
 }

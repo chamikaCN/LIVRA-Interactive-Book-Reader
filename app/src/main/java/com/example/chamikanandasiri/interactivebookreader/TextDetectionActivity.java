@@ -73,7 +73,7 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     int timeStampUniqueCount = 0;
     float speechSpeedValue, speechPitchValue;
-    private HashMap<String,Integer> textSizeConfig;
+    private HashMap<String, Integer> textSizeConfig;
     private String TAG = "Test";
     private String textSize;
 
@@ -109,11 +109,11 @@ public class TextDetectionActivity extends AppCompatActivity {
         currentTheme = sharedPreferences.getString("Theme", "Light");
         speechPitchValue = sharedPreferences.getFloat("Pitch", 0.5f);
         speechSpeedValue = sharedPreferences.getFloat("Speed", 0.5f);
-        textSize = sharedPreferences.getString("TextSize","Medium");
+        textSize = sharedPreferences.getString("TextSize", "Medium");
         textSizeConfig = new HashMap<>();
-        textSizeConfig.put("Small",12);
-        textSizeConfig.put("Medium",15);
-        textSizeConfig.put("Large",18);
+        textSizeConfig.put("Small", 12);
+        textSizeConfig.put("Medium", 15);
+        textSizeConfig.put("Large", 18);
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
         } else if (currentTheme.equals("Dark")) {

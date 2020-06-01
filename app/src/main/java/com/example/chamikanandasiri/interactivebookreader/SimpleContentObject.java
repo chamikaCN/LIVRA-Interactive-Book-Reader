@@ -12,7 +12,7 @@ public class SimpleContentObject implements Serializable {
     private String fileURL;
     private File file;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     public SimpleContentObject(String id, String imageURL, String name, String bookID, String fileURL) {
         this.id = id;
@@ -42,11 +42,11 @@ public class SimpleContentObject implements Serializable {
         return fileURL;
     }
 
-    public void setFile(File f){
+    public void setFile(File f) {
         this.file = f;
     }
 
-    public File getFile(){
+    public File getFile() {
         return file;
     }
 }

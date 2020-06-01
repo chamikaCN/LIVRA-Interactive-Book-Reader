@@ -26,9 +26,10 @@ public class ContentHandler {
             String Bc = res.getString(1);
             String Cc = res.getString(2);
             String Dc = res.getString(3);
-            results.add(new String[]{Ac,Bc,Cc,Dc});
+            results.add(new String[]{Ac, Bc, Cc, Dc});
 
-        }return results;
+        }
+        return results;
     }
 
     public ArrayList<String> getContentIDsByBookIDs(String id) {

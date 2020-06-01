@@ -17,7 +17,8 @@ import java.util.ArrayList;
 class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
     private Context context;
     private int resource;
-    private String TAG ="Test";
+    private String TAG = "Test";
+
     public SimpleBookArrayAdapter(Context context, int resource, ArrayList<SimpleBookObject> objects) {
         super(context, resource, objects);
         this.context = context;
@@ -54,7 +55,7 @@ class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
 
     private void displayAr(String bookID) {
         Intent intent = new Intent(context, ArViewActivity.class);
-        intent.putExtra("bookID",bookID);
+        intent.putExtra("bookID", bookID);
         context.startActivity(intent);
     }
 

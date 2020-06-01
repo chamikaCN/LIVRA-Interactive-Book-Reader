@@ -14,7 +14,7 @@ public class CustomARFragment extends ArFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FrameLayout frameLayout = (FrameLayout)  super.onCreateView(inflater, container, savedInstanceState);
+        FrameLayout frameLayout = (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
         getPlaneDiscoveryController().hide();
         getPlaneDiscoveryController().setInstructionView(null);
 

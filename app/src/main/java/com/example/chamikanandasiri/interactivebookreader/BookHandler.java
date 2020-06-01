@@ -64,7 +64,7 @@ public class BookHandler {
         return results;
     }
 
-    public String getBookIDByISBN(String ISBN){
+    public String getBookIDByISBN(String ISBN) {
         Cursor res = dbHelper.getBookIDByISBN(ISBN);
         String Ac = "empty";
         while (res.moveToNext()) {

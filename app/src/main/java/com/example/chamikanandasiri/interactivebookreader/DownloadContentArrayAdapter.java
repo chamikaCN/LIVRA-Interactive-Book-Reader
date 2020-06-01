@@ -47,7 +47,7 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
         TextView tvSize = convertView.findViewById(R.id.ContentListSizeView);
         CheckBox check = convertView.findViewById(R.id.ContentCheckBox);
 
-        if (contentIDsInDatabase.contains(id)){
+        if (contentIDsInDatabase.contains(id)) {
             check.setChecked(true);
             check.setEnabled(false);
         }

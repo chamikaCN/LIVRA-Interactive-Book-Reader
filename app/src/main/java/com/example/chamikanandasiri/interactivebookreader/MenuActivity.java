@@ -20,7 +20,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -82,7 +81,7 @@ public class MenuActivity extends AppCompatActivity {
     private ArrayList<BookObject> bookResponceObjects;
     private static BookObject book;
     private JSONArray bookResponse;
-    private HashMap<String,Integer> textSizeConfig;
+    private HashMap<String, Integer> textSizeConfig;
 
     private String TAG = "Test";
 
@@ -120,11 +119,11 @@ public class MenuActivity extends AppCompatActivity {
         currentTheme = sharedPreferences.getString("Theme", "Light");
         speechSpeedValue = sharedPreferences.getFloat("Speed", 0.5f);
         speechPitchValue = sharedPreferences.getFloat("Pitch", 0.5f);
-        textSize = sharedPreferences.getString("TextSize","Medium");
+        textSize = sharedPreferences.getString("TextSize", "Medium");
         textSizeConfig = new HashMap<>();
-        textSizeConfig.put("Small",12);
-        textSizeConfig.put("Medium",15);
-        textSizeConfig.put("Large",18);
+        textSizeConfig.put("Small", 12);
+        textSizeConfig.put("Medium", 15);
+        textSizeConfig.put("Large", 18);
 
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
@@ -279,22 +278,22 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
         stn_textSizeView.setText(textSize);
-        stn_textMinusButton.setOnClickListener(v1->{
+        stn_textMinusButton.setOnClickListener(v1 -> {
             String text = stn_textSizeView.getText().toString();
-            if(text.equals("Medium")){
+            if (text.equals("Medium")) {
                 stn_textSizeView.setText("Small");
                 stn_textMinusButton.setEnabled(false);
-            }else if(text.equals("Large")){
+            } else if (text.equals("Large")) {
                 stn_textSizeView.setText("Medium");
                 stn_textPlusButton.setEnabled(true);
             }
         });
-        stn_textPlusButton.setOnClickListener(v1->{
+        stn_textPlusButton.setOnClickListener(v1 -> {
             String text = stn_textSizeView.getText().toString();
-            if(text.equals("Medium")){
+            if (text.equals("Medium")) {
                 stn_textSizeView.setText("Large");
                 stn_textPlusButton.setEnabled(false);
-            }else if(text.equals("Small")){
+            } else if (text.equals("Small")) {
                 stn_textSizeView.setText("Medium");
                 stn_textMinusButton.setEnabled(true);
             }
@@ -579,9 +578,9 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void loadBookSearchResultGrid(ArrayList<BookObject> books) {
-        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         RecyclerView recyclerView = searchBookPopup.findViewById(R.id.BookSearchGridView);
-        if(recyclerView == null){
+        if (recyclerView == null) {
             Log.d(TAG, "loadBookSearchResultGrid: cat");
         }
         recyclerView.setLayoutManager(layoutManager);
@@ -701,19 +700,19 @@ public class MenuActivity extends AppCompatActivity {
             themechanged = true;
         }
         String currentSize = stn_textSizeView.getText().toString();
-        if(!currentSize.equals(textSize)){
+        if (!currentSize.equals(textSize)) {
             textSize = currentSize;
-            editor.putString("TextSize",currentSize);
+            editor.putString("TextSize", currentSize);
         }
         boolean voiceConf = stn_voiceCheckBox.isChecked();
-        if (voiceConf !=  toastManager.getVoiceSupportConfigurability()){
+        if (voiceConf != toastManager.getVoiceSupportConfigurability()) {
             toastManager.setVoiceSupportConfigurability(voiceConf);
-            editor.putBoolean("VoiceConfig",voiceConf);
+            editor.putBoolean("VoiceConfig", voiceConf);
         }
         boolean voiceSup = stn_voiceSwitch.isChecked();
-        if (voiceSup !=  toastManager.getVoiceSupport()){
+        if (voiceSup != toastManager.getVoiceSupport()) {
             toastManager.setVoiceSupport(voiceSup);
-            editor.putBoolean("VoiceSupport",voiceSup);
+            editor.putBoolean("VoiceSupport", voiceSup);
         }
         if (speechPitchValue != pitch) {
             speechPitchValue = pitch;

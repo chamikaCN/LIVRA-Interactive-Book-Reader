@@ -66,7 +66,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private void searchBooks() {
         String q = lib_searchText.getText().toString();
-        if(q.length() > 0) {
+        if (q.length() > 0) {
             displayingBooks = new ArrayList<>();
             ArrayList<String> bookIDs = bookHandler.getSimilarBookIDs(q);
             for (String id : bookIDs) {
@@ -78,7 +78,7 @@ public class LibraryActivity extends AppCompatActivity {
                 displayingBooks.add(new SimpleBookObject(id, title.toUpperCase(), auth, isbn, img));
             }
             loadView();
-        }else{
+        } else {
             toastManager.showShortToast("Search query Can not be empty");
         }
     }

@@ -34,7 +34,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class GameActivity extends AppCompatActivity {
 
     private ImageButton gameRestartButton, gameBackButton, gameRemoveButton, letterCloseButton;
-    private Button gameStartButton, gameChangeButton, gameCheckButton, letterRandomButton, letterOkButton,endRetryButton, endBackButton;
+    private Button gameStartButton, gameChangeButton, gameCheckButton, letterRandomButton, letterOkButton, endRetryButton, endBackButton;
     private TextView gameLetterView, gameDetailsView, endMessageView;
     private EditText letterEditText;
     private Speaker speaker;
@@ -45,7 +45,7 @@ public class GameActivity extends AppCompatActivity {
     private String selectedLetter, givenLetter;
     private Node selectedNode, tappedNode;
     private Camera camera;
-    private HashMap<Node,String> nodeStringPairs;
+    private HashMap<Node, String> nodeStringPairs;
     private Dialog letterPopup, endPopup;
     private int modelsRendered, gameSize = 6, score = 0;
     private String TAG = "Test";
@@ -111,7 +111,7 @@ public class GameActivity extends AppCompatActivity {
         gameChangeButton.setOnClickListener(this::showLetterPopup);
     }
 
-    private void setLetterOnTapGeneration(){
+    private void setLetterOnTapGeneration() {
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) ->
         {
             String model;
@@ -143,7 +143,7 @@ public class GameActivity extends AppCompatActivity {
         letterPopup.show();
     }
 
-    public void showEndPopup(String mes){
+    public void showEndPopup(String mes) {
         endRetryButton.setOnClickListener(v2 -> {
             startGame();
             endPopup.dismiss();
@@ -214,7 +214,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void remove() {
-        if(selectedNode != null) {
+        if (selectedNode != null) {
             Log.d(TAG, "remove: node Selected");
             AnchorNode an = (AnchorNode) selectedNode.getParent();
             Log.d(TAG, "remove: node " + an);
@@ -246,23 +246,24 @@ public class GameActivity extends AppCompatActivity {
         gameDetailsView.setVisibility(View.GONE);
         gameLetterView.setText("0");
         gameCheckButton.setVisibility(View.VISIBLE);
-        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> { });
+        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
+        });
         arFragment.getPlaneDiscoveryController().hide();
         modelsRendered = 0;
         for (int k = 0; k < gameSize; k++) {
 
             String model = getRandomLetterModel();
-            generatedLetters.add((model.substring(0,1)));
+            generatedLetters.add((model.substring(0, 1)));
             ModelRenderable.builder().setSource(this, Uri.parse(model)).build().thenAccept(modelRenderable -> {
 
                 AnchorNode node = new AnchorNode();
                 generatedNodes.add(node);
-                nodeStringPairs.put(node,model.substring(0,1));
+                nodeStringPairs.put(node, model.substring(0, 1));
                 node.setRenderable(modelRenderable);
                 scene.addChild(node);
 
                 node.setOnTapListener((hitResult, motionEvent) -> {
-                    if(hitResult.getNode() != null) {
+                    if (hitResult.getNode() != null) {
                         tappedNode = hitResult.getNode();
                         orbitAnimation.setTarget(tappedNode);
                         orbitAnimation.setDuration(2000);
@@ -271,24 +272,24 @@ public class GameActivity extends AppCompatActivity {
                 });
 
                 Random rand = new Random();
-                int x = rand.nextInt(5)-3;
-                int y = rand.nextInt(5)-3;
-                int z = rand.nextInt(5)-3;
+                int x = rand.nextInt(5) - 3;
+                int y = rand.nextInt(5) - 3;
+                int z = rand.nextInt(5) - 3;
                 Log.d(TAG, "startGame: position " + x + y + z);
                 node.setLocalPosition(new Vector3((float) x, (float) y, (float) z));
-                node.setLocalScale(new Vector3(0.5f,0.5f,0.5f));
+                node.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
 
                 modelsRendered += 1;
-                if(modelsRendered >= gameSize){
+                if (modelsRendered >= gameSize) {
                     gameCheckButton.setText("Check Letter");
                     letterSelection("");
                 }
             });
         }
         gameCheckButton.setOnClickListener(v -> {
-            if(tappedNode == null){
-                speaker.speak("You haven't selected a letter " , 0.5f, 0.5f);
-            }else if(nodeStringPairs.get(tappedNode).equals(givenLetter)){
+            if (tappedNode == null) {
+                speaker.speak("You haven't selected a letter ", 0.5f, 0.5f);
+            } else if (nodeStringPairs.get(tappedNode).equals(givenLetter)) {
                 score += 1;
                 String val = String.valueOf(score);
                 gameLetterView.setText(val);
@@ -297,19 +298,19 @@ public class GameActivity extends AppCompatActivity {
                 scene.removeChild(tappedNode);
                 letterSelection("You Are Correct. next attempt. ");
 
-            }else{
-                speaker.speak(" Sorry Wrong Letter. " , 0.5f, 0.5f);
+            } else {
+                speaker.speak(" Sorry Wrong Letter. ", 0.5f, 0.5f);
             }
         });
     }
 
-    private void letterSelection(String appendix){
-        if(generatedLetters.size()>0) {
+    private void letterSelection(String appendix) {
+        if (generatedLetters.size() > 0) {
             Random r = new Random();
             int ran = r.nextInt(generatedLetters.size());
             givenLetter = generatedLetters.get(ran);
-            speaker.speak(appendix +" please Select letter " + givenLetter, 0.5f, 0.5f);
-        } else{
+            speaker.speak(appendix + " please Select letter " + givenLetter, 0.5f, 0.5f);
+        } else {
             speaker.speak("You won", 0.5f, 0.5f);
             showEndPopup("Congratulations !!!\nYou won");
         }
@@ -328,14 +329,14 @@ public class GameActivity extends AppCompatActivity {
 
     private static ObjectAnimator createAnimator() {
 
-        Vector3 v1 = new Vector3(0.4f,0.4f,0.4f);
-        Vector3 v2 = new Vector3(0.5f,0.5f,0.5f);
-        Vector3 v3 = new Vector3(0.7f,0.7f,0.7f);
-        Vector3 v4 = new Vector3(0.5f,0.5f,0.5f);
-        Vector3 v5 = new Vector3(0.4f,0.4f,0.4f);
+        Vector3 v1 = new Vector3(0.4f, 0.4f, 0.4f);
+        Vector3 v2 = new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 v3 = new Vector3(0.7f, 0.7f, 0.7f);
+        Vector3 v4 = new Vector3(0.5f, 0.5f, 0.5f);
+        Vector3 v5 = new Vector3(0.4f, 0.4f, 0.4f);
 
         ObjectAnimator orbitAnimation = new ObjectAnimator();
-        orbitAnimation.setObjectValues(v1,v2,v3,v4,v5);
+        orbitAnimation.setObjectValues(v1, v2, v3, v4, v5);
         orbitAnimation.setPropertyName("localScale");
         orbitAnimation.setEvaluator(new Vector3Evaluator());
 

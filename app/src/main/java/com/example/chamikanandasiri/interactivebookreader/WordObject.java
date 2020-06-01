@@ -1,11 +1,8 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
-import android.util.Log;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 
 public class WordObject {
 
@@ -15,7 +12,7 @@ public class WordObject {
     private String partOfSpeech;
     private int timeStampUniqueCount;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     public WordObject(String word, String definition, String pos, int timeCount) {
         this.word = word;
@@ -47,7 +44,6 @@ public class WordObject {
     public String getTimeStamp() {
         return timestamp.toString();
     }
-
 
 
 }

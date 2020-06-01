@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 class CommentArrayAdapter extends ArrayAdapter<CommentObject> {
     private Context context;
-    private  int resource;
+    private int resource;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     public CommentArrayAdapter(Context context, int resource, ArrayList<CommentObject> objects) {
         super(context, resource, objects);
@@ -27,10 +27,10 @@ class CommentArrayAdapter extends ArrayAdapter<CommentObject> {
         String phrase = getItem(position).getPhrase();
         String comment = getItem(position).getComment();
 
-        CommentObject wo = new CommentObject(title,phrase,comment);
+        CommentObject wo = new CommentObject(title, phrase, comment);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(resource,parent,false);
+        convertView = inflater.inflate(resource, parent, false);
 
         TextView tvTitle = convertView.findViewById(R.id.CommentCardTitle);
         TextView tvPhrase = convertView.findViewById(R.id.CommentCardPhrase);

@@ -67,7 +67,7 @@ public class RecentBookAdapter extends RecyclerView.Adapter<RecentBookAdapter.Vi
 
     private void displayAr(String bookID) {
         Intent intent = new Intent(context, ArViewActivity.class);
-        intent.putExtra("bookID",bookID);
+        intent.putExtra("bookID", bookID);
         context.startActivity(intent);
     }
 }

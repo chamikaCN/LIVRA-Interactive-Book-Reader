@@ -1,18 +1,18 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.content.Intent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class WelcomeActivity extends AppCompatActivity {
 
     private String currentTheme;
-    private ImageView welcomeNameView,welcomeLogoView;
+    private ImageView welcomeNameView, welcomeLogoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +30,13 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeLogoView = findViewById(R.id.WelcomeLogoImageView);
         welcomeNameView = findViewById(R.id.WelcomeNameImageView);
 
-        Animation logo_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.logo_welcome);
+        Animation logo_anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.logo_welcome);
         welcomeLogoView.setAnimation(logo_anim);
 
-        Animation name_anim = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.name_welcome);
+        Animation name_anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.name_welcome);
         welcomeNameView.setAnimation(name_anim);
 
-        logo_anim.setAnimationListener(new Animation.AnimationListener(){
+        logo_anim.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
             public void onAnimationStart(Animation animation) {
@@ -47,7 +47,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
 
                 finish();
-                Intent intent = new Intent(getApplicationContext(),MenuActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MenuActivity.class);
                 startActivity(intent);
 
             }
@@ -58,7 +58,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
-        name_anim.setAnimationListener(new Animation.AnimationListener(){
+        name_anim.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
             public void onAnimationStart(Animation animation) {

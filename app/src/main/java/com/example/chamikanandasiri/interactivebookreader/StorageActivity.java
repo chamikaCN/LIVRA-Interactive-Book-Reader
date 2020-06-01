@@ -27,7 +27,7 @@ public class StorageActivity extends AppCompatActivity {
     ArrayList<WordObject> wordObjects;
     ArrayList<CommentObject> commentObjects;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
     String currentTheme;
 
 
@@ -106,7 +106,7 @@ public class StorageActivity extends AppCompatActivity {
                     definitions.append("\u2606 ").append("( ").append(a[0].toUpperCase()).append(" ) -  ").append(a[1]).append("\n");
                     POSs.append(a[0]).append("\n");
                 }
-                wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(),1));
+                wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(), 1));
             }
 
             wordListGenerate();
@@ -121,11 +121,11 @@ public class StorageActivity extends AppCompatActivity {
             StringBuilder definitions = new StringBuilder();
             StringBuilder POSs = new StringBuilder();
             for (String[] a : defpos) {
-                Log.d(TAG, "loadAllWords: "+ Arrays.toString(a));
+                Log.d(TAG, "loadAllWords: " + Arrays.toString(a));
                 definitions.append("\u2606 ").append("( ").append(a[0].toUpperCase()).append(" ) -  ").append(a[1]).append("\n");
                 POSs.append(a[0]).append("\n");
             }
-            wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(),1));
+            wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(), 1));
         }
         wordListGenerate();
     }

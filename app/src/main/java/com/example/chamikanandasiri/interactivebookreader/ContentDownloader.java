@@ -2,37 +2,34 @@ package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Trace;
-import android.text.PrecomputedText;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
 public class ContentDownloader extends AsyncTask {
-    private File outputdir, outputTempFile,ar;
+    private File outputdir, outputTempFile, ar;
     private DownloadContentObject d;
-    private URL fileurl,imgurl;
+    private URL fileurl, imgurl;
     private Context context;
 
 
     public ContentDownloader(Context context, DownloadContentObject d, File bookIDFile) {
-        this.outputdir=bookIDFile;
+        this.outputdir = bookIDFile;
         this.d = d;
         try {
-            this.fileurl=new URL((d.getFileURL()));
+            this.fileurl = new URL((d.getFileURL()));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
+
     @Override
     protected Boolean doInBackground(Object[] objects) {
         try {
@@ -42,10 +39,10 @@ public class ContentDownloader extends AsyncTask {
             Log.d("fIleurl", fileurl.toString());
 
             URLConnection c = fileurl.openConnection();
-            Log.d("Outputdir",outputdir.getAbsolutePath()+"ar");
-            Log.d("contentname",d.getContName());
+            Log.d("Outputdir", outputdir.getAbsolutePath() + "ar");
+            Log.d("contentname", d.getContName());
 
-            outputTempFile=createFile(outputdir.getAbsolutePath()+"/ar",d.getContId()+".sfb");
+            outputTempFile = createFile(outputdir.getAbsolutePath() + "/ar", d.getContId() + ".sfb");
             c.connect();
             InputStream input = c.getInputStream();
             FileOutputStream output = new FileOutputStream(outputTempFile);
@@ -84,13 +81,13 @@ public class ContentDownloader extends AsyncTask {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             return false;
         }
     }
 
-    public File createFile(String parent ,String filename) throws IOException {
-        File f =new File(parent,filename);
+    public File createFile(String parent, String filename) throws IOException {
+        File f = new File(parent, filename);
         f.createNewFile();
         return f;
 

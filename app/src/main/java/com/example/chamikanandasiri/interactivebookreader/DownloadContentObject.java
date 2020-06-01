@@ -17,7 +17,7 @@ public class DownloadContentObject implements Serializable {
     private String fileURL;
     private int timeStampUniqueCount;
 
-    private String TAG ="Test";
+    private String TAG = "Test";
 
     public DownloadContentObject(String id, String[] imageURLs, String name, String bookID, String description, String size, String fileURL, int timeCount) {
         this.id = id;
@@ -25,7 +25,7 @@ public class DownloadContentObject implements Serializable {
         this.name = name;
         this.description = description;
         this.size = size;
-        this.bookID =bookID;
+        this.bookID = bookID;
         this.fileURL = fileURL;
         this.timeStampUniqueCount = timeCount;
         this.timestamp = addTimeStamp();
@@ -34,7 +34,7 @@ public class DownloadContentObject implements Serializable {
     private Timestamp addTimeStamp() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(System.currentTimeMillis());
-        String stamp = formatter.format(date) +  "." + timeStampUniqueCount;
+        String stamp = formatter.format(date) + "." + timeStampUniqueCount;
         return Timestamp.valueOf(stamp);
     }
 
