@@ -618,7 +618,7 @@ public class MenuActivity extends AppCompatActivity {
         loadImage(book.getCovers()[0], dtl_imageView);
         dtl_titleView.setText(book.getTitle());
         dtl_othersView.setText(other);
-        dtl_contentButton.setVisibility(View.VISIBLE);
+        new Handler(Looper.getMainLooper()).post(() -> dtl_contentButton.setVisibility(View.VISIBLE));
     }
 
     private BookObject JsonBookResponseToBookObject(JSONObject jsonObject) throws JSONException {
