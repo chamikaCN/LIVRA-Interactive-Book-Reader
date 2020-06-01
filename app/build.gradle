@@ -223,3 +223,9 @@ sceneform.asset('sampleData/Z.fbx',
         'default',
         'sampleData/Z.sfa',
         'src/main/assets/Z')
+
+
+sceneform.asset('sampleData/AnimatedDroid.fbx',
+        'default',
+        'sampleData/AnimatedDroid.sfa',
+        'src/main/assets/AnimatedDroid')
