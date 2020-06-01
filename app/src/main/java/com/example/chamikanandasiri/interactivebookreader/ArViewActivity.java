@@ -63,6 +63,7 @@ public class ArViewActivity extends AppCompatActivity {
             contentAvailable.add(new SimpleContentObject(a[0], a[2], a[1], bookID, a[3]));
         }
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+
         btnRemove = findViewById(R.id.remove);
         btnBack = findViewById(R.id.back);
         initiateRecyclerView();
@@ -115,8 +116,8 @@ public class ArViewActivity extends AppCompatActivity {
         anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setParent(anchorNode);
-        node.getScaleController().setMaxScale(0.02f);
-        node.getScaleController().setMinScale(0.01f);
+        node.getScaleController().setMaxScale(0.2f);
+        node.getScaleController().setMinScale(0.1f);
         node.setRenderable(modelRenderable);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
         node.select();
