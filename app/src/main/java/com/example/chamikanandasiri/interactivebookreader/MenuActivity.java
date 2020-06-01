@@ -563,7 +563,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private void formatDatabaseResponse(JSONArray array) throws JSONException {
         bookResponse = array;
-
+        bookResponceObjects.clear();  // remove multiple click issue.
         if (bookResponse.length() > 0) {
             for (int k = 0; k < bookResponse.length(); k++) {
                 JSONObject obj = bookResponse.getJSONObject(k);
