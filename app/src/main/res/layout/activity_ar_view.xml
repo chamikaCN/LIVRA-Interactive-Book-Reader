@@ -7,11 +7,18 @@
     tools:context=".TextDetectionActivity">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineH1"
+    android:id="@+id/guidelineH1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_percent="0.03" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH1a"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.03" />
+        app:layout_constraintGuide_percent="0.08" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineH2"
@@ -91,6 +98,13 @@
         app:layout_constraintGuide_percent="0.65" />
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineH10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -104,6 +118,19 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.19" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8" />
 
     <fragment
         android:id="@+id/fragment"
@@ -137,6 +164,16 @@
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH3"
         app:srcCompat="@drawable/ic_remove" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/animationSpinner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH1a"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV3"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH1"/>
 
     <ImageButton
         android:id="@+id/rotate"
@@ -180,9 +217,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineH10" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import com.google.ar.core.Anchor;
 import com.google.ar.sceneform.AnchorNode;
@@ -47,6 +49,7 @@ public class ArViewActivity extends AppCompatActivity {
     private String TAG = "Test";
     String currentTheme;
     private ImageButton btnRemove, btnBack, btnRotate, btnScaleUp, btnScaleDown;
+    private Spinner spnAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +73,7 @@ public class ArViewActivity extends AppCompatActivity {
 
         ArrayList<String[]> arrayList = contentHandler.getContentsByBookID(bookID);
         for (String[] a : arrayList) {
-            contentAvailable.add(new SimpleContentObject(a[0], a[2], a[1], bookID, a[3]));
+            contentAvailable.add(new SimpleContentObject(a[0], a[2], a[1], bookID, a[3],(a[4].equals("1"))));
         }
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         scene = arFragment.getArSceneView().getScene();
@@ -78,6 +81,7 @@ public class ArViewActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.back);
         btnRotate = findViewById(R.id.rotate);
         btnScaleUp = findViewById(R.id.scaleUp);
+        spnAnimation = findViewById(R.id.animationSpinner);
         btnScaleDown = findViewById(R.id.scaleDown);
         initiateRecyclerView();
         try {
@@ -99,6 +103,10 @@ public class ArViewActivity extends AppCompatActivity {
         btnRotate.setVisibility(View.GONE);
         btnScaleDown.setVisibility(View.GONE);
         btnScaleUp.setVisibility(View.GONE);
+        String[] items = new String[]{"1", "2", "three"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        spnAnimation.setAdapter(adapter);
+
         btnRemove.setOnClickListener(view -> removeAnchorNode());
         btnBack.setOnClickListener(view -> {
             selectedARModel = null;
