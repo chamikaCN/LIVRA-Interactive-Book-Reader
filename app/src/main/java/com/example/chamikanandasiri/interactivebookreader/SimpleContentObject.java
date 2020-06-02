@@ -11,15 +11,17 @@ public class SimpleContentObject implements Serializable {
     private String bookID;
     private String fileURL;
     private File file;
+    private boolean animated;
 
     private String TAG = "Test";
 
-    public SimpleContentObject(String id, String imageURL, String name, String bookID, String fileURL) {
+    public SimpleContentObject(String id, String imageURL, String name, String bookID, String fileURL, boolean animated) {
         this.id = id;
         this.imageURL = imageURL;
         this.name = name;
         this.bookID = bookID;
         this.fileURL = fileURL;
+        this.animated = animated;
     }
 
     public String getContId() {
@@ -49,4 +51,6 @@ public class SimpleContentObject implements Serializable {
     public File getFile() {
         return file;
     }
+
+    public boolean isAnimated() { return animated; }
 }

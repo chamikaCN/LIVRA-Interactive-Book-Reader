@@ -17,7 +17,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private String TAG = "Test";
 
     public DataBaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 3);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("create table " + TABLE_COMMENT + " (TimeStamp TEXT Primary key, Title TEXT, Phrase TEXT, Comment TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_WORD + " (TimeStamp TEXT Primary key, Word TEXT UNIQUE, PartOfSpeech TEXT, Definition TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_BOOK + " (BookID TEXT Primary key, TimeStamp TEXT, Title TEXT, Author TEXT, ISBN TEXT, CoverURL TEXT, PublisherID TEXT, PublisherName TEXT)");
-        sqLiteDatabase.execSQL("create table " + TABLE_CONTENT + " (ContentID TEXT Primary key, TimeStamp TEXT, BookID TEXT, Name TEXT, Size TEXT, ImageURL TEXT, FileURL TEXT)");
+        sqLiteDatabase.execSQL("create table " + TABLE_CONTENT + " (ContentID TEXT Primary key, TimeStamp TEXT, BookID TEXT, Name TEXT, Size TEXT, ImageURL TEXT, FileURL TEXT, Animated TEXT)");
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean insertRowContent(String id, String timestamp, String bookID, String name, String size, String imageURL, String fileURL) {
+    public boolean insertRowContent(String id, String timestamp, String bookID, String name, String size, String imageURL, String fileURL, String animated) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("ContentID", id);
@@ -84,6 +84,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put("Size", size);
         cv.put("ImageURL", imageURL);
         cv.put("FileURL", fileURL);
+        cv.put("Animated", animated);
         long result = db.insert(TABLE_CONTENT, null, cv);
         return result != -1;
     }
@@ -163,7 +164,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getContentDetailsByBooKID(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "ImageURL", "FileURL"}, "BookID = ?", new String[]{id}, null, null, null, null);
+        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "ImageURL", "FileURL","Animated"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
 
     public Cursor getContentIDsByBooKID(String id) {

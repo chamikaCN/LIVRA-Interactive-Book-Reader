@@ -37,14 +37,17 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         holder.itemView.setSelected(selectedPos == position);
+        holder.textView.setTextColor(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.animatedView.setColorFilter(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
         holder.cardView.setCardBackgroundColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccent) : context.getResources().getColor(R.color.commonPrimary));
         Picasso.with(context).load(downloadedContent.get(position).getImageURL())
                 .placeholder(R.drawable.bookcover_loading_anim)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
                 .into(holder.imageView);
+
+        holder.animatedView.setEnabled(downloadedContent.get(position).isAnimated());
 
         holder.textView.setText(downloadedContent.get(position).getContName());
 
@@ -64,7 +67,7 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         CardView cardView;
-        ImageView imageView;
+        ImageView imageView,animatedView;
         TextView textView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -72,6 +75,7 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
             cardView = itemView.findViewById(R.id.ARcardView);
             imageView = itemView.findViewById(R.id.ARcardImageView);
             textView = itemView.findViewById(R.id.ARcardTextView);
+            animatedView = itemView.findViewById(R.id.ARcardAnimatedView);
         }
     }
 }

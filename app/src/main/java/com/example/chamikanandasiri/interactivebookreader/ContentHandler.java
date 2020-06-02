@@ -26,7 +26,8 @@ public class ContentHandler {
             String Bc = res.getString(1);
             String Cc = res.getString(2);
             String Dc = res.getString(3);
-            results.add(new String[]{Ac, Bc, Cc, Dc});
+            String Ec = res.getString(4);
+            results.add(new String[]{Ac, Bc, Cc, Dc, Ec});
 
         }
         return results;
@@ -44,6 +45,6 @@ public class ContentHandler {
 
     public boolean addContent(DownloadContentObject contentObject) {
         return dbHelper.insertRowContent(contentObject.getContId(), contentObject.getTimestamp(), contentObject.getBookID(),
-                contentObject.getContName(), contentObject.getContSize(), contentObject.getImageURLs()[0], contentObject.getFileURL());
+                contentObject.getContName(), contentObject.getContSize(), contentObject.getImageURLs()[0], contentObject.getFileURL(), contentObject.getAnimated() ? "1" : "0");
     }
 }

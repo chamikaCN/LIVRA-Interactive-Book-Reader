@@ -15,11 +15,12 @@ public class DownloadContentObject implements Serializable {
     private String bookID;
     private Timestamp timestamp;
     private String fileURL;
+    private Boolean Animated;
     private int timeStampUniqueCount;
 
     private String TAG = "Test";
 
-    public DownloadContentObject(String id, String[] imageURLs, String name, String bookID, String description, String size, String fileURL, int timeCount) {
+    public DownloadContentObject(String id, String[] imageURLs, String name, String bookID, String description, String size, String fileURL,boolean animated, int timeCount) {
         this.id = id;
         this.imageURLs = imageURLs;
         this.name = name;
@@ -27,6 +28,7 @@ public class DownloadContentObject implements Serializable {
         this.size = size;
         this.bookID = bookID;
         this.fileURL = fileURL;
+        this.Animated = animated;
         this.timeStampUniqueCount = timeCount;
         this.timestamp = addTimeStamp();
     }
@@ -69,4 +71,6 @@ public class DownloadContentObject implements Serializable {
     public String getFileURL() {
         return fileURL;
     }
+
+    public Boolean getAnimated() { return Animated; }
 }

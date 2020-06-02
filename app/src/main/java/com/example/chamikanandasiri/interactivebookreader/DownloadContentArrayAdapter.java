@@ -43,6 +43,7 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
         convertView = inflater.inflate(resource, parent, false);
 
         ImageView imageView = convertView.findViewById(R.id.ContentListImageView);
+        ImageView animatedView = convertView.findViewById(R.id.ContentListAnimatedView);
         TextView tvName = convertView.findViewById(R.id.ContentListNameView);
         TextView tvSize = convertView.findViewById(R.id.ContentListSizeView);
         CheckBox check = convertView.findViewById(R.id.ContentCheckBox);
@@ -68,6 +69,8 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
                 .into(imageView);
         tvName.setText(name);
         tvSize.setText(size);
+        animatedView.setVisibility(objects.get(position).getAnimated()? (View.VISIBLE):(View.GONE));
+        animatedView.setVisibility(View.GONE);
         check.setChecked(false);
 
         return convertView;
