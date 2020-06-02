@@ -16,19 +16,33 @@
         android:roundIcon="@mipmap/ic_livra_new_round"
         android:supportsRtl="true"
         android:theme="@style/LightTheme">
-        <activity android:name=".MenuActivity"></activity>
-        <activity android:name=".WelcomeActivity">
+        <activity
+            android:name=".MenuActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivity" />
-        <activity android:name=".LibraryActivity" />
-        <activity android:name=".ArViewActivity" />
-        <activity android:name=".StorageActivity" />
-        <activity android:name=".TextDetectionActivity" />
+        <activity
+            android:name=".GameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LibraryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ArViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".StorageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TextDetectionActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
