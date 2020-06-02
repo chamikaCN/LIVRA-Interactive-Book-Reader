@@ -502,6 +502,7 @@ public class MenuActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 String message = e.getMessage();
                 Log.w("failure Response", message);
+                toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server");
                 new Handler(Looper.getMainLooper()).post(() -> {
                     String s = "Cannot Connect to Server";
                     dtl_othersView.setText(s);
@@ -528,7 +529,7 @@ public class MenuActivity extends AppCompatActivity {
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, json);
-        if (searchString.length() > 0) {
+        if (searchString.length() > 1) {
             OkHttpClient client = new OkHttpClient();
 
             Request request = new Request.Builder()
@@ -541,6 +542,7 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     String message = e.getMessage();
+                    toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server");
                     Log.d(TAG, "fail" + message);
                 }
 
@@ -557,13 +559,13 @@ public class MenuActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "Keyword should be longer than 5 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Keyword should be at least 2 characters long", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void formatDatabaseResponse(JSONArray array) throws JSONException {
         bookResponse = array;
-        bookResponceObjects.clear();  // remove multiple click issue.
+        bookResponceObjects.clear();
         if (bookResponse.length() > 0) {
             for (int k = 0; k < bookResponse.length(); k++) {
                 JSONObject obj = bookResponse.getJSONObject(k);
@@ -572,9 +574,10 @@ public class MenuActivity extends AppCompatActivity {
                     bookResponceObjects.add(bookObject);
                 }
             }
-            new Handler(Looper.getMainLooper()).post(() -> loadBookSearchResultGrid(bookResponceObjects));
+        } else {
+            toastManager.showLongToast("No matching books found in our database");
         }
-
+        new Handler(Looper.getMainLooper()).post(() -> loadBookSearchResultGrid(bookResponceObjects));
     }
 
     private void loadBookSearchResultGrid(ArrayList<BookObject> books) {
@@ -652,7 +655,10 @@ public class MenuActivity extends AppCompatActivity {
                 String id = content.getJSONObject(i).getString("id");
                 String fi = content.getJSONObject(i).getString("file");
                 String des = content.getJSONObject(i).getString("description");
-                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID, des, size, fi, i));
+                //boolean ani = content.getJSONObject(i).getBoolean("animated");
+                boolean ani = true;
+
+                downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID, des, size, fi, ani, i));
             }
             bk = (new BookObject(bookID, title, authors, isbns, covers, active, downloadContentDetails, publisherID, publisherName));
         }
