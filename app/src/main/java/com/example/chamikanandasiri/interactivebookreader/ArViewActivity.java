@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ArViewActivity extends AppCompatActivity {
     private ModelAnimator modelAnimator;
     private ObjectAnimator selectionAnimation;
+    private VideoRecorder videoRecorder;
     private String bookID;
     private DataBaseHelper dataBaseHelper;
     private ContentHandler contentHandler;
@@ -49,7 +50,7 @@ public class ArViewActivity extends AppCompatActivity {
 
     private String TAG = "Test";
     String currentTheme;
-    private ImageButton btnRemove, btnBack, btnRotate, btnScaleUp, btnScaleDown, btnPlayAnim;
+    private ImageButton btnRemove, btnBack, btnRotate, btnScaleUp, btnScaleDown, btnTransformModel;
     private Spinner spnAnimation;
 
     @Override
@@ -83,7 +84,7 @@ public class ArViewActivity extends AppCompatActivity {
         btnRotate = findViewById(R.id.rotate);
         btnScaleUp = findViewById(R.id.scaleUp);
         spnAnimation = findViewById(R.id.animationSpinner);
-        btnPlayAnim = findViewById(R.id.playAnimation);
+        btnTransformModel = findViewById(R.id.transformModel);
         btnScaleDown = findViewById(R.id.scaleDown);
         initiateRecyclerView();
         try {
@@ -103,11 +104,11 @@ public class ArViewActivity extends AppCompatActivity {
                 toastManager.showShortToast("Select a card to display model");
             }
         });
+        btnTransformModel.setVisibility(View.INVISIBLE);
         btnRotate.setVisibility(View.GONE);
         btnScaleDown.setVisibility(View.GONE);
         btnScaleUp.setVisibility(View.GONE);
         spnAnimation.setVisibility(View.GONE);
-        btnPlayAnim.setVisibility(View.GONE);
 
         btnRemove.setOnClickListener(view -> removeAnchorNode());
         btnBack.setOnClickListener(view -> {
@@ -115,6 +116,16 @@ public class ArViewActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         });
+//        btnRecordVideo.setOnClickListener(v->{
+//            if(videoRecorder == null) {
+//                videoRecorder = new VideoRecorder();
+//                videoRecorder.setSceneView(arFragment.getArSceneView());
+//                int orientation = getResources().getConfiguration().orientation;
+//                videoRecorder.setVideoQuality(CamcorderProfile.QUALITY_HIGH, orientation);
+//            }
+//            boolean isRecording = videoRecorder.onToggleRecord();
+//            btnRecordVideo.setImageResource(isRecording? R.drawable.ic_stop: R.drawable.ic_video);
+//        });
     }
 
     public static void setSelectedARModel(File f) {
@@ -159,9 +170,9 @@ public class ArViewActivity extends AppCompatActivity {
         }
         tappedNode = node;
         selectionAnimation = createSelectionAnimator(tappedNode.getLocalScale());
-        btnRotate.setVisibility(View.VISIBLE);
-        btnScaleUp.setVisibility(View.VISIBLE);
-        btnScaleDown.setVisibility(View.VISIBLE);
+        btnTransformModel.setVisibility(View.VISIBLE);
+        closeButtonPanel();
+        btnTransformModel.setOnClickListener(v -> openButtonPanel());
         animateModel((ModelRenderable) tappedNode.getRenderable());
         startNewSelectionAnimation();
 
@@ -196,6 +207,22 @@ public class ArViewActivity extends AppCompatActivity {
         });
     }
 
+    private void openButtonPanel(){
+        btnRotate.setVisibility(View.VISIBLE);
+        btnScaleUp.setVisibility(View.VISIBLE);
+        btnScaleDown.setVisibility(View.VISIBLE);
+        btnTransformModel.setImageResource(R.drawable.ic_ar_close);
+        btnTransformModel.setOnClickListener(v-> closeButtonPanel());
+    }
+
+    private void closeButtonPanel(){
+        btnRotate.setVisibility(View.GONE);
+        btnScaleUp.setVisibility(View.GONE);
+        btnScaleDown.setVisibility(View.GONE);
+        btnTransformModel.setImageResource(R.drawable.ic_transform);
+        btnTransformModel.setOnClickListener(v-> openButtonPanel());
+    }
+
     private void startNewSelectionAnimation() {
         selectionAnimation = createSelectionAnimator(tappedNode.getLocalScale());
         selectionAnimation.setTarget(tappedNode);
@@ -214,9 +241,9 @@ public class ArViewActivity extends AppCompatActivity {
     public void removeAnchorNode() {
         if (tappedNode != null) {
             scene.removeChild(tappedNode);
-            btnRotate.setVisibility(View.GONE);
-            btnScaleDown.setVisibility(View.GONE);
-            btnScaleUp.setVisibility(View.GONE);
+            closeButtonPanel();
+            spnAnimation.setVisibility(View.GONE);
+            btnTransformModel.setVisibility(View.GONE);
             tappedNode = null;
         }
     }
@@ -237,7 +264,6 @@ public class ArViewActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, animations);
             spnAnimation.setAdapter(adapter);
             spnAnimation.setVisibility(View.VISIBLE);
-            btnPlayAnim.setVisibility(View.VISIBLE);
 
             spnAnimation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -335,4 +361,5 @@ public class ArViewActivity extends AppCompatActivity {
 
         return orbitAnimation;
     }
+
 }
