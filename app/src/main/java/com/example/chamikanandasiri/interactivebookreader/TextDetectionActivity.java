@@ -1,30 +1,45 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
-import android.Manifest;
+
+import android.app.Activity;
 import android.app.Dialog;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+
+import android.hardware.Camera;
+
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+
 import android.os.Bundle;
+
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 
@@ -32,17 +47,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 
-import androidx.annotation.NonNull;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 
 public class TextDetectionActivity extends AppCompatActivity {
 
@@ -50,14 +73,12 @@ public class TextDetectionActivity extends AppCompatActivity {
             cap_closeButton, spk_speakButton, spk_stopButton, spk_closeButton, spk_backButton,
             dict_closeButton, dict_backButton, dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton;
 
-    SurfaceView cameraView;
-    CameraSource cameraSource;
     TextRecognizer textRecognizer;
     ToneGenerator toneGenerator;
-
+    Camera mCamera;
     TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView;
     EditText cmt_editText, cmt_titleText;
-    String detectedString, capturedString, currentTheme, searchedWord;
+    String  capturedString, currentTheme, searchedWord;
     JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
     Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
@@ -79,31 +100,67 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     final int RequestCameraPermissionID = 1001;
     final int RequestWriteStoragePermissionID = 1002;
+    final File pictureFile = new File("/data/data/com.example.chamikanandasiri.interactivebookreader/files", "croppedimage"+".jpg");  //TODO :only for testing purpose. comment this out before final built
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case RequestCameraPermissionID: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    try {
-                        cameraSource.start(cameraView.getHolder());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            case RequestWriteStoragePermissionID: {
 
+    private CameraPreview preview;
+    private final Matrix mat = new Matrix();
+    private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+
+            try {
+                Rect r=preview.getFocusArea();
+                Log.d("rectangle",r.toString());
+
+                Bitmap b=BitmapFactory.decodeByteArray(data,0,data.length);
+                Log.d("Bitmap-Height",String.valueOf(b.getHeight()));
+                Log.d("Bitmap-Width",String.valueOf(b.getWidth()));
+                b=Bitmap.createBitmap(b,0,0,b.getWidth(),b.getHeight(),mat,true);
+
+                Log.d("Bitmap-Height",String.valueOf(b.getHeight()));
+                Log.d("Bitmap-Width",String.valueOf(b.getWidth()));
+
+                Log.d("rectangle-left",String.valueOf(r.left));
+                Log.d("rectangle-top",String.valueOf(r.top));
+                Log.d("rectangle-right",String.valueOf(r.right));
+                Log.d("rectangle-bottom",String.valueOf(r.bottom));
+
+                Bitmap croppedBitmap=Bitmap.createBitmap(b,r.left,r.top,r.right-r.left,r.bottom-r.top);
+                constructText(croppedBitmap);
+
+                //TODO :only for testing purpose. comment out next 3 lines before final built
+
+                FileOutputStream fos = new FileOutputStream(pictureFile);
+                croppedBitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                fos.close();
+
+            } catch (FileNotFoundException e) {
+                Log.d(TAG, "File not found: " + e.getMessage());
+            } catch (IOException e) {
+                Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
+            Log.v(TAG, "will now release camera");
+//            mCamera.release();
+            Log.v(TAG, "will now call finish()");
+//            finish();
         }
-    }
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        //seting view to be full screen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        DisplayMetrics displayMetrics=new DisplayMetrics();
+        ((Activity) this).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
         currentTheme = sharedPreferences.getString("Theme", "Light");
@@ -114,6 +171,7 @@ public class TextDetectionActivity extends AppCompatActivity {
         textSizeConfig.put("Small", 12);
         textSizeConfig.put("Medium", 15);
         textSizeConfig.put("Large", 18);
+
         if (currentTheme.equals("Light")) {
             setTheme(R.style.LightTheme);
         } else if (currentTheme.equals("Dark")) {
@@ -121,6 +179,16 @@ public class TextDetectionActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_text_detection);
+        //getting the camera instance
+        mCamera=getCameraInstance();
+        //creating a camera preview
+        preview = new CameraPreview(this, mCamera);
+
+//     setting to rotation value to 90 . thiss will later used to rotate the passed frame
+        mat.postRotate(90);
+
+        FrameLayout previewFrame = (FrameLayout) findViewById(R.id.camera_preview);
+        previewFrame.addView(preview);
 
         dbHelper = new DataBaseHelper(this);
         commentHandler = new CommentHandler(dbHelper, this);
@@ -133,25 +201,33 @@ public class TextDetectionActivity extends AppCompatActivity {
         setupAllPopups();
 
         textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-        //multiDetector = new MultiDetector.Builder().add(textRecognizer).add(barcodeDetector).build();
         toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+    }
 
-        detectText();
-        constructText();
 
+    public static Camera getCameraInstance(){
+        Camera c = null;
+        try {
+            c = Camera.open(); // attempt to get a Camera instance
+        }
+        catch (Exception e){
+            // Camera is not available (in use or does not exist)
+        }
+        return c; // returns null if camera is unavailable
     }
 
     //UI components Initialization
 
     private void setupMainLayout() {
 
-        cameraView = findViewById(R.id.Surface);
         main_captureButton = findViewById(R.id.CaptureButton);
         main_backButton = findViewById(R.id.TextDetectionBackButton);
 
         main_captureButton.setOnClickListener(v1 -> {
-            capturedString = detectedString;
-            showCapturePopup(v1);
+
+            Log.v(TAG, "Getting output media file");
+            mCamera.takePicture(null, null, mPicture);
+            //capturePopup will be called inside picture callback
         });
         main_backButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, MenuActivity.class);
@@ -208,7 +284,7 @@ public class TextDetectionActivity extends AppCompatActivity {
         cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
     }
 
-    public void showCapturePopup(View v) {
+    public void showCapturePopup() {
         selectedString = capturedString;
         cap_closeButton.setOnClickListener(v1 -> capturePopup.dismiss());
         cap_speechButton.setOnClickListener(v2 -> {
@@ -240,7 +316,7 @@ public class TextDetectionActivity extends AppCompatActivity {
             searchedWord = "";
             searchResultDefinitions = null;
             dictionaryPopup.dismiss();
-            showCapturePopup(v3);
+            showCapturePopup();
         });
         dict_closeButton.setOnClickListener(v1 ->
         {
@@ -263,7 +339,7 @@ public class TextDetectionActivity extends AppCompatActivity {
         spk_backButton.setOnClickListener(v1 -> {
             speechStop();
             speechPopup.dismiss();
-            showCapturePopup(v1);
+            showCapturePopup();
         });
         spk_closeButton.setOnClickListener(v1 ->
         {
@@ -290,7 +366,7 @@ public class TextDetectionActivity extends AppCompatActivity {
             cmt_titleText.setText("");
             cmt_editText.setText("");
             commentPopup.dismiss();
-            showCapturePopup(v1);
+            showCapturePopup();
         });
         cmt_closeButton.setOnClickListener(v1 -> commentPopup.dismiss());
         cmt_saveButton.setOnClickListener(v1 -> {
@@ -303,73 +379,41 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     // Main Functions
 
-    private void detectText() {
+    //this will recognize text from passed bitmap  TODO: split string by non alphabet
+    private void constructText(Bitmap b) {
 
-        if (!textRecognizer.isOperational()) {
-            Log.w("TextDetectionActivity", "Detector dependencies are not yet available");
+        SparseArray<TextBlock> items= textRecognizer.detect(new Frame.Builder().setBitmap(b).build());
+
+
+        if (items.size() != 0) {
+            Set<String> detections=new TreeSet<String>();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < items.size(); i++) {
+                TextBlock item = items.valueAt(i);
+                Set<String> detection=new TreeSet<String>(Arrays.asList(item.getValue().replaceAll("[^a-zA-Z]", " ").split("\\s+")));
+                Log.d("NIlaan",detection.toString());
+                Set<String> finalDetections = detections;
+                Set<String> newDetections=new HashSet<String>() {{
+                    addAll(detection);
+                    addAll(finalDetections);
+                }};
+                detections=newDetections;
+//                    stringBuilder.append(String.join("\n",item.getValue().split("\\W+")));  //removing all non alphabets
+//                    stringBuilder.append("\n");
+            }
+            Set<String> finalstring=new TreeSet<>(detections);
+            System.out.println(detections);
+
+            Log.d("NIlaan",detections.toString());
+            capturedString=String.join("\n",detections);
+
         } else {
-            //creating a video stream through camera
-            cameraSource = new CameraSource.Builder(getApplicationContext(), textRecognizer)
-                    .setFacing(CameraSource.CAMERA_FACING_BACK)
-//                    .setRequestedPreviewSize(350, 350)  //TODO: better assign preview size dynamicaly
-                    .setRequestedFps(2.0f)
-                    .setAutoFocusEnabled(true)
-                    .build();
-            cameraView.getHolder().addCallback(new SurfaceHolder.Callback() {
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
-
-                    try {
-                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(TextDetectionActivity.this,
-                                    new String[]{Manifest.permission.CAMERA}, RequestCameraPermissionID);
-                            return;
-                        }
-                        cameraSource.start(cameraView.getHolder());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-                }
-
-                @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    cameraSource.stop();
-                }
-            });
+            capturedString = "";
         }
+        Log.d("detectedString",capturedString);
+        showCapturePopup();
     }
 
-    private void constructText() {
-
-        textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
-
-            @Override
-            public void release() {
-            }
-
-            @Override
-            public void receiveDetections(Detector.Detections<TextBlock> detections) {
-                final SparseArray<TextBlock> items = detections.getDetectedItems();
-                if (items.size() != 0) {
-                    main_captureButton.post(() -> {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int i = 0; i < items.size(); i++) {
-                            TextBlock item = items.valueAt(i);
-                            stringBuilder.append(item.getValue());
-                            stringBuilder.append("\n");
-                        }
-                        detectedString = stringBuilder.toString();
-                    });
-                } else {
-                    detectedString = "";
-                }
-            }
-        });
-    }
 
     private void getDictionaryResponse(String word) {
 
@@ -479,16 +523,6 @@ public class TextDetectionActivity extends AppCompatActivity {
         return s;
     }
 
-    private void copyToClipboard() {
-//        selectedString = getSelectedString(cap_displayView);
-        ClipboardManager myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData myClip = ClipData.newPlainText("text", selectedString);
-        myClipboard.setPrimaryClip(myClip);
-
-        Toast.makeText(getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
-
-    }
-
     private void buttonAnimation1(ImageButton button) {
         Animation animation = AnimationUtils.loadAnimation(this, R.anim.bounce);
         BounceInterpolator bi = new BounceInterpolator(0.2, 20);
@@ -512,4 +546,21 @@ public class TextDetectionActivity extends AppCompatActivity {
         animation.setInterpolator(bi);
         button.startAnimation(animation);
     }
+
+    private void copyToClipboard() {
+//        selectedString = getSelectedString(cap_displayView);
+        ClipboardManager myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData myClip = ClipData.newPlainText("text", selectedString);
+        myClipboard.setPrimaryClip(myClip);
+
+        Toast.makeText(getApplicationContext(), "Text Copied", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+    }
+
+
 }
