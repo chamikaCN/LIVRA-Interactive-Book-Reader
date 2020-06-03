@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -35,7 +37,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ArViewActivity extends AppCompatActivity {
     private ModelAnimator modelAnimator;
     private ObjectAnimator selectionAnimation;
-    private int i;
     private String bookID;
     private DataBaseHelper dataBaseHelper;
     private ContentHandler contentHandler;
@@ -48,7 +49,7 @@ public class ArViewActivity extends AppCompatActivity {
 
     private String TAG = "Test";
     String currentTheme;
-    private ImageButton btnRemove, btnBack, btnRotate, btnScaleUp, btnScaleDown;
+    private ImageButton btnRemove, btnBack, btnRotate, btnScaleUp, btnScaleDown, btnPlayAnim;
     private Spinner spnAnimation;
 
     @Override
@@ -62,18 +63,18 @@ public class ArViewActivity extends AppCompatActivity {
         } else if (currentTheme.equals("Dark")) {
             setTheme(R.style.DarkTheme);
         }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_ar_view);
 
         dataBaseHelper = new DataBaseHelper(this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
         toastManager = new ToastManager(this);
-        selectionAnimation = createSelectionAnimator();
         this.bookID = getIntent().getExtras().getString("bookID");
         contentAvailable = new ArrayList<>();
 
         ArrayList<String[]> arrayList = contentHandler.getContentsByBookID(bookID);
         for (String[] a : arrayList) {
-            contentAvailable.add(new SimpleContentObject(a[0], a[2], a[1], bookID, a[3],(a[4].equals("1"))));
+            contentAvailable.add(new SimpleContentObject(a[0], a[2], a[1], bookID, a[3], (a[4].equals("1"))));
         }
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         scene = arFragment.getArSceneView().getScene();
@@ -82,6 +83,7 @@ public class ArViewActivity extends AppCompatActivity {
         btnRotate = findViewById(R.id.rotate);
         btnScaleUp = findViewById(R.id.scaleUp);
         spnAnimation = findViewById(R.id.animationSpinner);
+        btnPlayAnim = findViewById(R.id.playAnimation);
         btnScaleDown = findViewById(R.id.scaleDown);
         initiateRecyclerView();
         try {
@@ -93,7 +95,8 @@ public class ArViewActivity extends AppCompatActivity {
             Anchor anchor = hitResult.createAnchor();
             if (selectedARModel != null) {
                 ModelRenderable.builder()
-                        .setSource(this, Uri.fromFile(selectedARModel))
+//                        .setSource(this, Uri.fromFile(selectedARModel))
+                        .setSource(this, Uri.parse("AnimatedDroid.sfb"))
                         .build()
                         .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
             } else {
@@ -103,19 +106,14 @@ public class ArViewActivity extends AppCompatActivity {
         btnRotate.setVisibility(View.GONE);
         btnScaleDown.setVisibility(View.GONE);
         btnScaleUp.setVisibility(View.GONE);
-        String[] items = new String[]{"1", "2", "three"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        spnAnimation.setAdapter(adapter);
+        spnAnimation.setVisibility(View.GONE);
+        btnPlayAnim.setVisibility(View.GONE);
 
         btnRemove.setOnClickListener(view -> removeAnchorNode());
         btnBack.setOnClickListener(view -> {
             selectedARModel = null;
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
-        });
-        btnRotate.setOnClickListener(v1 -> {
-            rotateObject();
-            Log.d(TAG, "onCreate: came");
         });
     }
 
@@ -152,15 +150,59 @@ public class ArViewActivity extends AppCompatActivity {
         });
     }
 
+
     private void setTappedNode(Node node) {
+        if (selectionAnimation != null) {
+            if (selectionAnimation.isRunning()) {
+                selectionAnimation.end();
+            }
+        }
         tappedNode = node;
+        selectionAnimation = createSelectionAnimator(tappedNode.getLocalScale());
         btnRotate.setVisibility(View.VISIBLE);
         btnScaleUp.setVisibility(View.VISIBLE);
         btnScaleDown.setVisibility(View.VISIBLE);
+        animateModel((ModelRenderable) tappedNode.getRenderable());
+        startNewSelectionAnimation();
+
+        btnRotate.setOnClickListener(v -> {
+            Quaternion newQuat = Quaternion.axisAngle(new Vector3(0, 1, 0), tappedNode.getLocalRotation().w + 20);
+            tappedNode.setLocalRotation(newQuat);
+        });
+
+        btnScaleUp.setOnClickListener(v -> {
+            Vector3 newVector = Vector3.add(tappedNode.getLocalScale(), new Vector3(0.1f, 0.1f, 0.1f));
+            selectionAnimation.end();
+            tappedNode.setLocalScale(newVector);
+            if (modelAnimator != null) {
+                if (!modelAnimator.isRunning()) {
+                    startNewSelectionAnimation();
+                }
+            } else {
+                startNewSelectionAnimation();
+            }
+        });
+        btnScaleDown.setOnClickListener(v -> {
+            Vector3 newVector = Vector3.add(tappedNode.getLocalScale(), new Vector3(-0.1f, -0.1f, -0.1f));
+            selectionAnimation.end();
+            tappedNode.setLocalScale(newVector);
+            if (modelAnimator != null) {
+                if (!modelAnimator.isRunning()) {
+                    startNewSelectionAnimation();
+                }
+            } else {
+                startNewSelectionAnimation();
+            }
+        });
+    }
+
+    private void startNewSelectionAnimation() {
+        selectionAnimation = createSelectionAnimator(tappedNode.getLocalScale());
         selectionAnimation.setTarget(tappedNode);
         selectionAnimation.setDuration(2000);
         selectionAnimation.start();
     }
+
 
     private void rotateObject() {
         ObjectAnimator rotateAnimation = createOrbitAnimator();
@@ -179,27 +221,88 @@ public class ArViewActivity extends AppCompatActivity {
         }
     }
 
-    private void animate(ModelRenderable modelRenderable) {
+    private void animateModel(ModelRenderable modelRenderable) {
         if (modelAnimator != null && modelAnimator.isRunning())
             modelAnimator.end();
-        int animationCount = modelRenderable.getAnimationDataCount();
 
-        if (i == animationCount) {
-            i = 0;
+        int animationCount = modelRenderable.getAnimationDataCount();
+        Log.d(TAG, "animateModel: animation count =" + animationCount);
+
+        if (animationCount > 0) {
+            String[] animations = new String[animationCount + 1];
+            animations[0] = "None";
+            for (int m = 1; m <= animationCount; m++) {
+                animations[m] = modelRenderable.getAnimationData(m - 1).getName();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, animations);
+            spnAnimation.setAdapter(adapter);
+            spnAnimation.setVisibility(View.VISIBLE);
+            btnPlayAnim.setVisibility(View.VISIBLE);
+
+            spnAnimation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (modelAnimator != null && modelAnimator.isRunning())
+                        modelAnimator.end();
+                    if (parent.getItemAtPosition(position) != "None") {
+                        selectionAnimation.end();
+                        String selectedAnim = spnAnimation.getSelectedItem().toString();
+                        AnimationData animationData = modelRenderable.getAnimationData(selectedAnim);
+                        modelAnimator = new ModelAnimator(animationData, modelRenderable);
+                        modelAnimator.start();
+                        modelAnimator.setRepeatCount(1000);
+                    } else {
+                        startNewSelectionAnimation();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+
+//            btnPlayAnim.setOnClickListener(v -> {
+//                if (modelAnimator != null && modelAnimator.isRunning())
+//                    modelAnimator.end();
+//                String selectedAnim = spnAnimation.getSelectedItem().toString();
+//                if (!selectedAnim.equals("None")) {
+//                    AnimationData animationData = modelRenderable.getAnimationData(selectedAnim);
+//                    modelAnimator = new ModelAnimator(animationData, modelRenderable);
+//                    modelAnimator.start();
+//                } else {
+//                    toastManager.showShortToast("Select an animation to play");
+//                }
+//            });
+//            spnAnimation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                    if (modelAnimator != null && modelAnimator.isRunning())
+//                        modelAnimator.end();
+//                    if (parent.getItemAtPosition(position) == "None") {
+//                        new Handler(Looper.getMainLooper()).post(() -> btnPlayAnim.setVisibility(View.GONE));
+//                    } else {
+//                        new Handler(Looper.getMainLooper()).post(() -> btnPlayAnim.setVisibility(View.VISIBLE));
+//                    }
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {
+//
+//                }
+//            });
         }
-        AnimationData animationData = modelRenderable.getAnimationData(i);
-        modelAnimator = new ModelAnimator(animationData, modelRenderable);
-        modelAnimator.start();
-        i++;
 
     }
 
-    private static ObjectAnimator createSelectionAnimator() {
-        Vector3 v1 = new Vector3(0.97f, 0.97f, 0.97f);
-        Vector3 v2 = new Vector3(1.0f, 1.0f, 1.0f);
-        Vector3 v3 = new Vector3(1.04f, 1.04f, 1.04f);
-        Vector3 v4 = new Vector3(1.0f, 1.0f, 1.0f);
-        Vector3 v5 = new Vector3(0.97f, 0.97f, 0.97f);
+
+    private static ObjectAnimator createSelectionAnimator(Vector3 size) {
+        Vector3 v1 = size.scaled(0.97f);
+        Vector3 v2 = size;
+        Vector3 v3 = size.scaled(1.04f);
+        Vector3 v4 = size;
+        Vector3 v5 = size.scaled(0.97f);
 
         ObjectAnimator orbitAnimation = new ObjectAnimator();
         orbitAnimation.setObjectValues(v1, v2, v3, v4, v5);
