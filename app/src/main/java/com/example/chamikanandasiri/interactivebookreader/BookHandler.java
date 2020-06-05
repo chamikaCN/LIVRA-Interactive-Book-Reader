@@ -77,4 +77,8 @@ public class BookHandler {
         return dbHelper.insertRowBook(bookObject.getBookId(), bookObject.getTimeStamp(), bookObject.getTitle(), bookObject.getAuthors()[0],
                 bookObject.getIsbns()[0], bookObject.getCovers()[0], bookObject.getPublisherId(), bookObject.getPublisherName());
     }
+
+    public boolean deleteBook(String id){
+        return dbHelper.deleteRowBook(id);
+    }
 }
