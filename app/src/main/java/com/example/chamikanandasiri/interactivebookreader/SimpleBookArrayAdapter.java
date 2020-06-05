@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.NetworkPolicy;
@@ -14,43 +15,72 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+class SimpleBookArrayAdapter extends RecyclerView.Adapter<com.example.chamikanandasiri.interactivebookreader.SimpleBookArrayAdapter.ViewHolder> {
     private Context context;
-    private int resource;
+    private ArrayList<SimpleBookObject> books;
     private String TAG = "Test";
+    private int selectedPos;
 
-    public SimpleBookArrayAdapter(Context context, int resource, ArrayList<SimpleBookObject> objects) {
-        super(context, resource, objects);
+    public SimpleBookArrayAdapter(Context context, ArrayList<SimpleBookObject> objects) {
         this.context = context;
-        this.resource = resource;
+        this.books = objects;
+        selectedPos = RecyclerView.NO_POSITION;
+    }
 
+    @NonNull
+    @Override
+    public com.example.chamikanandasiri.interactivebookreader.SimpleBookArrayAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_book, parent, false);
+        return new com.example.chamikanandasiri.interactivebookreader.SimpleBookArrayAdapter.ViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        String imageURL = getItem(position).getCover();
-        String name = getItem(position).getTitle();
-        StringBuilder other = new StringBuilder();
-        other.append(getItem(position).getAuthor()).append("\n").append(getItem(position).getIsbn());
+    public void onBindViewHolder(@NonNull com.example.chamikanandasiri.interactivebookreader.SimpleBookArrayAdapter.ViewHolder holder, int position) {
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        convertView = inflater.inflate(resource, parent, false);
+        holder.itemView.setSelected(selectedPos == position);
+        holder.otherView.setTextColor(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.textView.setTextColor(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.itemView.setBackgroundColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccent) : context.getResources().getColor(R.color.commonPrimary));
 
-        ImageView imageView = convertView.findViewById(R.id.BookImageView);
-        TextView tvName = convertView.findViewById(R.id.BookTitleView);
-        TextView tvOther = convertView.findViewById(R.id.BookOtherView);
-
-        Picasso.with(context).load(imageURL)
+        Picasso.with(context).load(books.get(position).getCover())
                 .placeholder(R.drawable.bookcover_loading_anim)
                 .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
-                .into(imageView);
-        tvName.setText(name);
-        tvOther.setText(other);
+                .into(holder.imageView);
 
-        imageView.setOnClickListener(v -> displayAr(getItem(position).getBookId()));
+        holder.textView.setText(books.get(position).getTitle());
+        String s = books.get(position).getAuthor() + "\n" + books.get(position).getIsbn();
+        holder.otherView.setText(s);
 
-        return convertView;
+        holder.itemView.setOnClickListener(v -> displayAr(books.get(position).getBookId()));
+        holder.itemView.setOnLongClickListener(view -> {
+            notifyItemChanged(selectedPos);
+            selectedPos = holder.getLayoutPosition();
+            LibraryActivity.setSelectedBook(books.get(position).getBookId());
+            notifyItemChanged(selectedPos);
+            return true;
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return books.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imageView;
+        TextView textView, otherView;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.BookImageView);
+            textView = itemView.findViewById(R.id.BookTitleView);
+            otherView = itemView.findViewById(R.id.BookOtherView);
+        }
     }
 
     private void displayAr(String bookID) {
@@ -58,6 +88,17 @@ class SimpleBookArrayAdapter extends ArrayAdapter<SimpleBookObject> {
         intent.putExtra("bookID", bookID);
         context.startActivity(intent);
     }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
