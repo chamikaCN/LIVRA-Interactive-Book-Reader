@@ -74,6 +74,7 @@ public class MenuActivity extends AppCompatActivity {
     private SurfaceView cbd_surfaceView;
     private EditText sbk_searchText;
 
+    private RecentBookAdapter recentBookAdapter;
 
     private String detectedISBN;
     private float speechSpeedValue, speechPitchValue;
@@ -502,8 +503,8 @@ public class MenuActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 String message = e.getMessage();
                 Log.w("failure Response", message);
-                toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server");
                 new Handler(Looper.getMainLooper()).post(() -> {
+                    toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server");
                     String s = "Cannot Connect to Server";
                     dtl_othersView.setText(s);
                 });
@@ -583,9 +584,6 @@ public class MenuActivity extends AppCompatActivity {
     private void loadBookSearchResultGrid(ArrayList<BookObject> books) {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         RecyclerView recyclerView = searchBookPopup.findViewById(R.id.BookSearchGridView);
-        if (recyclerView == null) {
-            Log.d(TAG, "loadBookSearchResultGrid: cat");
-        }
         recyclerView.setLayoutManager(layoutManager);
         BookArrayAdapter adapter = new BookArrayAdapter(this, books);
         recyclerView.setAdapter(adapter);
@@ -655,8 +653,7 @@ public class MenuActivity extends AppCompatActivity {
                 String id = content.getJSONObject(i).getString("id");
                 String fi = content.getJSONObject(i).getString("file");
                 String des = content.getJSONObject(i).getString("description");
-                //boolean ani = content.getJSONObject(i).getBoolean("animated");
-                boolean ani = true;
+                boolean ani = content.getJSONObject(i).getBoolean("animated");
 
                 downloadContentDetails.add(new DownloadContentObject(id, im, ti, bookID, des, size, fi, ani, i));
             }
@@ -680,14 +677,20 @@ public class MenuActivity extends AppCompatActivity {
         DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent(), alreadyDownloadedContents);
         cnt_contentListView.setAdapter(adapter);
         cnt_downloadButton.setOnClickListener(v -> {
-            saveBook(book);
-            buttonAnimation4(cnt_downloadButton);
-            ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
-            File bookFile = makeDir(book.getBookId());
-            for (DownloadContentObject d : selected) {
-                ContentDownloader cd = new ContentDownloader(this, d, bookFile);
-                cd.execute();
-                contentHandler.addContent(d);
+            if(adapter.isAnySelected()) {
+                saveBook(book);
+                loadRecentBooks();
+                buttonAnimation4(cnt_downloadButton);
+                ArrayList<DownloadContentObject> selected = adapter.getSelectedObjects();
+                File bookFile = makeDir(book.getBookId());
+                for (DownloadContentObject d : selected) {
+                    ContentDownloader cd = new ContentDownloader(this, d, bookFile);
+                    cd.execute();
+                    contentHandler.addContent(d);
+                }
+                loadContentDetails(bookID);
+            }else{
+                toastManager.showShortToast("Select models to Download");
             }
         });
     }
@@ -750,6 +753,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void loadRecentBooks() {
+        displayingRecentBooks.clear();
         ArrayList<String> bookIDs = bookHandler.getRecentBookIDs();
         for (String id : bookIDs) {
             ArrayList<String> bookdet = bookHandler.getBooksByID(id);
@@ -762,22 +766,15 @@ public class MenuActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         RecyclerView recyclerView = findViewById(R.id.MenuRecentBookView);
         recyclerView.setLayoutManager(layoutManager);
-        RecentBookAdapter adapter = new RecentBookAdapter(this, displayingRecentBooks);
-        recyclerView.setAdapter(adapter);
+        recentBookAdapter = new RecentBookAdapter(this, displayingRecentBooks);
+        recyclerView.setAdapter(recentBookAdapter);
     }
 
     private void loadImage(String Url, ImageView im) {
         Picasso.with(this).load(Url)
                 .placeholder(R.drawable.bookcover_loading_anim)
-                .into(im, new com.squareup.picasso.Callback() {
-                    @Override
-                    public void onSuccess() {
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
+                .fit()
+                .into(im);
     }
 
     private void saveBook(BookObject book) {

@@ -69,8 +69,7 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
                 .into(imageView);
         tvName.setText(name);
         tvSize.setText(size);
-        animatedView.setVisibility(objects.get(position).getAnimated()? (View.VISIBLE):(View.GONE));
-        animatedView.setVisibility(View.GONE);
+        animatedView.setVisibility(objects.get(position).getAnimated() ? (View.VISIBLE) : (View.GONE));
         check.setChecked(false);
 
         return convertView;
@@ -78,6 +77,10 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
 
     public ArrayList<DownloadContentObject> getSelectedObjects() {
         return selectedObjects;
+    }
+
+    public boolean isAnySelected() {
+        return selectedObjects.size() > 0;
     }
 
 
