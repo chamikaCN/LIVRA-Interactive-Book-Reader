@@ -123,21 +123,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.28" />
+        app:layout_constraintGuide_percent="0.18" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.41" />
+        app:layout_constraintGuide_percent="0.31" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.54" />
+        app:layout_constraintGuide_percent="0.34" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineV5a"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.82" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineV6"
@@ -156,11 +163,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="80dp"
         android:background="?attr/colorPrimary"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineH3"
+        app:layout_constraintBottom_toTopOf="@id/guidelineH3"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageButton
         android:id="@+id/back"
@@ -170,7 +178,8 @@
         android:contentDescription="@string/back"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/guidelineH2"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV2"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV2"
         app:layout_constraintStart_toStartOf="@+id/guidelineV1"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:srcCompat="@drawable/ic_back" />
@@ -183,8 +192,9 @@
         android:contentDescription="@string/remove"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@+id/guidelineH2"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV3"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV2"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV4"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV3"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:srcCompat="@drawable/ic_remove" />
 
@@ -193,10 +203,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:spinnerMode="dropdown"
-        app:layout_constraintBottom_toTopOf="@+id/guidelineH2"
-        app:layout_constraintEnd_toEndOf="@+id/guidelineV6"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV4"
-        app:layout_constraintTop_toBottomOf="@+id/guidelineH1" />
+        app:layout_constraintBottom_toBottomOf="@+id/guidelineH2"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV5a"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV5"
+        app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
 
     <ImageButton
         android:id="@+id/transformModel"
@@ -205,11 +215,13 @@
         android:background="?attr/colorPrimary"
         android:contentDescription="@string/remove"
         android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
-        app:layout_constraintEnd_toEndOf="@id/guidelineV7"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintBottom_toBottomOf="@id/guidelineH2"
+        app:layout_constraintEnd_toEndOf="@id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
         app:layout_constraintTop_toTopOf="@+id/guidelineH1"
         app:srcCompat="@drawable/ic_transform" />
+
 
     <fragment
         android:id="@+id/fragment"
@@ -217,7 +229,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineH2" />
+        app:layout_constraintTop_toBottomOf="@id/guidelineH3" />
 
     <ImageButton
         android:id="@+id/rotate"
@@ -227,6 +239,7 @@
         android:contentDescription="@string/remove"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH5"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH4"
@@ -240,6 +253,7 @@
         android:contentDescription="@string/remove"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH7"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH6"
@@ -253,10 +267,25 @@
         android:contentDescription="@string/remove"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH9"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
         app:layout_constraintStart_toStartOf="@+id/guidelineV6"
         app:layout_constraintTop_toBottomOf="@+id/guidelineH8"
         app:srcCompat="@drawable/ic_scaledown" />
+
+    <ImageButton
+        android:id="@+id/removeButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?attr/colorError"
+        android:contentDescription="@string/remove"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineH11"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/guidelineV7"
+        app:layout_constraintStart_toStartOf="@+id/guidelineV6"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineH10"
+        app:srcCompat="@drawable/ic_ar_remove" />
 
 
     <androidx.recyclerview.widget.RecyclerView
