@@ -1,6 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
     private int selectedPos;
     private ArrayList<SimpleContentObject> downloadedContent;
     private Context context;
+    private  String TAG = "Test";
 
     public ArCardViewAdapter(Context context, ArrayList<SimpleContentObject> objects) {
         this.downloadedContent = objects;
@@ -47,15 +49,22 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
                 .fit()
                 .into(holder.imageView);
 
-        holder.animatedView.setEnabled(downloadedContent.get(position).isAnimated());
+        Log.d(TAG, "onBindViewHolder: " + downloadedContent.get(position).getContName() + downloadedContent.get(position).isAnimated() );
+        holder.animatedView.setVisibility(downloadedContent.get(position).isAnimated()? View.VISIBLE: View.GONE);
 
         holder.textView.setText(downloadedContent.get(position).getContName());
 
         holder.itemView.setOnClickListener(view -> {
-            notifyItemChanged(selectedPos);
-            selectedPos = holder.getLayoutPosition();
-            notifyItemChanged(selectedPos);
-            ArViewActivity.setSelectedARModel(downloadedContent.get(position).getFile());
+            if(position != selectedPos) {
+                notifyItemChanged(selectedPos);
+                selectedPos = holder.getLayoutPosition();
+                notifyItemChanged(selectedPos);
+                ArViewActivity.setSelectedARModel(downloadedContent.get(position).getFile());
+            }else{
+                notifyItemChanged(selectedPos);
+                selectedPos = RecyclerView.NO_POSITION;
+                ArViewActivity.setSelectedARModel(null);
+            }
         });
     }
 
