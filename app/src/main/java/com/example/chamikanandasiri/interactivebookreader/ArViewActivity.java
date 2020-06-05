@@ -50,7 +50,7 @@ public class ArViewActivity extends AppCompatActivity {
 
     private String TAG = "Test";
     String currentTheme;
-    private ImageButton btnRemove, btnBack, btnRotate, btnScaleUp, btnScaleDown, btnTransformModel;
+    private ImageButton btnDeselect, btnBack, btnRotate, btnScaleUp, btnScaleDown, btnTransformModel, btnRemoveModel;
     private Spinner spnAnimation;
 
     @Override
@@ -79,13 +79,14 @@ public class ArViewActivity extends AppCompatActivity {
         }
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         scene = arFragment.getArSceneView().getScene();
-        btnRemove = findViewById(R.id.remove);
+        btnDeselect = findViewById(R.id.removeButton);
         btnBack = findViewById(R.id.back);
         btnRotate = findViewById(R.id.rotate);
         btnScaleUp = findViewById(R.id.scaleUp);
         spnAnimation = findViewById(R.id.animationSpinner);
         btnTransformModel = findViewById(R.id.transformModel);
         btnScaleDown = findViewById(R.id.scaleDown);
+        btnRemoveModel = findViewById(R.id.remove);
         initiateRecyclerView();
         try {
             loadCards();
@@ -96,36 +97,30 @@ public class ArViewActivity extends AppCompatActivity {
             Anchor anchor = hitResult.createAnchor();
             if (selectedARModel != null) {
                 ModelRenderable.builder()
-//                        .setSource(this, Uri.fromFile(selectedARModel))
-                        .setSource(this, Uri.parse("AnimatedDroid.sfb"))
+                        .setSource(this, Uri.fromFile(selectedARModel))
+//                        .setSource(this, Uri.parse("AnimatedDroid.sfb"))
                         .build()
                         .thenAccept(modelRenderable -> addModelToScene(anchor, modelRenderable));
             } else {
+                deselectModel();
                 toastManager.showShortToast("Select a card to display model");
             }
         });
         btnTransformModel.setVisibility(View.INVISIBLE);
+        btnDeselect.setVisibility(View.GONE);
         btnRotate.setVisibility(View.GONE);
         btnScaleDown.setVisibility(View.GONE);
         btnScaleUp.setVisibility(View.GONE);
-        spnAnimation.setVisibility(View.GONE);
+        btnRemoveModel.setVisibility(View.INVISIBLE);
+        spnAnimation.setVisibility(View.INVISIBLE);
 
-        btnRemove.setOnClickListener(view -> removeAnchorNode());
+        btnRemoveModel.setOnClickListener(v-> removeAnchorNode());
+        btnDeselect.setOnClickListener(view -> {});
         btnBack.setOnClickListener(view -> {
             selectedARModel = null;
             Intent intent = new Intent(this, MenuActivity.class);
             startActivity(intent);
         });
-//        btnRecordVideo.setOnClickListener(v->{
-//            if(videoRecorder == null) {
-//                videoRecorder = new VideoRecorder();
-//                videoRecorder.setSceneView(arFragment.getArSceneView());
-//                int orientation = getResources().getConfiguration().orientation;
-//                videoRecorder.setVideoQuality(CamcorderProfile.QUALITY_HIGH, orientation);
-//            }
-//            boolean isRecording = videoRecorder.onToggleRecord();
-//            btnRecordVideo.setImageResource(isRecording? R.drawable.ic_stop: R.drawable.ic_video);
-//        });
     }
 
     public static void setSelectedARModel(File f) {
@@ -161,7 +156,6 @@ public class ArViewActivity extends AppCompatActivity {
         });
     }
 
-
     private void setTappedNode(Node node) {
         if (selectionAnimation != null) {
             if (selectionAnimation.isRunning()) {
@@ -171,8 +165,11 @@ public class ArViewActivity extends AppCompatActivity {
         tappedNode = node;
         selectionAnimation = createSelectionAnimator(tappedNode.getLocalScale());
         btnTransformModel.setVisibility(View.VISIBLE);
+        btnDeselect.setVisibility(View.VISIBLE);
+        btnRemoveModel.setVisibility(View.VISIBLE);
         closeButtonPanel();
         btnTransformModel.setOnClickListener(v -> openButtonPanel());
+        spnAnimation.setVisibility(View.INVISIBLE);
         animateModel((ModelRenderable) tappedNode.getRenderable());
         startNewSelectionAnimation();
 
@@ -205,22 +202,45 @@ public class ArViewActivity extends AppCompatActivity {
                 startNewSelectionAnimation();
             }
         });
+        btnDeselect.setOnClickListener(v-> deselectModel());
     }
 
-    private void openButtonPanel(){
+
+
+    private void deselectModel() {
+        if (selectionAnimation != null) {
+            if (selectionAnimation.isRunning()) {
+                selectionAnimation.end();
+            }
+        }
+        if (modelAnimator != null) {
+            if (modelAnimator.isRunning()) {
+                modelAnimator.end();
+            }
+        }
+        closeButtonPanel();
+        spnAnimation.setVisibility(View.INVISIBLE);
+        btnTransformModel.setVisibility(View.INVISIBLE);
+        btnRemoveModel.setVisibility(View.INVISIBLE);
+        tappedNode = null;
+    }
+
+    private void openButtonPanel() {
         btnRotate.setVisibility(View.VISIBLE);
         btnScaleUp.setVisibility(View.VISIBLE);
         btnScaleDown.setVisibility(View.VISIBLE);
-        btnTransformModel.setImageResource(R.drawable.ic_ar_close);
-        btnTransformModel.setOnClickListener(v-> closeButtonPanel());
+        btnDeselect.setVisibility(View.VISIBLE);
+        btnTransformModel.setImageResource(R.drawable.ic_ar_panelclose);
+        btnTransformModel.setOnClickListener(v -> closeButtonPanel());
     }
 
-    private void closeButtonPanel(){
+    private void closeButtonPanel() {
         btnRotate.setVisibility(View.GONE);
         btnScaleUp.setVisibility(View.GONE);
         btnScaleDown.setVisibility(View.GONE);
+        btnDeselect.setVisibility(View.GONE);
         btnTransformModel.setImageResource(R.drawable.ic_transform);
-        btnTransformModel.setOnClickListener(v-> openButtonPanel());
+        btnTransformModel.setOnClickListener(v -> openButtonPanel());
     }
 
     private void startNewSelectionAnimation() {
@@ -229,7 +249,6 @@ public class ArViewActivity extends AppCompatActivity {
         selectionAnimation.setDuration(2000);
         selectionAnimation.start();
     }
-
 
     private void rotateObject() {
         ObjectAnimator rotateAnimation = createOrbitAnimator();
@@ -242,8 +261,9 @@ public class ArViewActivity extends AppCompatActivity {
         if (tappedNode != null) {
             scene.removeChild(tappedNode);
             closeButtonPanel();
-            spnAnimation.setVisibility(View.GONE);
-            btnTransformModel.setVisibility(View.GONE);
+            spnAnimation.setVisibility(View.INVISIBLE);
+            btnTransformModel.setVisibility(View.INVISIBLE);
+            btnRemoveModel.setVisibility(View.INVISIBLE);
             tappedNode = null;
         }
     }
@@ -253,7 +273,6 @@ public class ArViewActivity extends AppCompatActivity {
             modelAnimator.end();
 
         int animationCount = modelRenderable.getAnimationDataCount();
-        Log.d(TAG, "animateModel: animation count =" + animationCount);
 
         if (animationCount > 0) {
             String[] animations = new String[animationCount + 1];
@@ -261,7 +280,8 @@ public class ArViewActivity extends AppCompatActivity {
             for (int m = 1; m <= animationCount; m++) {
                 animations[m] = modelRenderable.getAnimationData(m - 1).getName();
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, animations);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_selectitem, animations);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdownitem);
             spnAnimation.setAdapter(adapter);
             spnAnimation.setVisibility(View.VISIBLE);
 
@@ -284,44 +304,10 @@ public class ArViewActivity extends AppCompatActivity {
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-
                 }
             });
-
-
-//            btnPlayAnim.setOnClickListener(v -> {
-//                if (modelAnimator != null && modelAnimator.isRunning())
-//                    modelAnimator.end();
-//                String selectedAnim = spnAnimation.getSelectedItem().toString();
-//                if (!selectedAnim.equals("None")) {
-//                    AnimationData animationData = modelRenderable.getAnimationData(selectedAnim);
-//                    modelAnimator = new ModelAnimator(animationData, modelRenderable);
-//                    modelAnimator.start();
-//                } else {
-//                    toastManager.showShortToast("Select an animation to play");
-//                }
-//            });
-//            spnAnimation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                    if (modelAnimator != null && modelAnimator.isRunning())
-//                        modelAnimator.end();
-//                    if (parent.getItemAtPosition(position) == "None") {
-//                        new Handler(Looper.getMainLooper()).post(() -> btnPlayAnim.setVisibility(View.GONE));
-//                    } else {
-//                        new Handler(Looper.getMainLooper()).post(() -> btnPlayAnim.setVisibility(View.VISIBLE));
-//                    }
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) {
-//
-//                }
-//            });
         }
-
     }
-
 
     private static ObjectAnimator createSelectionAnimator(Vector3 size) {
         Vector3 v1 = size.scaled(0.97f);
