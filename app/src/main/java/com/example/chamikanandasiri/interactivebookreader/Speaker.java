@@ -21,10 +21,11 @@ public class Speaker {
                 int result = speech.setLanguage(Locale.UK);
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Log.e("TTS", "language not supported");
-                } else {
-                    Log.e("TTS", "initializing failed");
                 }
+            } else {
+                Log.e("TTS", "initializing failed");
             }
+
         });
     }
 
