@@ -22,6 +22,8 @@
     <color name="commonAccent">#FFCA28</color>
     <color name="commonPrimaryText">#FFFFFF</color>
     <color name="commonAccentText">#000000</color>
+    <color name="commonButton1">#5CAF04</color>
+    <color name="commonButton2">#D81A3E</color>
 
     Theme Light
     <color name="lightPrimary">#CFD8DC</color>

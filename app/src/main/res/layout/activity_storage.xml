@@ -28,9 +28,9 @@
             android:id="@+id/StorageSearchButton"
             android:layout_width= "60dp"
             android:layout_height="60dp"
-            android:background="@drawable/rounded_button_three"
+            android:background="@drawable/rounded_button_common_one"
             android:contentDescription="@string/SearchButtonContentDescription"
-            app:srcCompat="@drawable/ic_search"
+            app:srcCompat="@drawable/ic_accent_search"
             android:scaleType="fitXY"/>
     </LinearLayout>
 

@@ -118,20 +118,20 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/rounded_button_three"
+            android:background="@drawable/rounded_button_common_one"
             android:contentDescription="@string/SearchButtonContentDescription"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_search" />
+            app:srcCompat="@drawable/ic_accent_search" />
 
         <ImageButton
             android:id="@+id/LibraryBookDetailsButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:background="@drawable/rounded_button_four"
+            android:background="@drawable/rounded_button_common_two"
             android:contentDescription="@string/SearchButtonContentDescription"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/ic_deselect" />
+            app:srcCompat="@drawable/ic_accent_deselect" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
