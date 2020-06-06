@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.NetworkPolicy;
@@ -41,8 +39,8 @@ class SimpleBookArrayAdapter extends RecyclerView.Adapter<com.example.chamikanan
     public void onBindViewHolder(@NonNull com.example.chamikanandasiri.interactivebookreader.SimpleBookArrayAdapter.ViewHolder holder, int position) {
 
         holder.itemView.setSelected(selectedPos == position);
-        holder.otherView.setTextColor(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
-        holder.textView.setTextColor(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.otherView.setTextColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.textView.setTextColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
         holder.itemView.setBackgroundColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccent) : context.getResources().getColor(R.color.commonPrimary));
 
         Picasso.with(context).load(books.get(position).getCover())
@@ -57,11 +55,18 @@ class SimpleBookArrayAdapter extends RecyclerView.Adapter<com.example.chamikanan
 
         holder.itemView.setOnClickListener(v -> displayAr(books.get(position).getBookId()));
         holder.itemView.setOnLongClickListener(view -> {
-            notifyItemChanged(selectedPos);
-            selectedPos = holder.getLayoutPosition();
-            LibraryActivity.setSelectedBook(books.get(position).getBookId());
-            notifyItemChanged(selectedPos);
-            return true;
+            if (selectedPos != holder.getLayoutPosition()) {
+                notifyItemChanged(selectedPos);
+                selectedPos = holder.getLayoutPosition();
+                LibraryActivity.setSelectedBook(books.get(position).getBookId());
+                notifyItemChanged(selectedPos);
+                return true;
+            } else {
+                notifyItemChanged(selectedPos);
+                selectedPos = RecyclerView.NO_POSITION;
+                LibraryActivity.setSelectedBook(null);
+                return true;
+            }
         });
     }
 
