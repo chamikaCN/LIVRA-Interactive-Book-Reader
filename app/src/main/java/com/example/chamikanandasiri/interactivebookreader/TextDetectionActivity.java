@@ -3,35 +3,27 @@ package com.example.chamikanandasiri.interactivebookreader;
 
 import android.app.Activity;
 import android.app.Dialog;
-
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-
 import android.hardware.Camera;
-
 import android.media.AudioManager;
 import android.media.ToneGenerator;
-
 import android.os.Bundle;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
-
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -51,7 +43,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +50,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -78,7 +68,7 @@ public class TextDetectionActivity extends AppCompatActivity {
     Camera mCamera;
     TextView cap_displayView, spk_displayView, dict_displayView, dict_wordView, cmt_displayView;
     EditText cmt_editText, cmt_titleText;
-    String  capturedString, currentTheme, searchedWord;
+    String capturedString, currentTheme, searchedWord;
     JSONObject dictionaryResponse;
     JSONArray searchResultDefinitions;
     Dialog capturePopup, speechPopup, dictionaryPopup, commentPopup;
@@ -100,7 +90,7 @@ public class TextDetectionActivity extends AppCompatActivity {
 
     final int RequestCameraPermissionID = 1001;
     final int RequestWriteStoragePermissionID = 1002;
-    final File pictureFile = new File("/data/data/com.example.chamikanandasiri.interactivebookreader/files", "croppedimage"+".jpg");  //TODO :only for testing purpose. comment this out before final built
+    final File pictureFile = new File("/data/data/com.example.chamikanandasiri.interactivebookreader/files", "croppedimage" + ".jpg");  //TODO :only for testing purpose. comment this out before final built
 
 
     private CameraPreview preview;
@@ -111,29 +101,29 @@ public class TextDetectionActivity extends AppCompatActivity {
         public void onPictureTaken(byte[] data, Camera camera) {
 
             try {
-                Rect r=preview.getFocusArea();
-                Log.d("rectangle",r.toString());
+                Rect r = preview.getFocusArea();
+                Log.d("rectangle", r.toString());
 
-                Bitmap b=BitmapFactory.decodeByteArray(data,0,data.length);
-                Log.d("Bitmap-Height",String.valueOf(b.getHeight()));
-                Log.d("Bitmap-Width",String.valueOf(b.getWidth()));
-                b=Bitmap.createBitmap(b,0,0,b.getWidth(),b.getHeight(),mat,true);
+                Bitmap b = BitmapFactory.decodeByteArray(data, 0, data.length);
+                Log.d("Bitmap-Height", String.valueOf(b.getHeight()));
+                Log.d("Bitmap-Width", String.valueOf(b.getWidth()));
+                b = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), mat, true);
 
-                Log.d("Bitmap-Height",String.valueOf(b.getHeight()));
-                Log.d("Bitmap-Width",String.valueOf(b.getWidth()));
+                Log.d("Bitmap-Height", String.valueOf(b.getHeight()));
+                Log.d("Bitmap-Width", String.valueOf(b.getWidth()));
 
-                Log.d("rectangle-left",String.valueOf(r.left));
-                Log.d("rectangle-top",String.valueOf(r.top));
-                Log.d("rectangle-right",String.valueOf(r.right));
-                Log.d("rectangle-bottom",String.valueOf(r.bottom));
+                Log.d("rectangle-left", String.valueOf(r.left));
+                Log.d("rectangle-top", String.valueOf(r.top));
+                Log.d("rectangle-right", String.valueOf(r.right));
+                Log.d("rectangle-bottom", String.valueOf(r.bottom));
 
-                Bitmap croppedBitmap=Bitmap.createBitmap(b,r.left,r.top,r.right-r.left,r.bottom-r.top);
+                Bitmap croppedBitmap = Bitmap.createBitmap(b, r.left, r.top, r.right - r.left, r.bottom - r.top);
                 constructText(croppedBitmap);
 
                 //TODO :only for testing purpose. comment out next 3 lines before final built
 
                 FileOutputStream fos = new FileOutputStream(pictureFile);
-                croppedBitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
                 fos.close();
 
             } catch (FileNotFoundException e) {
@@ -149,7 +139,6 @@ public class TextDetectionActivity extends AppCompatActivity {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -159,7 +148,7 @@ public class TextDetectionActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        DisplayMetrics displayMetrics=new DisplayMetrics();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) this).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         sharedPreferences = this.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
@@ -180,7 +169,7 @@ public class TextDetectionActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_text_detection);
         //getting the camera instance
-        mCamera=getCameraInstance();
+        mCamera = getCameraInstance();
         //creating a camera preview
         preview = new CameraPreview(this, mCamera);
 
@@ -205,12 +194,11 @@ public class TextDetectionActivity extends AppCompatActivity {
     }
 
 
-    public static Camera getCameraInstance(){
+    public static Camera getCameraInstance() {
         Camera c = null;
         try {
             c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             // Camera is not available (in use or does not exist)
         }
         return c; // returns null if camera is unavailable
@@ -382,35 +370,35 @@ public class TextDetectionActivity extends AppCompatActivity {
     //this will recognize text from passed bitmap  TODO: split string by non alphabet
     private void constructText(Bitmap b) {
 
-        SparseArray<TextBlock> items= textRecognizer.detect(new Frame.Builder().setBitmap(b).build());
+        SparseArray<TextBlock> items = textRecognizer.detect(new Frame.Builder().setBitmap(b).build());
 
 
         if (items.size() != 0) {
-            Set<String> detections=new TreeSet<String>();
+            Set<String> detections = new TreeSet<String>();
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < items.size(); i++) {
                 TextBlock item = items.valueAt(i);
-                Set<String> detection=new TreeSet<String>(Arrays.asList(item.getValue().replaceAll("[^a-zA-Z]", " ").split("\\s+")));
-                Log.d("NIlaan",detection.toString());
+                Set<String> detection = new TreeSet<String>(Arrays.asList(item.getValue().replaceAll("[^a-zA-Z]", " ").split("\\s+")));
+                Log.d("NIlaan", detection.toString());
                 Set<String> finalDetections = detections;
-                Set<String> newDetections=new HashSet<String>() {{
+                Set<String> newDetections = new HashSet<String>() {{
                     addAll(detection);
                     addAll(finalDetections);
                 }};
-                detections=newDetections;
+                detections = newDetections;
 //                    stringBuilder.append(String.join("\n",item.getValue().split("\\W+")));  //removing all non alphabets
 //                    stringBuilder.append("\n");
             }
-            Set<String> finalstring=new TreeSet<>(detections);
+            Set<String> finalstring = new TreeSet<>(detections);
             System.out.println(detections);
 
-            Log.d("NIlaan",detections.toString());
-            capturedString=String.join("\n",detections);
+            Log.d("NIlaan", detections.toString());
+            capturedString = String.join("\n", detections);
 
         } else {
             capturedString = "";
         }
-        Log.d("detectedString",capturedString);
+        Log.d("detectedString", capturedString);
         showCapturePopup();
     }
 

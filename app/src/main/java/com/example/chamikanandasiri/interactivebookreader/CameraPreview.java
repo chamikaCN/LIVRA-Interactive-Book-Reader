@@ -89,7 +89,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         Log.d("CameraPreview-Heightsurfacechanged",String.valueOf(this.getHeight()));
         //TODO:add preview size dynamicaly
         parameters.setPreviewSize(1280,720);
-        parameters.setPictureSize(1280,720);
+        parameters.setPictureSize(height,width);
 
         parameters.setRotation(90);
         List<Camera.Size> pictureSizes = parameters.getSupportedPictureSizes();
