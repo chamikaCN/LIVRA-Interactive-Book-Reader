@@ -277,7 +277,7 @@
         android:id="@+id/removeButton"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="?attr/colorError"
+        android:background="?attr/colorPrimary"
         android:contentDescription="@string/remove"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/guidelineH11"

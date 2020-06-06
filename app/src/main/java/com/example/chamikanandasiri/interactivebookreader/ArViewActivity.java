@@ -48,6 +48,8 @@ public class ArViewActivity extends AppCompatActivity {
     private ArrayList<SimpleContentObject> contentAvailable;
     private static File selectedARModel;
 
+    private boolean loopAnimation = true;
+    private int rotation = 45;
     private String TAG = "Test";
     String currentTheme;
     private ImageButton btnDeselect, btnBack, btnRotate, btnScaleUp, btnScaleDown, btnTransformModel, btnRemoveModel;
@@ -114,8 +116,9 @@ public class ArViewActivity extends AppCompatActivity {
         btnRemoveModel.setVisibility(View.INVISIBLE);
         spnAnimation.setVisibility(View.INVISIBLE);
 
-        btnRemoveModel.setOnClickListener(v-> removeAnchorNode());
-        btnDeselect.setOnClickListener(view -> {});
+        btnRemoveModel.setOnClickListener(v -> removeAnchorNode());
+        btnDeselect.setOnClickListener(view -> {
+        });
         btnBack.setOnClickListener(view -> {
             selectedARModel = null;
             Intent intent = new Intent(this, MenuActivity.class);
@@ -174,8 +177,24 @@ public class ArViewActivity extends AppCompatActivity {
         startNewSelectionAnimation();
 
         btnRotate.setOnClickListener(v -> {
-            Quaternion newQuat = Quaternion.axisAngle(new Vector3(0, 1, 0), tappedNode.getLocalRotation().w + 20);
-            tappedNode.setLocalRotation(newQuat);
+            Quaternion newQuat = Quaternion.axisAngle(Vector3.up(),rotation);
+            rotation +=45;
+            ModelRenderable original = (ModelRenderable) tappedNode.getRenderable();
+            ModelRenderable duplicate = original.makeCopy();
+            AnchorNode newNode = new AnchorNode();
+            newNode.setLocalPosition(tappedNode.getLocalPosition());
+            newNode.setLocalScale(tappedNode.getLocalScale());
+            newNode.setWorldRotation(newQuat);
+            newNode.setRenderable(duplicate);
+            scene.removeChild(tappedNode);
+            scene.addChild(newNode);
+            setTappedNode(newNode);
+            newNode.setOnTapListener((hitResult, motionEvent) -> {
+                if (hitResult.getNode() != null) {
+                    setTappedNode(hitResult.getNode());
+                }
+            });
+            openButtonPanel();
         });
 
         btnScaleUp.setOnClickListener(v -> {
@@ -202,9 +221,8 @@ public class ArViewActivity extends AppCompatActivity {
                 startNewSelectionAnimation();
             }
         });
-        btnDeselect.setOnClickListener(v-> deselectModel());
+        btnDeselect.setOnClickListener(v -> deselectModel());
     }
-
 
 
     private void deselectModel() {
@@ -296,7 +314,7 @@ public class ArViewActivity extends AppCompatActivity {
                         AnimationData animationData = modelRenderable.getAnimationData(selectedAnim);
                         modelAnimator = new ModelAnimator(animationData, modelRenderable);
                         modelAnimator.start();
-                        modelAnimator.setRepeatCount(1000);
+                        modelAnimator.setRepeatCount(loopAnimation ? 1000 : 0);
                     } else {
                         startNewSelectionAnimation();
                     }
@@ -308,6 +326,7 @@ public class ArViewActivity extends AppCompatActivity {
             });
         }
     }
+
 
     private static ObjectAnimator createSelectionAnimator(Vector3 size) {
         Vector3 v1 = size.scaled(0.97f);
