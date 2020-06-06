@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,10 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class LibraryActivity extends AppCompatActivity {
 
     private ImageButton lib_searchButton, lib_contentRemoveButton, del_closeButton;
-    private Button del_deleteButton;
+    private Button del_deleteButton, con_confirmButton, con_cancelButton;
     private ListView del_listView;
     private EditText lib_searchText;
-    private Dialog deletePopup;
+    private Dialog deletePopup, confirmPopup;
 
     private static String selectedBook;
 
@@ -58,7 +57,10 @@ public class LibraryActivity extends AppCompatActivity {
 
         deletePopup = new Dialog(this);
         deletePopup.setContentView(R.layout.popup_delete);
+        confirmPopup = new Dialog(this);
+        confirmPopup.setContentView(R.layout.popup_confirm);
         setupDeletePopup();
+        setupConfirmPopup();
 
         lib_searchButton = findViewById(R.id.LibrarySearchButton);
         lib_searchText = findViewById(R.id.LibraryEditText);
@@ -81,12 +83,22 @@ public class LibraryActivity extends AppCompatActivity {
         del_listView = deletePopup.findViewById(R.id.DeleteListView);
     }
 
+    private void setupConfirmPopup() {
+        con_confirmButton = confirmPopup.findViewById(R.id.ConfirmOKButton);
+        con_cancelButton = confirmPopup.findViewById(R.id.ConfirmCancelButton);
+    }
+
     public void showDeletePopup(View v2) {
         loadDeleteDetails();
         del_closeButton.setOnClickListener(v -> {
             deletePopup.dismiss();
         });
         deletePopup.show();
+    }
+
+    public void showConfirmPopup(View v2) {
+        con_cancelButton.setOnClickListener(v -> confirmPopup.dismiss());
+        confirmPopup.show();
     }
 
     private void loadDeleteDetails() {
@@ -101,15 +113,20 @@ public class LibraryActivity extends AppCompatActivity {
         del_deleteButton.setOnClickListener(v -> {
             if (!adapter.isAnySelected()) {
                 toastManager.showShortToast("select at least one to delete");
-            } else if (adapter.isAllSelected()) {
+            } else {
+                showConfirmPopup(v);
+            }
+        });
+        con_confirmButton.setOnClickListener(v -> {
+            if (adapter.isAllSelected()) {
                 deleteBook();
                 setSelectedBook(null);
                 loadBookDetails();
                 deletePopup.dismiss();
-            }else{
+            } else {
                 ArrayList<SimpleContentObject> selected = adapter.getSelectedObjects();
                 boolean delSuccess = true;
-                for (SimpleContentObject s: selected) {
+                for (SimpleContentObject s : selected) {
                     delSuccess = delSuccess && deleteContent(s.getContId());
                 }
                 if (delSuccess) {
@@ -119,6 +136,7 @@ public class LibraryActivity extends AppCompatActivity {
                 }
                 loadDeleteDetails();
             }
+            confirmPopup.dismiss();
         });
     }
 
@@ -137,9 +155,9 @@ public class LibraryActivity extends AppCompatActivity {
             fileSuccess = fileSuccess && ar.delete();
             fileSuccess = fileSuccess && f.delete();
         }
-        if(fileSuccess){
+        if (fileSuccess) {
             toastManager.showShortToast("deleted Successfully");
-        }else{
+        } else {
             toastManager.showShortToast("failed to delete");
         }
     }
@@ -149,11 +167,11 @@ public class LibraryActivity extends AppCompatActivity {
         boolean fileSuccess = false;
         File f = new File(this.getFilesDir(), selectedBook);
         File ar = new File(f, "ar");
-        File content = new File(ar, contentId+".sfb");
-        if(content.exists() && dbSuccess){
+        File content = new File(ar, contentId + ".sfb");
+        if (content.exists() && dbSuccess) {
             fileSuccess = content.delete();
         }
-        return  fileSuccess;
+        return fileSuccess;
     }
 
 
@@ -206,7 +224,7 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(this,MenuActivity.class);
+        Intent intent = new Intent(this, MenuActivity.class);
         startActivity(intent);
     }
 }
