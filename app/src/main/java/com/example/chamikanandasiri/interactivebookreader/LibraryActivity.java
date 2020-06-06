@@ -1,6 +1,7 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -202,5 +203,10 @@ public class LibraryActivity extends AppCompatActivity {
         selectedBook = bookID;
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this,MenuActivity.class);
+        startActivity(intent);
+    }
 }

@@ -179,6 +179,7 @@ public class MenuActivity extends AppCompatActivity {
         libraryCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, LibraryActivity.class);
             intent.putExtra("type", "library");
+            finish();
             startActivity(intent);
         });
 
@@ -256,8 +257,12 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     public void showSavedItemPopup(View v1) {
-        str_wordButton.setOnClickListener(v2 -> loadStorageActivity("word"));
-        str_commentButton.setOnClickListener(v2 -> loadStorageActivity("comment"));
+        str_wordButton.setOnClickListener(v2 -> {
+            savedItemPopup.dismiss();
+            loadStorageActivity("word");});
+        str_commentButton.setOnClickListener(v2 -> {
+            savedItemPopup.dismiss();
+            loadStorageActivity("comment");});
         str_closeButton.setOnClickListener(v2 -> savedItemPopup.dismiss());
         savedItemPopup.show();
     }
