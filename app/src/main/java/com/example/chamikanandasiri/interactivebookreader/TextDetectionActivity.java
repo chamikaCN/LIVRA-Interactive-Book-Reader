@@ -371,33 +371,14 @@ public class TextDetectionActivity extends AppCompatActivity {
     private void constructText(Bitmap b) {
 
         SparseArray<TextBlock> items = textRecognizer.detect(new Frame.Builder().setBitmap(b).build());
-
-
         if (items.size() != 0) {
-            Set<String> detections = new TreeSet<String>();
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < items.size(); i++) {
-                TextBlock item = items.valueAt(i);
-                Set<String> detection = new TreeSet<String>(Arrays.asList(item.getValue().replaceAll("[^a-zA-Z]", " ").split("\\s+")));
-                Log.d("NIlaan", detection.toString());
-                Set<String> finalDetections = detections;
-                Set<String> newDetections = new HashSet<String>() {{
-                    addAll(detection);
-                    addAll(finalDetections);
-                }};
-                detections = newDetections;
-//                    stringBuilder.append(String.join("\n",item.getValue().split("\\W+")));  //removing all non alphabets
-//                    stringBuilder.append("\n");
-            }
-            Set<String> finalstring = new TreeSet<>(detections);
-            System.out.println(detections);
-
-            Log.d("NIlaan", detections.toString());
-            capturedString = String.join("\n", detections);
-
+            capturedString=getTextAsItIs(items);
+//            capturedString=getUniqueStrings(items);
         } else {
             capturedString = "";
         }
+
+
         Log.d("detectedString", capturedString);
         showCapturePopup();
     }
@@ -548,6 +529,36 @@ public class TextDetectionActivity extends AppCompatActivity {
     @Override
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+    }
+
+    public  String getUniqueStrings(SparseArray<TextBlock> items){
+        Set<String> detections=new TreeSet<String>();
+//        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < items.size(); i++) {
+            TextBlock item = items.valueAt(i);
+            Set<String> detection=new TreeSet<String>(Arrays.asList(item.getValue().replaceAll("[^a-zA-Z]", " ").split("\\s+")));
+            Log.d("NIlaan",detection.toString());
+            Set<String> finalDetections = detections;
+            Set<String> newDetections=new HashSet<String>() {{
+                addAll(detection);
+                addAll(finalDetections);
+            }};
+            detections=newDetections;
+//                    stringBuilder.append(String.join("\n",item.getValue().split("\\W+")));  //removing all non alphabets
+//                    stringBuilder.append("\n");
+        }
+        Set<String> finalString=new TreeSet<>(detections);
+        System.out.println(detections);
+        Log.d("NIlaan",detections.toString());
+        return String.join("\n",finalString);
+    }
+    public  String getTextAsItIs(SparseArray<TextBlock> items){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < items.size(); i++) {
+            TextBlock item = items.valueAt(i);
+            stringBuilder.append(item.getValue().replaceAll("[^a-zA-Z]", " ").replaceAll("\\s+","  "));
+        }
+        return stringBuilder.toString();
     }
 
 
