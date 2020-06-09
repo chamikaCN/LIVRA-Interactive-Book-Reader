@@ -16,7 +16,8 @@ import java.net.URLConnection;
 public class ContentDownloader extends AsyncTask {
     private File outputdir, outputTempFile, ar;
     private DownloadContentObject d;
-    private URL fileurl, imgurl;
+    private URL fileurl;
+    private  ToastManager toastManager;
     private Context context;
 
 
@@ -35,12 +36,7 @@ public class ContentDownloader extends AsyncTask {
         try {
 //            URL fileurl = new URL("https://res.cloudinary.com/db2rl2mxy/raw/upload/v1588078553/a99101c088dc6d4cc97dd7d306b4a7f753164786.zip");
 
-
-            Log.d("fIleurl", fileurl.toString());
-
             URLConnection c = fileurl.openConnection();
-            Log.d("Outputdir", outputdir.getAbsolutePath() + "ar");
-            Log.d("contentname", d.getContName());
 
             outputTempFile = createFile(outputdir.getAbsolutePath() + "/ar", d.getContId() + ".sfb");
             c.connect();
@@ -56,23 +52,6 @@ public class ContentDownloader extends AsyncTask {
 //            output.flush();
             output.close();
             input.close();
-
-//            URLConnection ic = imgurl.openConnection();
-//            Log.d("Outputdir",outputdir.getAbsolutePath()+"img");
-//            Log.d("contentname",d.getContName());
-//
-//            outputTempFile=createFile(outputdir.getAbsolutePath()+"/img",d.getContName()+".jpg");
-//            c.connect();
-//            InputStream inputimg = ic.getInputStream();
-//            FileOutputStream outputimg = new FileOutputStream(outputTempFile);
-//            byte[] imgbuffer = new byte[1024];
-//            int lent = 0;
-//            while ((len = inputimg.read(imgbuffer)) != -1) {
-//                outputimg.write(imgbuffer, 0, len);
-//            }
-//
-//            outputimg.close();
-//            inputimg.close();
 
             return true;
         } catch (FileNotFoundException e) {
