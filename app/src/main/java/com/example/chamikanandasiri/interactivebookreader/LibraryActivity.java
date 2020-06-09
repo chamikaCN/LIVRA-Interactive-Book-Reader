@@ -53,7 +53,7 @@ public class LibraryActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(this);
         bookHandler = new BookHandler(dataBaseHelper, this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
-        toastManager = new ToastManager(this);
+        toastManager = new ToastManager(getApplicationContext());
 
         deletePopup = new Dialog(this);
         deletePopup.setContentView(R.layout.popup_delete);
@@ -205,6 +205,7 @@ public class LibraryActivity extends AppCompatActivity {
             loadView();
         } else {
             toastManager.showShortToast("Search query Can not be empty");
+            loadBookDetails();
         }
     }
 
