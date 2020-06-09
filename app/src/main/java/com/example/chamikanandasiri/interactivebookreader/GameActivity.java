@@ -235,6 +235,7 @@ public class GameActivity extends AppCompatActivity {
     private void startGame() {
         ObjectAnimator orbitAnimation = createAnimator();
         reset();
+        final ArrayList<Vector3> letterPositions = new ArrayList<>();
         gameChangeButton.setVisibility(View.GONE);
         gameRestartButton.setVisibility(View.GONE);
         gameRemoveButton.setVisibility(View.GONE);
@@ -268,10 +269,15 @@ public class GameActivity extends AppCompatActivity {
                 });
 
                 Random rand = new Random();
-                int x = rand.nextInt(5) - 3;
-                int y = rand.nextInt(5) - 3;
-                int z = rand.nextInt(5) - 3;
-                node.setLocalPosition(new Vector3((float) x, (float) y, (float) z));
+                Vector3 vec = getRandomVector(rand);
+                if (letterPositions.contains(vec)) {
+                    vec = getRandomVector(rand);
+                    letterPositions.add(vec);
+                } else {
+                    letterPositions.add(vec);
+                }
+
+                node.setLocalPosition(vec);
                 node.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
 
                 modelsRendered += 1;
@@ -297,6 +303,17 @@ public class GameActivity extends AppCompatActivity {
                 speaker.speak(" Sorry Wrong Letter. ", 0.5f, 0.5f);
             }
         });
+    }
+
+    private void addRandomVector(ArrayList<Vector3> arrayList, Random ran) {
+
+    }
+
+    private Vector3 getRandomVector(Random rand) {
+        int x = rand.nextInt(5) - 3;
+        int y = rand.nextInt(5) - 3;
+        int z = rand.nextInt(5) - 3;
+        return new Vector3(new Vector3((float) x, (float) y, (float) z));
     }
 
     private void letterSelection(String appendix) {
