@@ -90,7 +90,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         Camera.Parameters parameters = mCamera.getParameters();
         parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         Log.d("CameraPreview-Heightsurfacechanged", String.valueOf(this.getHeight()));
-        //TODO:add preview size dynamicaly
+        //TODO:add preview size dynamically
         parameters.setPreviewSize(1280, 720);
         parameters.setPictureSize(height, width);
 
@@ -164,3 +164,23 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 }
+//    public Camera.Size getOptimalPreviewSize(List<Camera.Size> pictureSizes,int width,int height){
+//        Size display=new Size(height,width);
+//        Camera.Size size;
+//        for (Camera.Size pictureSize:pictureSizes){
+//            if (pictureSize.equals(display)){
+//                Log.v(TAG,"optimalPreview"+height+" "+width);
+//                return pictureSize;
+//            }
+//            else{
+//                if(pictureSize.height<=width &&pictureSize.width<=height){
+//                    size=pictureSize;
+//                    return size;
+//                }
+//
+//            }
+//            pictureSize.height
+//        }
+//    }
+//    }
+
