@@ -10,7 +10,6 @@ import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -138,7 +137,7 @@ public class MenuActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(this);
         bookHandler = new BookHandler(dataBaseHelper, this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
-        toastManager = new ToastManager(this);
+        toastManager = new ToastManager(getApplicationContext());
         displayingRecentBooks = new ArrayList<>();
         bookResponceObjects = new ArrayList<>();
 
@@ -179,7 +178,7 @@ public class MenuActivity extends AppCompatActivity {
         libraryCard.setOnClickListener(v -> {
             Intent intent = new Intent(this, LibraryActivity.class);
             intent.putExtra("type", "library");
-            finish();
+//            finish();
             startActivity(intent);
         });
 
@@ -259,10 +258,12 @@ public class MenuActivity extends AppCompatActivity {
     public void showSavedItemPopup(View v1) {
         str_wordButton.setOnClickListener(v2 -> {
             savedItemPopup.dismiss();
-            loadStorageActivity("word");});
+            loadStorageActivity("word");
+        });
         str_commentButton.setOnClickListener(v2 -> {
             savedItemPopup.dismiss();
-            loadStorageActivity("comment");});
+            loadStorageActivity("comment");
+        });
         str_closeButton.setOnClickListener(v2 -> savedItemPopup.dismiss());
         savedItemPopup.show();
     }
@@ -368,7 +369,6 @@ public class MenuActivity extends AppCompatActivity {
             barcodePopup.dismiss();
         });
         brc_loadButton.setOnClickListener(v -> {
-            Log.d(TAG, "showBarcodePopup: " + bookHandler.getBookIDByISBN(detectedISBN));
             loadARActivity(bookHandler.getBookIDByISBN(detectedISBN));
             barcodePopup.dismiss();
         });
@@ -507,7 +507,7 @@ public class MenuActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 String message = e.getMessage();
-                Log.w("failure Response", message);
+//                Log.w("failure Response", message);
                 new Handler(Looper.getMainLooper()).post(() -> {
                     toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server");
                     String s = "Cannot Connect to Server";
@@ -519,7 +519,7 @@ public class MenuActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String message = response.body().string();
-                Log.d("Test", message);
+//                Log.d("Test", message);
                 try {
                     formatDetailsResponse(new JSONObject(message));
                 } catch (JSONException e) {
@@ -548,15 +548,15 @@ public class MenuActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     String message = e.getMessage();
-                    toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server");
-                    Log.d(TAG, "fail" + message);
+                    new Handler(Looper.getMainLooper()).post(() -> toastManager.showShortToast((message.equals("timeout")) ? "Request timed out. Please Try Again!!" : "Cannot connect to server"));
+//                    Log.d(TAG, "fail" + message);
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
 
                     String message = response.body().string();
-                    Log.d(TAG, "okay" + message);
+//                    Log.d(TAG, "okay" + message);
                     try {
                         formatDatabaseResponse(new JSONArray(message));
                     } catch (JSONException e) {
@@ -581,7 +581,8 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         } else {
-            toastManager.showLongToast("No matching books found in our database");
+            new Handler(Looper.getMainLooper()).post(() -> {
+            toastManager.showLongToast("No matching books found in our database");});
         }
         new Handler(Looper.getMainLooper()).post(() -> loadBookSearchResultGrid(bookResponceObjects));
     }
@@ -682,7 +683,7 @@ public class MenuActivity extends AppCompatActivity {
         DownloadContentArrayAdapter adapter = new DownloadContentArrayAdapter(this, R.layout.listitem_content, book.getDownloadContent(), alreadyDownloadedContents);
         cnt_contentListView.setAdapter(adapter);
         cnt_downloadButton.setOnClickListener(v -> {
-            if(adapter.isAnySelected()) {
+            if (adapter.isAnySelected()) {
                 saveBook(book);
                 loadRecentBooks();
                 buttonAnimation4(cnt_downloadButton);
@@ -694,7 +695,7 @@ public class MenuActivity extends AppCompatActivity {
                     contentHandler.addContent(d);
                 }
                 loadContentDetails(bookID);
-            }else{
+            } else {
                 toastManager.showShortToast("Select models to Download");
             }
         });
@@ -817,7 +818,6 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void loadARActivity(String bookID) {
-        Log.d(TAG, "loadARActivity: cat");
         Intent intent = new Intent(this, ArViewActivity.class);
         intent.putExtra("bookID", bookID);
         startActivity(intent);
