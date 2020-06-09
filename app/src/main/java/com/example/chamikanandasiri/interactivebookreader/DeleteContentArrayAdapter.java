@@ -1,7 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,11 +47,9 @@ class DeleteContentArrayAdapter extends ArrayAdapter<SimpleContentObject> {
         check.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if ((isChecked)) {
                 selectedObjects.add(objects.get(position));
-                Log.d("Test", "added one " + selectedObjects.size());
 
             } else {
                 selectedObjects.remove(objects.get(position));
-                Log.d("Test", " removed one" + selectedObjects.size());
             }
         });
 
@@ -61,7 +58,7 @@ class DeleteContentArrayAdapter extends ArrayAdapter<SimpleContentObject> {
                 .into(imageView);
         tvName.setText(name);
         sizeView.setVisibility(View.GONE);
-        animatedView.setVisibility(objects.get(position).isAnimated()? (View.VISIBLE):(View.GONE));
+        animatedView.setVisibility(objects.get(position).isAnimated() ? (View.VISIBLE) : (View.GONE));
         check.setChecked(false);
 
         return convertView;
@@ -71,9 +68,13 @@ class DeleteContentArrayAdapter extends ArrayAdapter<SimpleContentObject> {
         return selectedObjects;
     }
 
-    public boolean isAllSelected(){return objects.size() == selectedObjects.size();}
+    public boolean isAllSelected() {
+        return objects.size() == selectedObjects.size();
+    }
 
-    public boolean isAnySelected(){return selectedObjects.size() > 0; }
+    public boolean isAnySelected() {
+        return selectedObjects.size() > 0;
+    }
 
 
 }

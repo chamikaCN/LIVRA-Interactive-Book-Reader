@@ -78,7 +78,7 @@ public class BookHandler {
                 bookObject.getIsbns()[0], bookObject.getCovers()[0], bookObject.getPublisherId(), bookObject.getPublisherName());
     }
 
-    public boolean deleteBook(String id){
+    public boolean deleteBook(String id) {
         return dbHelper.deleteRowBook(id);
     }
 }

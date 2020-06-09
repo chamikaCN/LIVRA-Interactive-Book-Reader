@@ -20,7 +20,7 @@ public class DownloadContentObject implements Serializable {
 
     private String TAG = "Test";
 
-    public DownloadContentObject(String id, String[] imageURLs, String name, String bookID, String description, String size, String fileURL,boolean animated, int timeCount) {
+    public DownloadContentObject(String id, String[] imageURLs, String name, String bookID, String description, String size, String fileURL, boolean animated, int timeCount) {
         this.id = id;
         this.imageURLs = imageURLs;
         this.name = name;
@@ -72,5 +72,7 @@ public class DownloadContentObject implements Serializable {
         return fileURL;
     }
 
-    public Boolean getAnimated() { return Animated; }
+    public Boolean getAnimated() {
+        return Animated;
+    }
 }

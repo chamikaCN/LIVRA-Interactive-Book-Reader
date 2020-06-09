@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -215,12 +214,9 @@ public class GameActivity extends AppCompatActivity {
 
     private void remove() {
         if (selectedNode != null) {
-            Log.d(TAG, "remove: node Selected");
             AnchorNode an = (AnchorNode) selectedNode.getParent();
-            Log.d(TAG, "remove: node " + an);
             an.removeChild(selectedNode);
             selectedNode = null;
-            Log.d(TAG, "remove: transform node removed");
             scene.removeChild(an);
         }
     }
@@ -275,7 +271,6 @@ public class GameActivity extends AppCompatActivity {
                 int x = rand.nextInt(5) - 3;
                 int y = rand.nextInt(5) - 3;
                 int z = rand.nextInt(5) - 3;
-                Log.d(TAG, "startGame: position " + x + y + z);
                 node.setLocalPosition(new Vector3((float) x, (float) y, (float) z));
                 node.setLocalScale(new Vector3(0.5f, 0.5f, 0.5f));
 

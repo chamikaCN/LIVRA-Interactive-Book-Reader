@@ -1,7 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,11 +55,9 @@ class DownloadContentArrayAdapter extends ArrayAdapter<DownloadContentObject> {
         check.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if ((isChecked)) {
                 selectedObjects.add(objects.get(position));
-                Log.d("Test", "added one " + selectedObjects.size());
 
             } else {
                 selectedObjects.remove(objects.get(position));
-                Log.d("Test", " removed one" + selectedObjects.size());
             }
         });
 

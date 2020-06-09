@@ -164,7 +164,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getContentDetailsByBooKID(String id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "ImageURL", "FileURL","Animated"}, "BookID = ?", new String[]{id}, null, null, null, null);
+        return db.query(TABLE_CONTENT, new String[]{"ContentID", "Name", "ImageURL", "FileURL", "Animated"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
 
     public Cursor getContentIDsByBooKID(String id) {
@@ -172,14 +172,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return db.query(TABLE_CONTENT, new String[]{"ContentID"}, "BookID = ?", new String[]{id}, null, null, null, null);
     }
 
-    public boolean deleteRowBook(String id){
+    public boolean deleteRowBook(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return ((db.delete(TABLE_BOOK,"BookID = ?",new String[]{id}) > 0) && (db.delete(TABLE_CONTENT,"BookID = ?",new String[]{id}) > 0)) ;
+        return ((db.delete(TABLE_BOOK, "BookID = ?", new String[]{id}) > 0) && (db.delete(TABLE_CONTENT, "BookID = ?", new String[]{id}) > 0));
     }
 
-    public boolean deleteRowContent(String id){
+    public boolean deleteRowContent(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return (db.delete(TABLE_CONTENT,"ContentID = ?",new String[]{id}) > 0);
+        return (db.delete(TABLE_CONTENT, "ContentID = ?", new String[]{id}) > 0);
     }
 
 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -71,8 +70,9 @@ public class ArViewActivity extends AppCompatActivity {
 
         dataBaseHelper = new DataBaseHelper(this);
         contentHandler = new ContentHandler(dataBaseHelper, this);
-        toastManager = new ToastManager(this);
+        toastManager = new ToastManager(getApplicationContext());
         this.bookID = getIntent().getExtras().getString("bookID");
+//        this.bookID = "5ea26ccded33b92a919fc52e";
         contentAvailable = new ArrayList<>();
 
         ArrayList<String[]> arrayList = contentHandler.getContentsByBookID(bookID);
@@ -115,13 +115,14 @@ public class ArViewActivity extends AppCompatActivity {
         btnScaleUp.setVisibility(View.GONE);
         btnRemoveModel.setVisibility(View.INVISIBLE);
         spnAnimation.setVisibility(View.INVISIBLE);
-
+//        arFragment.getPlaneDiscoveryController().hide();
+//        arFragment.getPlaneDiscoveryController().setInstructionView(null);
         btnRemoveModel.setOnClickListener(v -> removeAnchorNode());
         btnDeselect.setOnClickListener(view -> {
         });
         btnBack.setOnClickListener(view -> {
             selectedARModel = null;
-            Intent intent = new Intent(this, MenuActivity.class);
+            Intent intent = new Intent(this, LibraryActivity.class);
             startActivity(intent);
         });
     }
@@ -177,8 +178,8 @@ public class ArViewActivity extends AppCompatActivity {
         startNewSelectionAnimation();
 
         btnRotate.setOnClickListener(v -> {
-            Quaternion newQuat = Quaternion.axisAngle(Vector3.up(),rotation);
-            rotation +=45;
+            Quaternion newQuat = Quaternion.axisAngle(Vector3.up(), rotation);
+            rotation += 45;
             ModelRenderable original = (ModelRenderable) tappedNode.getRenderable();
             ModelRenderable duplicate = original.makeCopy();
             AnchorNode newNode = new AnchorNode();

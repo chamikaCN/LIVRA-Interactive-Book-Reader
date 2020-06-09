@@ -48,7 +48,7 @@ public class ContentHandler {
                 contentObject.getContName(), contentObject.getContSize(), contentObject.getImageURLs()[0], contentObject.getFileURL(), contentObject.getAnimated() ? "1" : "0");
     }
 
-    public boolean deleteContent(String id){
+    public boolean deleteContent(String id) {
         return dbHelper.deleteRowContent(id);
     }
 }

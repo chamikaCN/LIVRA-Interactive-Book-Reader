@@ -1,7 +1,6 @@
 package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
     private int selectedPos;
     private ArrayList<SimpleContentObject> downloadedContent;
     private Context context;
-    private  String TAG = "Test";
+    private String TAG = "Test";
 
     public ArCardViewAdapter(Context context, ArrayList<SimpleContentObject> objects) {
         this.downloadedContent = objects;
@@ -40,8 +39,8 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.itemView.setSelected(selectedPos == position);
-        holder.textView.setTextColor(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
-        holder.animatedView.setColorFilter(holder.itemView.isSelected()?context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.textView.setTextColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
+        holder.animatedView.setColorFilter(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccentText) : context.getResources().getColor(R.color.commonPrimaryText));
         holder.cardView.setCardBackgroundColor(holder.itemView.isSelected() ? context.getResources().getColor(R.color.commonAccent) : context.getResources().getColor(R.color.commonPrimary));
         Picasso.with(context).load(downloadedContent.get(position).getImageURL())
                 .placeholder(R.drawable.bookcover_loading_anim)
@@ -49,18 +48,17 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
                 .fit()
                 .into(holder.imageView);
 
-        Log.d(TAG, "onBindViewHolder: " + downloadedContent.get(position).getContName() + downloadedContent.get(position).isAnimated() );
-        holder.animatedView.setVisibility(downloadedContent.get(position).isAnimated()? View.VISIBLE: View.GONE);
+        holder.animatedView.setVisibility(downloadedContent.get(position).isAnimated() ? View.VISIBLE : View.GONE);
 
         holder.textView.setText(downloadedContent.get(position).getContName());
 
         holder.itemView.setOnClickListener(view -> {
-            if(position != selectedPos) {
+            if (position != selectedPos) {
                 notifyItemChanged(selectedPos);
                 selectedPos = holder.getLayoutPosition();
                 notifyItemChanged(selectedPos);
                 ArViewActivity.setSelectedARModel(downloadedContent.get(position).getFile());
-            }else{
+            } else {
                 notifyItemChanged(selectedPos);
                 selectedPos = RecyclerView.NO_POSITION;
                 ArViewActivity.setSelectedARModel(null);
@@ -76,7 +74,7 @@ public class ArCardViewAdapter extends RecyclerView.Adapter<ArCardViewAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         CardView cardView;
-        ImageView imageView,animatedView;
+        ImageView imageView, animatedView;
         TextView textView;
 
         public ViewHolder(@NonNull View itemView) {

@@ -52,5 +52,7 @@ public class SimpleContentObject implements Serializable {
         return file;
     }
 
-    public boolean isAnimated() { return animated; }
+    public boolean isAnimated() {
+        return animated;
+    }
 }
