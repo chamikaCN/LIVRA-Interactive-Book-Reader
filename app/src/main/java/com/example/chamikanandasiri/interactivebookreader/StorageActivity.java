@@ -2,7 +2,6 @@ package com.example.chamikanandasiri.interactivebookreader;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -11,7 +10,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -54,6 +52,7 @@ public class StorageActivity extends AppCompatActivity {
         str_searchButton = findViewById(R.id.StorageSearchButton);
 
         String type = getIntent().getStringExtra("type");
+        if(type == null ){type = "word";}
 
         if (type.equals("word")) {
             str_searchText.setHint("search by word");
@@ -90,6 +89,8 @@ public class StorageActivity extends AppCompatActivity {
 
             commentListGenerate();
 
+        }else{
+            loadAllComments();
         }
     }
 
@@ -110,6 +111,8 @@ public class StorageActivity extends AppCompatActivity {
             }
 
             wordListGenerate();
+        }else{
+            loadAllWords();
         }
     }
 
@@ -121,7 +124,6 @@ public class StorageActivity extends AppCompatActivity {
             StringBuilder definitions = new StringBuilder();
             StringBuilder POSs = new StringBuilder();
             for (String[] a : defpos) {
-                Log.d(TAG, "loadAllWords: " + Arrays.toString(a));
                 definitions.append("\u2606 ").append("( ").append(a[0].toUpperCase()).append(" ) -  ").append(a[1]).append("\n");
                 POSs.append(a[0]).append("\n");
             }
