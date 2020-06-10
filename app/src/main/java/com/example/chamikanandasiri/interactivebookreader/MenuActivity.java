@@ -74,7 +74,7 @@ public class MenuActivity extends AppCompatActivity {
     private EditText sbk_searchText;
 
     private RecentBookAdapter recentBookAdapter;
-
+    private float speed,pitch;
     private String detectedISBN;
     private float speechSpeedValue, speechPitchValue;
     private ArrayList<SimpleBookObject> displayingRecentBooks;
@@ -84,7 +84,7 @@ public class MenuActivity extends AppCompatActivity {
     private HashMap<String, Integer> textSizeConfig;
 
     private String TAG = "Test";
-
+    Speaker speaker;
     private CameraSource cameraSource;
     private ToneGenerator toneGenerator;
     private BarcodeDetector barcodeDetector;
@@ -131,7 +131,7 @@ public class MenuActivity extends AppCompatActivity {
             setTheme(R.style.DarkTheme);
         }
         setContentView(R.layout.activity_menu);
-
+        speaker=new Speaker(this);
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
         toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         dataBaseHelper = new DataBaseHelper(this);
@@ -305,8 +305,39 @@ public class MenuActivity extends AppCompatActivity {
                 stn_textMinusButton.setEnabled(true);
             }
         });
+        speed=speechSpeedValue;
+        pitch=speechPitchValue;
         pitchBar.setProgress(Math.round(speechPitchValue * 50), true);
         speedBar.setProgress(Math.round(speechSpeedValue * 50), true);
+        pitchBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                pitch = pitchBar.getProgress()/50f;
+            }
+
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                speaker.speak("livra",speed,pitch);
+            }
+        });
+        speedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                speed=speedBar.getProgress()/50f;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                speaker.speak("livra",speed,pitch);
+            }
+        });
         stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
         stn_applyButton.setOnClickListener(v1 -> {
             applySettings();
