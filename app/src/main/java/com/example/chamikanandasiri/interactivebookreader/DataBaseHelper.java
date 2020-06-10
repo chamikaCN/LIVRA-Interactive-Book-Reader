@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -17,13 +18,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private String TAG = "Test";
 
     public DataBaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 3);
+        super(context, DATABASE_NAME, null, 4);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table " + TABLE_COMMENT + " (TimeStamp TEXT Primary key, Title TEXT, Phrase TEXT, Comment TEXT)");
-        sqLiteDatabase.execSQL("create table " + TABLE_WORD + " (TimeStamp TEXT Primary key, Word TEXT UNIQUE, PartOfSpeech TEXT, Definition TEXT)");
+        sqLiteDatabase.execSQL("create table " + TABLE_WORD + " (TimeStamp TEXT Primary key, Word TEXT, PartOfSpeech TEXT, Definition TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_BOOK + " (BookID TEXT Primary key, TimeStamp TEXT, Title TEXT, Author TEXT, ISBN TEXT, CoverURL TEXT, PublisherID TEXT, PublisherName TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_CONTENT + " (ContentID TEXT Primary key, TimeStamp TEXT, BookID TEXT, Name TEXT, Size TEXT, ImageURL TEXT, FileURL TEXT, Animated TEXT)");
     }
