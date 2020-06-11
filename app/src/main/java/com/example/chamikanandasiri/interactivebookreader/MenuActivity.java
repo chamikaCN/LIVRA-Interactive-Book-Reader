@@ -74,7 +74,7 @@ public class MenuActivity extends AppCompatActivity {
     private EditText sbk_searchText;
 
     private RecentBookAdapter recentBookAdapter;
-    private float speed,pitch;
+    private float speed, pitch;
     private String detectedISBN;
     private float speechSpeedValue, speechPitchValue;
     private ArrayList<SimpleBookObject> displayingRecentBooks;
@@ -131,7 +131,7 @@ public class MenuActivity extends AppCompatActivity {
             setTheme(R.style.DarkTheme);
         }
         setContentView(R.layout.activity_menu);
-        speaker=new Speaker(this);
+        speaker = new Speaker(this);
         barcodeDetector = new BarcodeDetector.Builder(getApplicationContext()).build();
         toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         dataBaseHelper = new DataBaseHelper(this);
@@ -305,13 +305,13 @@ public class MenuActivity extends AppCompatActivity {
                 stn_textMinusButton.setEnabled(true);
             }
         });
-        speed=speechSpeedValue;
-        pitch=speechPitchValue;
+        speed = speechSpeedValue;
+        pitch = speechPitchValue;
         pitchBar.setProgress(Math.round(speechPitchValue * 50), true);
         speedBar.setProgress(Math.round(speechSpeedValue * 50), true);
         pitchBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                pitch = pitchBar.getProgress()/50f;
+                pitch = pitchBar.getProgress() / 50f;
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -319,13 +319,13 @@ public class MenuActivity extends AppCompatActivity {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                speaker.speak("livra",speed,pitch);
+                speaker.speak("livra", speed, pitch);
             }
         });
         speedBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                speed=speedBar.getProgress()/50f;
+                speed = speedBar.getProgress() / 50f;
             }
 
             @Override
@@ -335,7 +335,7 @@ public class MenuActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                speaker.speak("livra",speed,pitch);
+                speaker.speak("livra", speed, pitch);
             }
         });
         stn_closeButton.setOnClickListener(v1 -> settingsPopup.dismiss());
@@ -613,7 +613,8 @@ public class MenuActivity extends AppCompatActivity {
             }
         } else {
             new Handler(Looper.getMainLooper()).post(() -> {
-            toastManager.showLongToast("No matching books found in our database");});
+                toastManager.showLongToast("No matching books found in our database");
+            });
         }
         new Handler(Looper.getMainLooper()).post(() -> loadBookSearchResultGrid(bookResponceObjects));
     }
@@ -633,8 +634,12 @@ public class MenuActivity extends AppCompatActivity {
             setBook(responseBook);
             new Handler(Looper.getMainLooper()).post(this::buildDetailsPopupWithBook);
         } else {
-            String s = "No Details Available for the Book on Our Database";
-            dtl_othersView.setText(s);
+            new Handler(Looper.getMainLooper()).post(() -> {
+                        String s = "No Details Available for the Book on Our Database";
+                        dtl_othersView.setText(s);
+                        toastManager.showLongToast("No matching books found in our database");
+                    }
+            );
         }
     }
 
