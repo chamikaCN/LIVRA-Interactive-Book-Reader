@@ -63,6 +63,7 @@
             android:layout_margin="20dp"
             android:background="@drawable/rounded_button_three"
             android:contentDescription="@string/SpeakButtonContentDescription"
+            android:tooltipText="Play"
             app:srcCompat="@drawable/ic_play"
             android:scaleType="fitXY"/>
 
@@ -72,6 +73,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="20dp"
+            android:tooltipText="Stop"
             android:background="@drawable/rounded_button_one"
             android:contentDescription="@string/StopButtonContentDescription"
             app:srcCompat="@drawable/ic_stop"
