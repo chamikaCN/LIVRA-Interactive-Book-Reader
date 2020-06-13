@@ -18,12 +18,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private String TAG = "Test";
 
     public DataBaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, 4);
+        super(context, DATABASE_NAME, null, 5);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table " + TABLE_COMMENT + " (TimeStamp TEXT Primary key, Title TEXT, Phrase TEXT, Comment TEXT)");
+        sqLiteDatabase.execSQL("create table " + TABLE_COMMENT + " (TimeStamp TEXT Primary key, Title TEXT, Phrase TEXT, Comment TEXT, BookID TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_WORD + " (TimeStamp TEXT Primary key, Word TEXT, PartOfSpeech TEXT, Definition TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_BOOK + " (BookID TEXT Primary key, TimeStamp TEXT, Title TEXT, Author TEXT, ISBN TEXT, CoverURL TEXT, PublisherID TEXT, PublisherName TEXT)");
         sqLiteDatabase.execSQL("create table " + TABLE_CONTENT + " (ContentID TEXT Primary key, TimeStamp TEXT, BookID TEXT, Name TEXT, Size TEXT, ImageURL TEXT, FileURL TEXT, Animated TEXT)");
@@ -38,13 +38,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public boolean insertRowComment(String timestamp, String title, String phrase, String comment) {
+    public boolean insertRowComment(String timestamp, String title, String phrase, String comment, String bookID) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("TimeStamp", timestamp);
         cv.put("Title", title);
         cv.put("Phrase", phrase);
         cv.put("Comment", comment);
+        cv.put("BookID", bookID);
         long result = db.insert(TABLE_COMMENT, null, cv);
         return result != -1;
     }
@@ -96,10 +97,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return db.query(TABLE_COMMENT, new String[]{"Comment"}, null, null, null, null, "TimeStamp");
     }
 
-    public Cursor getPhraseCommentByTitle(String title) {
+    public Cursor getPhraseCommentBookIDByTitle(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
         //return db.rawQuery("select * from " + TABLE_COMMENT + " where Title = \'"+ title +"\'",null);
-        return db.query(TABLE_COMMENT, new String[]{"Phrase", "Comment"}, "Title = ?", new String[]{title}, null, null, null);
+        return db.query(TABLE_COMMENT, new String[]{"Phrase", "Comment","BookID"}, "Title = ?", new String[]{title}, null, null, null);
 
     }
 
@@ -161,6 +162,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Cursor getBookIDByISBN(String ISBN) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_BOOK, new String[]{"BookID"}, "ISBN = ?", new String[]{ISBN}, null, null, null);
+    }
+
+    public Cursor getAllBookIDsTitles() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_BOOK, new String[]{"BookID", "Title"}, null, null, null, null, "TimeStamp");
     }
 
     public Cursor getContentDetailsByBooKID(String id) {

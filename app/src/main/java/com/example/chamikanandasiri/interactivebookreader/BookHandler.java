@@ -73,6 +73,18 @@ public class BookHandler {
         return Ac;
     }
 
+    public ArrayList<String[]> getAllBookIDsTitles() {
+        Cursor res = dbHelper.getAllBookIDsTitles();
+        ArrayList<String[]> results = new ArrayList<>();
+
+        while (res.moveToNext()) {
+            String Ac = res.getString(0);
+            String Bc = res.getString(1);
+            results.add(new String[]{Ac, Bc});
+        }
+        return results;
+    }
+
     public boolean addBook(BookObject bookObject) {
         return dbHelper.insertRowBook(bookObject.getBookId(), bookObject.getTimeStamp(), bookObject.getTitle(), bookObject.getAuthors()[0],
                 bookObject.getIsbns()[0], bookObject.getCovers()[0], bookObject.getPublisherId(), bookObject.getPublisherName());
