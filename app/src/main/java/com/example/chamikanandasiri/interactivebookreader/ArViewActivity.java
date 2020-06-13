@@ -115,8 +115,6 @@ public class ArViewActivity extends AppCompatActivity {
         btnScaleUp.setVisibility(View.GONE);
         btnRemoveModel.setVisibility(View.INVISIBLE);
         spnAnimation.setVisibility(View.INVISIBLE);
-//        arFragment.getPlaneDiscoveryController().hide();
-//        arFragment.getPlaneDiscoveryController().setInstructionView(null);
         btnRemoveModel.setOnClickListener(v -> removeAnchorNode());
         btnDeselect.setOnClickListener(view -> {
         });

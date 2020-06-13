@@ -650,6 +650,9 @@ public class MenuActivity extends AppCompatActivity {
         if (availableContentAmount == 0) {
             other.append("\n\nNo AR content is available for this book");
             dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_disabled);
+            dtl_contentButton.setOnClickListener(v2 -> {
+            });
+
         } else {
             other.append("\n\n").append(availableContentAmount).append(" models are available");
             dtl_contentButton.setBackgroundResource(R.drawable.rounded_button_three);
