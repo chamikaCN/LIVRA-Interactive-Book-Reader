@@ -30,15 +30,18 @@
         </activity>
         <activity
             android:name=".GameActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".LibraryActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ArViewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".StorageActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TextDetectionActivity"
