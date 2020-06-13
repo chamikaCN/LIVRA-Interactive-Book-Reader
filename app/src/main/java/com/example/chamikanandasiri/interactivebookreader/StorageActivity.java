@@ -20,6 +20,7 @@ public class StorageActivity extends AppCompatActivity {
     DataBaseHelper dataBaseHelper;
     CommentHandler commentHandler;
     WordHandler wordHandler;
+    BookHandler bookHandler;
     ListView str_listView;
     EditText str_searchText;
     ImageButton str_searchButton;
@@ -48,13 +49,16 @@ public class StorageActivity extends AppCompatActivity {
         dataBaseHelper = new DataBaseHelper(this);
         commentHandler = new CommentHandler(dataBaseHelper, this);
         wordHandler = new WordHandler(dataBaseHelper, this);
+        bookHandler = new BookHandler(dataBaseHelper,this);
 
         str_listView = findViewById(R.id.StorageListView);
         str_searchText = findViewById(R.id.StorageEditText);
         str_searchButton = findViewById(R.id.StorageSearchButton);
 
         String type = getIntent().getStringExtra("type");
-        if(type == null ){type = "word";}
+        if (type == null) {
+            type = "word";
+        }
 
         if (type.equals("word")) {
             str_searchText.setHint("search by word");
@@ -79,19 +83,13 @@ public class StorageActivity extends AppCompatActivity {
             commentObjects = new ArrayList<>();
             ArrayList<String> titles = commentHandler.getSimilarTitles(q);
             for (String title : titles) {
-                ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentbyTitle(title);
-                StringBuilder phrases = new StringBuilder();
-                StringBuilder comments = new StringBuilder();
+                ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentBookIDbyTitle(title);
                 for (String[] a : phrcmt) {
-                    phrases.append(a[0]).append("\n");
-                    comments.append(a[1]).append("\n");
+                    commentObjects.add(new CommentObject(title, "\u2606 " + a[0], "\u2606 " + a[1],a[2]));
                 }
-                commentObjects.add(new CommentObject(title, phrases.toString(), comments.toString()));
             }
-
             commentListGenerate();
-
-        }else{
+        } else {
             loadAllComments();
         }
     }
@@ -111,9 +109,8 @@ public class StorageActivity extends AppCompatActivity {
                 }
                 wordObjects.add(new WordObject(word.toUpperCase(), definitions.toString(), POSs.toString(), 1));
             }
-
             wordListGenerate();
-        }else{
+        } else {
             loadAllWords();
         }
     }
@@ -138,9 +135,9 @@ public class StorageActivity extends AppCompatActivity {
         commentObjects = new ArrayList<>();
         ArrayList<String> titles = commentHandler.getAllDistinctTitles();
         for (String title : titles) {
-            ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentbyTitle(title);
+            ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentBookIDbyTitle(title);
             for (String[] a : phrcmt) {
-                commentObjects.add(new CommentObject(title, "\u2606 " + a[0], "\u2606 " + a[1]));
+                commentObjects.add(new CommentObject(title, "\u2606 " + a[0], "\u2606 " + a[1],a[2]));
             }
         }
         commentListGenerate();
@@ -152,7 +149,7 @@ public class StorageActivity extends AppCompatActivity {
     }
 
     private void commentListGenerate() {
-        CommentArrayAdapter adapter = new CommentArrayAdapter(this, R.layout.listitem_comment, commentObjects);
+        CommentArrayAdapter adapter = new CommentArrayAdapter(this, R.layout.listitem_comment, commentObjects,bookHandler);
         str_listView.setAdapter(adapter);
     }
 

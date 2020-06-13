@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
-    android:layout_height="500dp"
+    android:layout_height="550dp"
     android:layout_gravity="center"
     android:background="?attr/panelBackground"
     android:orientation="vertical"
@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="end"
         android:layout_marginTop="15dp"
+        android:gravity="end"
         android:orientation="horizontal">
 
         <ImageButton
@@ -44,9 +44,9 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_margin="20dp"
-        android:scrollY="40dp"
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
+        android:scrollY="40dp"
         android:textColor="?attr/editTextColor"
         android:textIsSelectable="true" />
 
@@ -59,15 +59,15 @@
         android:layout_marginBottom="10dp"
         android:hint="Add Your Title...."
         android:importantForAutofill="no"
-        android:textColorHint="?attr/hintTextColor"
+        android:inputType="text"
         android:textColor="?attr/editTextColor"
-        android:textIsSelectable="true"
-        android:inputType="text" />
+        android:textColorHint="?attr/hintTextColor"
+        android:textIsSelectable="true" />
 
     <EditText
         android:id="@+id/CommentEditText"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="100dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:gravity="top|start"
@@ -85,6 +85,39 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Link to book"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:textColor="?attr/colorAccent"/>
+
+        <Spinner
+            android:id="@+id/CommentBookSpinner"
+            android:layout_width="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="@+id/guidelineH2"
+            app:layout_constraintEnd_toEndOf="@+id/guidelineV5a"
+            app:layout_constraintStart_toStartOf="@+id/guidelineV5"
+            app:layout_constraintTop_toTopOf="@+id/guidelineH1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:scrollX="0dp">
 
@@ -92,10 +125,11 @@
             android:id="@+id/CommentOKButton"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_margin="15dp"
+            android:layout_margin="10dp"
             android:background="@drawable/rounded_button_three"
             android:contentDescription="@string/SpeakButtonContentDescription"
             android:scaleType="fitXY"
+            android:tooltipText="Save Comment"
             app:srcCompat="@drawable/ic_save" />
 
     </LinearLayout>

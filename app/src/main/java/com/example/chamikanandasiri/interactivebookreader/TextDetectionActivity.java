@@ -19,9 +19,11 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,6 +59,7 @@ public class TextDetectionActivity extends AppCompatActivity {
     ImageButton main_captureButton, main_backButton, cap_dictionaryButton, cap_speechButton, cap_commentButton,
             cap_closeButton, spk_speakButton, spk_stopButton, spk_closeButton, spk_backButton,
             dict_closeButton, dict_backButton, dict_saveButton, cmt_backButton, cmt_closeButton, cmt_saveButton;
+    Spinner cmt_bookSpinner;
 
     TextRecognizer textRecognizer;
     ToneGenerator toneGenerator;
@@ -83,6 +87,7 @@ public class TextDetectionActivity extends AppCompatActivity {
     private HashMap<String, Integer> textSizeConfig;
     private String TAG = "Test";
     private String textSize;
+    private ArrayList<String[]> allBooks;
 
     final int RequestCameraPermissionID = 1001;
     final int RequestWriteStoragePermissionID = 1002;
@@ -290,6 +295,7 @@ public class TextDetectionActivity extends AppCompatActivity {
         cmt_displayView = commentPopup.findViewById(R.id.CommentDisplayTextView);
         cmt_titleText = commentPopup.findViewById(R.id.CommentTitleEditText);
         cmt_editText = commentPopup.findViewById(R.id.CommentEditText);
+        cmt_bookSpinner = commentPopup.findViewById(R.id.CommentBookSpinner);
     }
 
     public void showCapturePopup(View v) {
@@ -382,6 +388,15 @@ public class TextDetectionActivity extends AppCompatActivity {
             saveComment();
         });
         cmt_displayView.setText(selectedString);
+        allBooks = bookHandler.getAllBookIDsTitles();
+        String[] booktitles = new String[allBooks.size() + 1];
+        booktitles[0] = "None";
+        for (int m = 1; m <= allBooks.size(); m++) {
+            booktitles[m] = allBooks.get(m - 1)[1];
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_selectitem, booktitles);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdownitem);
+        cmt_bookSpinner.setAdapter(adapter);
         commentPopup.show();
     }
 
@@ -543,9 +558,24 @@ public class TextDetectionActivity extends AppCompatActivity {
         String phrase = selectedString;
         String title = cmt_titleText.getText().toString();
         String comment = cmt_editText.getText().toString();
+        String spinner = cmt_bookSpinner.getSelectedItem().toString();
         CommentObject commentObject = new CommentObject(title, phrase, comment);
+//        if (spinner.equals("None")) {
+//            commentObject = new CommentObject(title, phrase, comment);
+//        } else {
+            for (String[] s : allBooks) {
+                Log.d(TAG, "saveComment:"+ s[1] + spinner);
+                if (spinner.equals(s[1])) {
+                    Log.d(TAG, "saveComment: came");
+                    commentObject = new CommentObject(title, phrase, comment, s[0]);
+                    Log.d(TAG, "saveComment: "+s[0]);
+                    break;
+                }
+            }
+//        }
         commentHandler.addComment(commentObject);
     }
+
 
     private void saveDictionaryDefinitions(JSONArray array) throws JSONException {
         String word = selectedString;

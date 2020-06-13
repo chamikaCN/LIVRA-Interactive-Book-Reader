@@ -10,13 +10,23 @@ public class CommentObject {
     private String title;
     private String phrase;
     private String comment;
+    private String bookID;
 
     private String TAG = "Test";
+
+    public CommentObject(String title, String phrase, String comment, String bookID) {
+        this.title = title;
+        this.phrase = phrase;
+        this.comment = comment;
+        this.bookID = bookID;
+        this.timestamp = addTimeStamp();
+    }
 
     public CommentObject(String title, String phrase, String comment) {
         this.title = title;
         this.phrase = phrase;
         this.comment = comment;
+        this.bookID = "NONE";
         this.timestamp = addTimeStamp();
     }
 
@@ -43,5 +53,7 @@ public class CommentObject {
         return timestamp.toString();
     }
 
-
+    public String getBookID() {
+        return bookID;
+    }
 }

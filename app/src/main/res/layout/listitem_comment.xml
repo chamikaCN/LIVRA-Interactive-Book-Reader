@@ -10,17 +10,41 @@
     android:background="?attr/colorPrimary"
     android:orientation="vertical">
 
-    <TextView
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/CommentCardTitle"
-        android:textColor="?attr/titleTextColor"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"/>
+        android:gravity="center_vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/CommentCardTitle"
+            android:textColor="?attr/titleTextColor"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:text="dshegaerg"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorAccent"
+            android:id="@+id/CommentCardBook"
+            android:text="zfbagaf"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +55,7 @@
             android:layout_width="0dp"
             android:layout_weight="0.4"
             android:layout_height="wrap_content"
-            android:textColor="?attr/editTextColor"
+            android:textColor="?attr/colorAccent"
             android:id="@+id/CommentCardPhrase"
             android:padding="5dp"/>
 
