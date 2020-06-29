@@ -99,9 +99,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public Cursor getPhraseCommentBookIDByTitle(String title) {
         SQLiteDatabase db = this.getReadableDatabase();
-        //return db.rawQuery("select * from " + TABLE_COMMENT + " where Title = \'"+ title +"\'",null);
+       //return db.rawQuery("select * from " + TABLE_COMMENT + " where Title = \'"+ title +"\'",null);
         return db.query(TABLE_COMMENT, new String[]{"Phrase", "Comment","BookID"}, "Title = ?", new String[]{title}, null, null, null);
+    }
 
+    public Cursor getPhraseCommentTitlesByBookID(String id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_COMMENT, new String[]{"Title","Phrase", "Comment"}, "BookID = ?", new String[]{id}, null, null, null);
     }
 
     public Cursor getAllDistinctTitles() {

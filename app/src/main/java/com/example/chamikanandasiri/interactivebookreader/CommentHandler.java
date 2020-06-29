@@ -45,6 +45,20 @@ public class CommentHandler {
         return results;
     }
 
+    public ArrayList<String[]> getPhraseCommentTitlesbyBookID(String id) {
+        Cursor res = dbHelper.getPhraseCommentTitlesByBookID(id);
+        ArrayList<String[]> results = new ArrayList<>();
+
+        while (res.moveToNext()) {
+            String Ac = res.getString(0);
+            String Bc = res.getString(1);
+            String Cc = res.getString(2);
+
+            results.add(new String[]{Ac, Bc, Cc});
+        }
+        return results;
+    }
+
     public ArrayList<String> getAllDistinctTitles() {
         Cursor res = dbHelper.getAllDistinctTitles();
         ArrayList<String> results = new ArrayList<>();

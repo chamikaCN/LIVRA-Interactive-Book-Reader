@@ -28,6 +28,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.android.gms:play-services-vision:20.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.google.android.material:material:1.1.0'
@@ -51,26 +52,21 @@ dependencies {
 }
 
 
-sceneform.asset('sampleData/model.obj',
-        'default',
-        'sampleData/model.sfa',
-        'src/main/assets/model')
-
-sceneform.asset('sampleData/table.obj',
-        'default',
-        'sampleData/table.sfa',
-        'src/main/assets/table')
-
-
-//sceneform.asset('sampleData/room.obj',
+//sceneform.asset('sampleData/model.obj',
 //        'default',
-//        'sampleData/room.sfa',
-//        'src/main/assets/room')
+//        'sampleData/model.sfa',
+//        'src/main/assets/model')
+//
+//sceneform.asset('sampleData/table.obj',
+//        'default',
+//        'sampleData/table.sfa',
+//        'src/main/assets/table')
 
-sceneform.asset('sampleData/embedded_resources.fbx',
-        'default',
-        'sampleData/embedded_resources.sfa',
-        'src/main/assets/bird')
+
+//sceneform.asset('sampleData/embedded_resources.fbx',
+//        'default',
+//        'sampleData/embedded_resources.sfa',
+//        'src/main/assets/bird')
 
 
 sceneform.asset('sampleData/A.fbx',
@@ -230,7 +226,7 @@ sceneform.asset('sampleData/Z.fbx',
         'src/main/assets/Z')
 
 
-sceneform.asset('sampleData/AnimatedDroid.fbx',
-        'default',
-        'sampleData/AnimatedDroid.sfa',
-        'src/main/assets/AnimatedDroid')
+//sceneform.asset('sampleData/AnimatedDroid.fbx',
+//        'default',
+//        'sampleData/AnimatedDroid.sfa',
+//        'src/main/assets/AnimatedDroid')

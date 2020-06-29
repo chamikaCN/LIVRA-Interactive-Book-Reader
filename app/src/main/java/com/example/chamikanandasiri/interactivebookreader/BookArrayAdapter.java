@@ -43,7 +43,6 @@ class BookArrayAdapter extends RecyclerView.Adapter<BookArrayAdapter.ViewHolder>
 
         Picasso.with(context).load(books.get(position).getCovers()[0])
                 .placeholder(R.drawable.bookcover_loading_anim)
-                .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
                 .into(holder.imageView);
 

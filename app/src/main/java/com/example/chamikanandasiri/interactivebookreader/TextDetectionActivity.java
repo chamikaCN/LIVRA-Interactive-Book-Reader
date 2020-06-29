@@ -242,10 +242,7 @@ public class TextDetectionActivity extends AppCompatActivity {
 //            mCamera.takePicture(null, null, mPicture);
 //            //capturePopup will be called inside picture callback
         });
-        main_backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MenuActivity.class);
-            startActivity(intent);
-        });
+        main_backButton.setOnClickListener(v -> finish());
     }
 
     private void setupAllPopups() {

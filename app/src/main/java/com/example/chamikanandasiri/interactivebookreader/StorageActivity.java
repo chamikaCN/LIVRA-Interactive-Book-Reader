@@ -68,7 +68,7 @@ public class StorageActivity extends AppCompatActivity {
             });
             loadAllWords();
         } else {
-            str_searchText.setHint("search by Title");
+            str_searchText.setHint("search by title or book");
             str_searchButton.setOnClickListener(v -> {
                 buttonAnimation1(str_searchButton);
                 searchTitle(v);
@@ -86,6 +86,13 @@ public class StorageActivity extends AppCompatActivity {
                 ArrayList<String[]> phrcmt = commentHandler.getPhraseCommentBookIDbyTitle(title);
                 for (String[] a : phrcmt) {
                     commentObjects.add(new CommentObject(title, "\u2606 " + a[0], "\u2606 " + a[1],a[2]));
+                }
+            }
+            ArrayList<String> bookIds = bookHandler.getSimilarBookIDs(q);
+            for (String id : bookIds) {
+                ArrayList<String[]> phrcmt1 = commentHandler.getPhraseCommentTitlesbyBookID(id);
+                for (String[] a : phrcmt1) {
+                    commentObjects.add(new CommentObject(a[0], "\u2606 " + a[1], "\u2606 " + a[2],id));
                 }
             }
             commentListGenerate();
@@ -163,8 +170,7 @@ public class StorageActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+        finish();
     }
 
 }

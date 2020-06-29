@@ -4,11 +4,15 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,6 +69,7 @@ public class LibraryActivity extends AppCompatActivity {
         lib_searchButton = findViewById(R.id.LibrarySearchButton);
         lib_searchText = findViewById(R.id.LibraryEditText);
         lib_contentRemoveButton = findViewById(R.id.LibraryBookDetailsButton);
+        //lib_commentButton = findViewById(R.id.LibraryCommentsButton);
         lib_searchButton.setOnClickListener(v -> searchBooks());
         lib_contentRemoveButton.setOnClickListener(v -> {
             if (selectedBook != null) {
@@ -73,6 +78,13 @@ public class LibraryActivity extends AppCompatActivity {
                 toastManager.showShortToast("Select a book to remove");
             }
         });
+//        lib_commentButton.setOnClickListener(v->{
+//            Intent intent = new Intent(this,StorageActivity.class);
+//            intent.putExtra("bookComment",true);
+//            intent.putExtra("type","comment");
+//            startActivity(intent);
+//        });
+//        lib_commentButton.setVisibility(View.GONE);
         setSelectedBook(null);
         loadBookDetails();
     }
@@ -225,7 +237,6 @@ public class LibraryActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+        finish();
     }
 }

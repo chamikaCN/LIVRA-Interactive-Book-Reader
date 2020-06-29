@@ -120,8 +120,7 @@ public class ArViewActivity extends AppCompatActivity {
         });
         btnBack.setOnClickListener(view -> {
             selectedARModel = null;
-            Intent intent = new Intent(this, LibraryActivity.class);
-            startActivity(intent);
+            finish();
         });
     }
 

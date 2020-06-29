@@ -335,8 +335,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void loadMainActivity() {
-        Intent intent = new Intent(this, MenuActivity.class);
-        startActivity(intent);
+        finish();
     }
 
     private static ObjectAnimator createAnimator() {
