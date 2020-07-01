@@ -62,6 +62,27 @@ Theme - you can change between light and dark themes.
 Text size - you can set text size of detections to Small, Medium or Large.
 Voice Support - if switched active app will read out all the toast messages you receive. It is mostly intended for small children.
 Audio settings - you can adjust the pitch and the speed of the app's voice including speak mode and voice support.
+
+### Web Platform
+You can add books and content to the web platform which can be used by all the users of the system. At first you have to create an account as a publisher.
+#### Registration
+Go to our Livra web platform by clicking the following link. https://ar-content-platform.github.io/
+Click the ‘Publishers’ button on the top right hand corner and select ‘register’.
+Add your details according to the given descriptions and click Register.
+Login to the account with those credentials.
+#### Adding a book
+Click the ‘Add book’ option on the top navigation panel.
+Fill the required details about the book.
+You can add up to 3 images, but the first image will be used as the main cover image of the book. Then add the book to the platform.
+#### Adding content
+Click the ‘Add content’ option right next to the previous one and fill the details.
+You can link your content only with a book added through your account.
+The content must have at least 100 character long description.
+If the content you are uploading has embedded animation, check the ‘Animated?’ checkbox  at the bottom.
+Same as books the first image of the three images will be used as the cover image for that content.
+Currently all the content you upload should be in the format of ‘.sfb’ for our app to recognize and render your content successfully.
+Now you can add the content.
+
 ###### List of books already available in the system
-*Ar content available* - Inferno, Icon(Animated), A Column of Fire,The Separation, Conspiracy of Evil
-*Without content* - Collections, Artemis Fowl, A Game of Thrones, The Hunger Games
+* *Ar content available* - Inferno, Icon(Animated), A Column of Fire,The Separation, Conspiracy of Evil
+* *Without content* - Collections, Artemis Fowl, A Game of Thrones, The Hunger Games
