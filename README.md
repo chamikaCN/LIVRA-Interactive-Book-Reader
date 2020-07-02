@@ -14,6 +14,7 @@ Apart from that Android Vision library for text detection and barcode recognitio
 <p align="center">
   <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-113858.png" height="500px" alt="Sublime's custom image"/>
   <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-114427.png" height="500px" alt="Sublime's custom image"/>
+</br><i>dark and light themes of main menu</i>
 </p>
 When you download and open our ‘Livra’ app you will be guided to the main menu with 6 buttons on screen. Without any books and content added you can’t enjoy the great experience provided by it.
 
@@ -44,10 +45,6 @@ Select a book from results and proceed to the next step.
 Refer from step 7 in the previous option.
 
 #### Library
-
-<p align="center">
-  <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-114011.png" height="500px" alt="Sublime's custom image"/>
-</p>
 
 You can access all downloaded books and content through the library. To go to the library just click the ‘My Library’ button on the menu.
 You can search a book by its title from the search bar.
