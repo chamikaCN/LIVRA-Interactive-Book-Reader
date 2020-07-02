@@ -110,7 +110,7 @@ Audio settings - you can adjust the pitch and the speed of the app's voice inclu
 ### Web Platform
 You can add books and content to the web platform which can be used by all the users of the system. At first you have to create an account as a publisher.
 #### Registration
-Go to our Livra web platform by clicking the [this link](https://ar-content-platform.github.io/)
+Go to our Livra web platform by clicking the [this link](https://ar-content-platform.github.io/).
 Click the ‘Publishers’ button on the top right hand corner and select ‘register’.
 Add your details according to the given descriptions and click Register.
 Login to the account with those credentials.
