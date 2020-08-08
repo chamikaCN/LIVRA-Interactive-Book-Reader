@@ -68,7 +68,7 @@ If the model you placed is animated (indicated by the ⏩ icon on the model card
 #### Text Detection
 
 <p align="center">
-  <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-114117.png" height="500px" alt="Sublime's custom image"/>
+  <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-114011.png" height="500px" alt="Sublime's custom image"/>
 </p>
 
 Text detection is another functionality available in our app.
@@ -83,7 +83,7 @@ From here you can access and search the previously saved words and comments as y
 #### Alphabet Game
 
 <p align="center">
-  <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-114011.png" height="500px" alt="Sublime's custom image"/>
+  <img src="https://github.com/chamikaCN/LIVRA-Interactive-Book-Reader/blob/master/ReadMe%20content/Screenshot_20200625-114117.png" height="500px" alt="Sublime's custom image"/>
 </p>
 
 This is a small learning activity intended for small children to learn the alphabet with interaction.
