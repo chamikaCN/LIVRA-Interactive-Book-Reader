@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="430dp"
+    android:layout_gravity="center"
+    android:background="?attr/panelBackground"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/TutorialTitleView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:paddingTop="10dp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:scrollY="0dp"
+        android:text="LIVRA"
+        android:textColor="?attr/titleTextColor"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/TutorialTextView"
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:scrollY="0dp"
+        android:text="@string/TutorialContent"
+        android:textColor="?attr/editTextColor"
+        android:textIsSelectable="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/TutorialHelpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_button_common_three"
+            android:padding="15dp"
+            android:text="Click here for User Guide"
+            android:textColor="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:scrollX="0dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:scrollX="0dp">
+
+            <CheckBox
+                android:id="@+id/TutorialCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/TutorialConfigLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="do not show this again"
+                android:textColor="?attr/editTextColor"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/TutorialOKButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded_button_three"
+            android:padding="10dp"
+            android:text="@string/Tutorialok"
+            android:textColor="?attr/colorPrimary" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

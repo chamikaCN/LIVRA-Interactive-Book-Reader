@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -61,13 +62,13 @@ public class MenuActivity extends AppCompatActivity {
 
     private String currentTheme, textSize;
     private CardView libraryCard, textDetectorCard, savedItemsCard, alphaGameCard, addBookCard, settingsCard;
-    private Dialog savedItemPopup, settingsPopup, complexBarcodePopup, searchBookPopup, barcodePopup, detailsPopup, contentPopup;
+    private Dialog savedItemPopup, settingsPopup, complexBarcodePopup, searchBookPopup, barcodePopup, detailsPopup, contentPopup, tutorialPopup;
     private ImageButton str_closeButton, stn_closeButton, stn_textPlusButton, stn_textMinusButton, cbd_closeButton, sbk_closeButton, sbk_searchButton, brc_closeButton, dtl_closeButton, dtl_backButton, cnt_closeButton, cnt_backButton;
-    private Button str_commentButton, str_wordButton, stn_applyButton, cbd_searchButton, sbk_proceedButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton;
+    private Button str_commentButton, str_wordButton, stn_applyButton, cbd_searchButton, sbk_proceedButton, brc_detailsButton, brc_loadButton, dtl_contentButton, cnt_downloadButton,tut_OKButton, tut_helpButton;
     private SeekBar pitchBar, speedBar;
     private ImageView dtl_imageView;
     private Switch stn_themeSwitch, stn_voiceSwitch;
-    private CheckBox stn_voiceCheckBox;
+    private CheckBox stn_voiceCheckBox, tut_againCheckBox;
     private TextView brc_displayView, dtl_othersView, dtl_titleView, stn_textSizeView;
     private ListView cnt_contentListView;
     private SurfaceView cbd_surfaceView;
@@ -75,6 +76,7 @@ public class MenuActivity extends AppCompatActivity {
 
     private RecentBookAdapter recentBookAdapter;
     private float speed, pitch;
+    private boolean showTutorial;
     private String detectedISBN;
     private float speechSpeedValue, speechPitchValue;
     private ArrayList<SimpleBookObject> displayingRecentBooks;
@@ -120,6 +122,7 @@ public class MenuActivity extends AppCompatActivity {
         speechSpeedValue = sharedPreferences.getFloat("Speed", 0.5f);
         speechPitchValue = sharedPreferences.getFloat("Pitch", 0.5f);
         textSize = sharedPreferences.getString("TextSize", "Medium");
+        showTutorial = sharedPreferences.getBoolean("Tutorial",true);
         textSizeConfig = new HashMap<>();
         textSizeConfig.put("Small", 12);
         textSizeConfig.put("Medium", 15);
@@ -155,6 +158,8 @@ public class MenuActivity extends AppCompatActivity {
         detailsPopup.setContentView(R.layout.popup_details);
         contentPopup = new Dialog(this);
         contentPopup.setContentView(R.layout.popup_content);
+        tutorialPopup = new Dialog(this);
+        tutorialPopup.setContentView(R.layout.popup_tutorial);
 
         setupMainLayout();
         setupSavedItemPopup();
@@ -164,6 +169,7 @@ public class MenuActivity extends AppCompatActivity {
         setupBarcodePopup();
         setupDetailsPopup();
         setupContentPopup();
+        setupTutorialPopup();
         loadRecentBooks();
     }
 
@@ -197,6 +203,8 @@ public class MenuActivity extends AppCompatActivity {
         settingsCard.setOnClickListener(this::showSettingsPopup);
 
         addBookCard.setOnClickListener(this::showComplexBarcodePopup);
+
+
     }
 
     private void setupSavedItemPopup() {
@@ -253,6 +261,13 @@ public class MenuActivity extends AppCompatActivity {
         cnt_backButton = contentPopup.findViewById(R.id.ContentBackButton);
         cnt_downloadButton = contentPopup.findViewById(R.id.ContentDownloadButton);
         cnt_contentListView = contentPopup.findViewById(R.id.ContentListView);
+    }
+
+    private void setupTutorialPopup() {
+        tut_againCheckBox = tutorialPopup.findViewById(R.id.TutorialCheckBox);
+        tut_OKButton = tutorialPopup.findViewById(R.id.TutorialOKButton);
+        tut_helpButton = tutorialPopup.findViewById(R.id.TutorialHelpButton);
+        if(showTutorial){showTutorialPopup();}
     }
 
     public void showSavedItemPopup(View v1) {
@@ -459,6 +474,23 @@ public class MenuActivity extends AppCompatActivity {
             contentPopup.dismiss();
         });
         contentPopup.show();
+    }
+
+    public void showTutorialPopup() {
+        tut_OKButton.setOnClickListener(v -> {
+            if (tut_againCheckBox.isChecked()) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                showTutorial = false;
+                editor.putBoolean("Tutorial", false);
+                editor.apply();
+            }
+            tutorialPopup.dismiss();
+        });
+        tut_helpButton.setOnClickListener(v-> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ar-content-platform.github.io/dashboard"));
+            startActivity(browserIntent);
+        });
+        tutorialPopup.show();
     }
 
     private void detectBarcode() {
