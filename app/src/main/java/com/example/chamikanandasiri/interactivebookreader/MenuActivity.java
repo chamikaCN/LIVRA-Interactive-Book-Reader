@@ -487,7 +487,7 @@ public class MenuActivity extends AppCompatActivity {
             tutorialPopup.dismiss();
         });
         tut_helpButton.setOnClickListener(v-> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ar-content-platform.github.io/dashboard"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://ar-content-platform.github.io/user-guide"));
             startActivity(browserIntent);
         });
         tutorialPopup.show();
